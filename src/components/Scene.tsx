@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
-import { buildCar } from '../game/carModel'
+import { buildCar, type CarModel } from '../game/carModel'
+import { paintForDriver } from '../game/drivers'
+import { buildGridSlots, gridLook, playerSlot, type GridSlot } from '../game/grid'
 import {
   allowedSpeed,
   buildSpeedEnvelope,
@@ -65,10 +67,28 @@ export function Scene() {
     const track = buildTrack()
     scene.add(track.group)
 
-    const car = buildCar()
-    scene.add(car.group)
+    const slots = buildGridSlots()
+    const player = playerSlot(slots)
+    const field: Array<{ slot: GridSlot; car: CarModel }> = []
+    for (const slot of slots) {
+      const model = buildCar(paintForDriver(slot.driver))
+      model.group.position.set(slot.x, 0, slot.z)
+      model.group.rotation.y = slot.heading
+      scene.add(model.group)
+      field.push({ slot, car: model })
+    }
+    const car = field.find((entry) => entry.slot.driver.id === player.driver.id)?.car
+    if (!car) {
+      throw new Error('Player car missing from grid')
+    }
+    const look = gridLook(slots)
 
     const sim = new CarSim()
+    sim.resetToTrack(player.s)
+    sim.x = player.x
+    sim.z = player.z
+    sim.heading = player.heading
+    sim.distFromCenter = Math.abs(player.offsetM)
     const envelope = buildSpeedEnvelope(monzaPath)
     const keyboard = new Keyboard()
     keyboard.attach()
@@ -206,23 +226,30 @@ export function Scene() {
         tire.rotation.x -= (sim.speed / 0.34) * dt
       }
 
-      // Chase camera: sit behind the car along its heading.
-      const back = new THREE.Vector3(
-        Math.sin(sim.heading),
-        0,
-        Math.cos(sim.heading),
-      )
-      const desired = new THREE.Vector3(sim.x, 0, sim.z)
-        .addScaledVector(back, 9 + sim.speed * 0.03)
-        .add(new THREE.Vector3(0, 3.4, 0))
-      if (cameraReady) {
-        camera.position.lerp(desired, Math.min(1, dt * 5))
+      // Parked: look across the coloured grid. Driving: chase cam.
+      if (phase === 'waiting') {
+        camera.position.set(look.x, look.y, look.z)
+        cameraTarget.set(look.lookX, look.lookY, look.lookZ)
+        camera.lookAt(cameraTarget)
+        cameraReady = false
       } else {
-        camera.position.copy(desired)
-        cameraReady = true
+        const back = new THREE.Vector3(
+          Math.sin(sim.heading),
+          0,
+          Math.cos(sim.heading),
+        )
+        const desired = new THREE.Vector3(sim.x, 0, sim.z)
+          .addScaledVector(back, 9 + sim.speed * 0.03)
+          .add(new THREE.Vector3(0, 3.4, 0))
+        if (cameraReady) {
+          camera.position.lerp(desired, Math.min(1, dt * 5))
+        } else {
+          camera.position.copy(desired)
+          cameraReady = true
+        }
+        cameraTarget.set(sim.x, 1.1, sim.z).addScaledVector(back, -6)
+        camera.lookAt(cameraTarget)
       }
-      cameraTarget.set(sim.x, 1.1, sim.z).addScaledVector(back, -6)
-      camera.lookAt(cameraTarget)
 
       // Racing line glow + boost charge while riding it.
       const linePoint = track.racingLine.sampleAt(sim.s)

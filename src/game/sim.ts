@@ -21,7 +21,7 @@ const ROLLING = 1.4
 const OFF_TRACK_DRAG = 14
 /** Lateral grip for yaw — above ENVELOPE_LAT_ACCEL so corners stay makeable. */
 const YAW_LAT = 55
-const SPAWN_S = monzaPath.length - 60 // on the grid, just before the line
+export const SPAWN_S = monzaPath.length - 60 // on the grid, just before the line
 /** Half-width of the car for barrier hits. */
 const CAR_RADIUS = 1.05
 
