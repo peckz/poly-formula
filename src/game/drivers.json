@@ -1,0 +1,218 @@
+{
+  "season": 2026,
+  "notes": "FIA 2026 22-driver entry list. Paints are recognizable digital team colors for the poly car, not factory formulas.",
+  "playerDriverId": "leclerc",
+  "teams": {
+    "mclaren": {
+      "name": "McLaren",
+      "primary": "#FF8000",
+      "secondary": "#2D2D2D"
+    },
+    "mercedes": {
+      "name": "Mercedes",
+      "primary": "#00D2BE",
+      "secondary": "#C8CCCF"
+    },
+    "redbull": {
+      "name": "Red Bull",
+      "primary": "#161B4E",
+      "secondary": "#F7D117"
+    },
+    "ferrari": {
+      "name": "Ferrari",
+      "primary": "#D0181C",
+      "secondary": "#F2F2F0"
+    },
+    "williams": {
+      "name": "Williams",
+      "primary": "#041E42",
+      "secondary": "#00A0DE"
+    },
+    "racingbulls": {
+      "name": "Racing Bulls",
+      "primary": "#F2F2F0",
+      "secondary": "#2647D8"
+    },
+    "astonmartin": {
+      "name": "Aston Martin",
+      "primary": "#006F62",
+      "secondary": "#CEDC00"
+    },
+    "haas": {
+      "name": "Haas",
+      "primary": "#F2F2F0",
+      "secondary": "#E10600"
+    },
+    "audi": {
+      "name": "Audi",
+      "primary": "#C00000",
+      "secondary": "#1A1A1A"
+    },
+    "alpine": {
+      "name": "Alpine",
+      "primary": "#0090FF",
+      "secondary": "#FF87C3"
+    },
+    "cadillac": {
+      "name": "Cadillac",
+      "primary": "#111111",
+      "secondary": "#F2F2F0"
+    }
+  },
+  "drivers": [
+    {
+      "id": "norris",
+      "name": "Lando Norris",
+      "code": "NOR",
+      "number": 1,
+      "team": "mclaren"
+    },
+    {
+      "id": "piastri",
+      "name": "Oscar Piastri",
+      "code": "PIA",
+      "number": 81,
+      "team": "mclaren"
+    },
+    {
+      "id": "russell",
+      "name": "George Russell",
+      "code": "RUS",
+      "number": 63,
+      "team": "mercedes"
+    },
+    {
+      "id": "antonelli",
+      "name": "Kimi Antonelli",
+      "code": "ANT",
+      "number": 12,
+      "team": "mercedes"
+    },
+    {
+      "id": "verstappen",
+      "name": "Max Verstappen",
+      "code": "VER",
+      "number": 3,
+      "team": "redbull"
+    },
+    {
+      "id": "hadjar",
+      "name": "Isack Hadjar",
+      "code": "HAD",
+      "number": 6,
+      "team": "redbull"
+    },
+    {
+      "id": "leclerc",
+      "name": "Charles Leclerc",
+      "code": "LEC",
+      "number": 16,
+      "team": "ferrari"
+    },
+    {
+      "id": "hamilton",
+      "name": "Lewis Hamilton",
+      "code": "HAM",
+      "number": 44,
+      "team": "ferrari"
+    },
+    {
+      "id": "albon",
+      "name": "Alex Albon",
+      "code": "ALB",
+      "number": 23,
+      "team": "williams"
+    },
+    {
+      "id": "sainz",
+      "name": "Carlos Sainz",
+      "code": "SAI",
+      "number": 55,
+      "team": "williams"
+    },
+    {
+      "id": "lawson",
+      "name": "Liam Lawson",
+      "code": "LAW",
+      "number": 30,
+      "team": "racingbulls"
+    },
+    {
+      "id": "lindblad",
+      "name": "Arvid Lindblad",
+      "code": "LIN",
+      "number": 41,
+      "team": "racingbulls"
+    },
+    {
+      "id": "alonso",
+      "name": "Fernando Alonso",
+      "code": "ALO",
+      "number": 14,
+      "team": "astonmartin"
+    },
+    {
+      "id": "stroll",
+      "name": "Lance Stroll",
+      "code": "STR",
+      "number": 18,
+      "team": "astonmartin"
+    },
+    {
+      "id": "ocon",
+      "name": "Esteban Ocon",
+      "code": "OCO",
+      "number": 31,
+      "team": "haas"
+    },
+    {
+      "id": "bearman",
+      "name": "Ollie Bearman",
+      "code": "BEA",
+      "number": 87,
+      "team": "haas"
+    },
+    {
+      "id": "hulkenberg",
+      "name": "Nico Hulkenberg",
+      "code": "HUL",
+      "number": 27,
+      "team": "audi"
+    },
+    {
+      "id": "bortoleto",
+      "name": "Gabriel Bortoleto",
+      "code": "BOR",
+      "number": 5,
+      "team": "audi"
+    },
+    {
+      "id": "gasly",
+      "name": "Pierre Gasly",
+      "code": "GAS",
+      "number": 10,
+      "team": "alpine"
+    },
+    {
+      "id": "colapinto",
+      "name": "Franco Colapinto",
+      "code": "COL",
+      "number": 43,
+      "team": "alpine"
+    },
+    {
+      "id": "perez",
+      "name": "Sergio Perez",
+      "code": "PER",
+      "number": 11,
+      "team": "cadillac"
+    },
+    {
+      "id": "bottas",
+      "name": "Valtteri Bottas",
+      "code": "BOT",
+      "number": 77,
+      "team": "cadillac"
+    }
+  ]
+}
