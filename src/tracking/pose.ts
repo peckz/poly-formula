@@ -13,10 +13,6 @@ const undetectedPoint = (): Point3 => ({
   z: 0,
 })
 
-function toDeg(rad: number) {
-  return (rad * 180) / Math.PI
-}
-
 function mirrorX(x: number) {
   return 1 - x
 }
@@ -54,14 +50,4 @@ export function readHands(result: HandLandmarkerResult): {
   }
 
   return { leftHand, rightHand }
-}
-
-export function readWheelAngle(leftHand: Point3, rightHand: Point3): number | null {
-  if (!leftHand.detected || !rightHand.detected) {
-    return null
-  }
-
-  const dx = rightHand.x - leftHand.x
-  const dy = rightHand.y - leftHand.y
-  return toDeg(Math.atan2(-dy, dx))
 }

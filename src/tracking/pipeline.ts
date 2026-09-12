@@ -5,8 +5,9 @@ import {
 } from '@mediapipe/tasks-vision'
 import { drawTracking } from './draw'
 import { HeadTracker } from './face'
-import { readHands, readWheelAngle } from './pose'
+import { readHands } from './pose'
 import { trackingStore } from './store'
+import { WheelTracker } from './wheel'
 
 const WASM_PATH = '/mediapipe/wasm'
 const FACE_MODEL =
@@ -46,6 +47,7 @@ export class CameraPipeline {
   private frames = 0
   private lastFpsAt = 0
   private heads = new HeadTracker()
+  private wheels = new WheelTracker()
 
   async start(video: HTMLVideoElement, overlay: HTMLCanvasElement) {
     trackingStore.setStatus('loading')
@@ -120,6 +122,7 @@ export class CameraPipeline {
     this.face = null
     this.hands = null
     this.heads.reset()
+    this.wheels.reset()
   }
 
   private loop = (video: HTMLVideoElement, overlay: HTMLCanvasElement) => {
@@ -138,13 +141,19 @@ export class CameraPipeline {
         const aspect = video.videoWidth / video.videoHeight || 4 / 3
         const head = this.heads.update(face.faceLandmarks[0], aspect)
         const { leftHand, rightHand } = readHands(hands)
+        const wheel = this.wheels.update(
+          hands.landmarks,
+          video.videoWidth,
+          video.videoHeight,
+          timestamp,
+        )
 
-        drawTracking(overlay, video, face, hands, head)
+        drawTracking(overlay, video, face, hands, head, wheel)
         trackingStore.applyFrame({
           head,
           leftHand,
           rightHand,
-          wheelAngle: readWheelAngle(leftHand, rightHand),
+          wheel,
         })
 
         this.frames += 1

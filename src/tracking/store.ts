@@ -20,6 +20,12 @@ export type HeadPose = {
   sideways: number
 }
 
+export type WheelPose = {
+  held: boolean
+  grabbing: boolean
+  steering: number
+}
+
 const emptyPoint = (): Point3 => ({
   detected: false,
   x: 0,
@@ -36,6 +42,12 @@ const emptyHead = (): HeadPose => ({
   row: 2,
   forward: 0,
   sideways: 0,
+})
+
+const emptyWheel = (): WheelPose => ({
+  held: false,
+  grabbing: false,
+  steering: 0,
 })
 
 function writePoint(target: Point3, source: Point3) {
@@ -56,6 +68,12 @@ function writeHead(target: HeadPose, source: HeadPose) {
   target.sideways = source.sideways
 }
 
+function writeWheel(target: WheelPose, source: WheelPose) {
+  target.held = source.held
+  target.grabbing = source.grabbing
+  target.steering = source.steering
+}
+
 class TrackingStore {
   status: CameraStatus = 'idle'
   error: string | null = null
@@ -63,7 +81,7 @@ class TrackingStore {
   head: HeadPose = emptyHead()
   leftHand: Point3 = emptyPoint()
   rightHand: Point3 = emptyPoint()
-  wheelAngle: number | null = null
+  wheel: WheelPose = emptyWheel()
 
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
@@ -82,12 +100,12 @@ class TrackingStore {
     head: HeadPose
     leftHand: Point3
     rightHand: Point3
-    wheelAngle: number | null
+    wheel: WheelPose
   }) {
     writeHead(this.head, frame.head)
     writePoint(this.leftHand, frame.leftHand)
     writePoint(this.rightHand, frame.rightHand)
-    this.wheelAngle = frame.wheelAngle
+    writeWheel(this.wheel, frame.wheel)
   }
 }
 

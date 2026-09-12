@@ -30,7 +30,7 @@ const PointBlock = observer(function PointBlock({
 })
 
 export const TrackingHud = observer(function TrackingHud() {
-  const { fps, head, leftHand, rightHand, wheelAngle } = trackingStore
+  const { fps, head, leftHand, rightHand, wheel } = trackingStore
   const [falStatus, setFalStatus] = useState<'loading' | 'ready' | 'missing'>(
     'loading',
   )
@@ -94,11 +94,11 @@ export const TrackingHud = observer(function TrackingHud() {
       <section>
         <h2>
           Wheel{' '}
-          <span className={wheelAngle === null ? 'off' : 'ok'}>
-            {wheelAngle === null ? 'off' : 'on'}
+          <span className={wheel.held ? 'ok' : 'off'}>
+            {wheel.grabbing ? 'grip' : wheel.held ? 'on' : 'off'}
           </span>
         </h2>
-        <p>{wheelAngle === null ? '—' : `${fmt(wheelAngle)}°`}</p>
+        <p>{fmt(wheel.steering)}</p>
       </section>
     </aside>
   )

@@ -18,6 +18,7 @@ The camera loop does not go through React. It writes numbers into a store once p
 - **Store only useful numbers** — pose, wrists, wheel angle. Not the full landmark mesh
 - **fal.ai** — generates driver atlases via GPT Image; character name is an input (default Charles Leclerc). Key stays in `.env`; the browser talks to a local Vite proxy
 - **Driver sprite** — 5×5 atlas. Nose vs eyes/mouth picks yaw/pitch, then snaps to a cell. Overlay is counter-mirrored so left/right match
+- **Wheel sprite** — two palm centers set position, tilt, and size so the grips sit in your hands
 
 ## Now
 

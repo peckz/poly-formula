@@ -6,7 +6,9 @@ import {
   type NormalizedLandmark,
 } from '@mediapipe/tasks-vision'
 import { drawDriverHead } from './driver-sprite'
+import { drawDriverWheel } from './driver-wheel'
 import type { HeadFrame } from './face'
+import type { WheelFrame } from './wheel'
 
 function drawConnections(
   ctx: CanvasRenderingContext2D,
@@ -57,6 +59,7 @@ export function drawTracking(
   face: FaceLandmarkerResult,
   hands: HandLandmarkerResult,
   head: HeadFrame,
+  wheel: WheelFrame,
 ) {
   const width = video.videoWidth
   const height = video.videoHeight
@@ -87,8 +90,11 @@ export function drawTracking(
     }
   }
 
-  for (const landmarks of hands.landmarks) {
-    drawConnections(ctx, landmarks, HandLandmarker.HAND_CONNECTIONS, '#7ec8ff')
-    drawDots(ctx, landmarks, '#7ec8ff', 3)
+  const drewWheel = drawDriverWheel(ctx, wheel)
+  if (!drewWheel) {
+    for (const landmarks of hands.landmarks) {
+      drawConnections(ctx, landmarks, HandLandmarker.HAND_CONNECTIONS, '#7ec8ff')
+      drawDots(ctx, landmarks, '#7ec8ff', 3)
+    }
   }
 }

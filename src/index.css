@@ -17,14 +17,14 @@ body,
 
 .camera-feed {
   position: absolute;
-  left: 16px;
-  bottom: 16px;
+  top: 16px;
+  left: 50%;
   width: 280px;
   aspect-ratio: 4 / 3;
   overflow: hidden;
   background: #000;
   border: 1px solid #333;
-  transform: scaleX(-1);
+  transform: translateX(-50%) scaleX(-1);
 }
 
 .camera-feed video,
