@@ -16,7 +16,8 @@ The camera loop does not go through React. It writes numbers into a store once p
 - **MediaPipe Face + Hand Landmarker** — geometric head pose from a few landmarks, plus both wrists
 - **MobX** — tracking updates every frame without re-rendering the whole app
 - **Store only useful numbers** — pose, wrists, wheel angle. Not the full landmark mesh
-- **Driver picker** — Tekken-style horizontal select of the **22** 2026 F1 drivers, each with a bundled **5×5** head atlas under `public/sprites/drivers/`. Selected sheet drives webcam head tracking. Bake/rebuild with `npm run generate:atlases` (fal **GPT Image 2.5 Flare**; `FAL_KEY` in `.env`). Entry can optionally Reroll one driver live via the Vite fal proxy.
+- **Driver picker** — Tekken-style horizontal select of the **22** 2026 F1 drivers, each with a bundled **5×5** head atlas under `public/sprites/drivers/`. Selected sheet drives webcam head tracking. Bake/rebuild with `npm run generate:atlases` (fal **GPT Image 2.5 Flare**; `FAL_KEY` in `.env`).
+- **Convex (optional)** — anonymous lap times + leaderboard. Nickname only; no login. Without a URL the board stays on this device.
 - **Driver sprite** — 5×5 atlas. Nose vs eyes/mouth picks yaw/pitch, then snaps to a cell. Overlay is counter-mirrored so left/right match
 - **Wheel sprite** — two palm centers set position, tilt, and size so the grips sit in your hands
 
@@ -35,9 +36,9 @@ Real circuits come in as data files, researched separately (possibly by other ag
 
 ## Now
 
-Landing is a sharp pre-race entry screen: pick a 2026 driver, set a nickname, Start. After start, the existing hand-wheel / READY overlay and HUD take over.
+Landing is a sharp pre-race entry screen: pick a 2026 driver, set a nickname, Start, and open the Leaderboard. After start, the existing hand-wheel / READY overlay and HUD take over.
 
-Drivable low-poly F1 car on the real 1:1 Monza layout, built at runtime from [`src/tracks/monza.json`](src/tracks/monza.json) (OSM-sourced, 5793 m): arcade physics, chase camera, HUD with minimap and corner callouts. Keyboard (WASD/arrows) drives, `R` resets you onto the track; holding the hand wheel takes over steering with a gentle auto-throttle.
+Drivable low-poly F1 car on the real 1:1 Monza layout, built at runtime from [`src/tracks/monza.json`](src/tracks/monza.json) (OSM-sourced, 5793 m): arcade physics, chase camera, HUD with minimap, lap clock, and corner callouts. Keyboard (WASD/arrows) drives, `R` resets you onto the track; holding the hand wheel takes over steering with a gentle auto-throttle.
 
 ## Run
 
@@ -47,3 +48,21 @@ npm run dev
 ```
 
 Allow the camera when the browser asks.
+
+## Leaderboard
+
+Finish a flying lap (first start/finish crossing starts the clock; the next crossing posts the time). Open **Leaderboard** on the entry screen or the in-race chip.
+
+Laps sync to Convex when `VITE_CONVEX_URL` is set. Leave it empty and the board still works — it just stays in `localStorage`.
+
+```bash
+npx convex dev
+```
+
+That command creates/links a Convex project, pushes `convex/schema.ts` + `convex/laps.ts`, and writes the public client URL to `.env.local`:
+
+```
+VITE_CONVEX_URL=https://<your-deployment>.convex.cloud
+```
+
+Restart `npm run dev` after the URL lands. Do not commit `.env.local`. There is no auth and no extra secrets — the URL is the public Convex client endpoint.

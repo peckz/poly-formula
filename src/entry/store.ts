@@ -8,8 +8,12 @@ import {
   type DriverInfo,
 } from './drivers'
 import { fetchFalHealth, type FalHealth } from '../fal/health'
+import {
+  NICKNAME_MAX,
+  normalizeNickname,
+} from '../leaderboard/format'
 
-const NICKNAME_MAX = 20
+const NICKNAME_KEY = 'poly-formula.nickname.v1'
 
 export type DriverSlotStatus = 'idle' | 'generating' | 'ready' | 'error'
 
@@ -38,6 +42,31 @@ function bundledSlots(): DriverSlot[] {
   }))
 }
 
+function readSavedNickname(): string {
+  try {
+    const raw = localStorage.getItem(NICKNAME_KEY)
+    if (!raw) {
+      return ''
+    }
+    return normalizeNickname(raw)
+  } catch {
+    return ''
+  }
+}
+
+function writeSavedNickname(value: string) {
+  try {
+    const cleaned = normalizeNickname(value)
+    if (!cleaned) {
+      localStorage.removeItem(NICKNAME_KEY)
+      return
+    }
+    localStorage.setItem(NICKNAME_KEY, cleaned)
+  } catch {
+    // Private mode / quota — nickname still works for this session.
+  }
+}
+
 class EntryStore {
   nickname = ''
   entered = false
@@ -47,11 +76,12 @@ class EntryStore {
 
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
+    this.nickname = readSavedNickname()
     this.applySelectedAtlas()
   }
 
   get trimmedNickname(): string {
-    return this.nickname.trim()
+    return normalizeNickname(this.nickname)
   }
 
   get canStart(): boolean {
@@ -103,6 +133,7 @@ class EntryStore {
       return
     }
     this.nickname = this.trimmedNickname
+    writeSavedNickname(this.nickname)
     this.applySelectedAtlas()
     this.entered = true
   }

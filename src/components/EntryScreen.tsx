@@ -3,32 +3,14 @@ import type { CSSProperties, FormEvent, KeyboardEvent } from 'react'
 import { useEffect, useRef } from 'react'
 import { entryPreview, EntryPreviewPipeline } from '../entry/preview'
 import { entryStore, NICKNAME_LIMIT } from '../entry/store'
+import { leaderboardStore } from '../leaderboard/store'
 
 function falLine(): string {
-  const { falStatus, selectedSlot, totalDrivers } = entryStore
-  if (selectedSlot.status === 'generating') {
-    return `Generating ${selectedSlot.driver.name}…`
-  }
-  if (selectedSlot.error) {
-    return selectedSlot.error
-  }
-  if (falStatus === 'missing') {
-    return `Bundled roster · ${totalDrivers} drivers (reroll needs fal.ai key)`
-  }
-  if (falStatus === 'ready') {
-    return `Bundled roster · ${totalDrivers} drivers`
-  }
-  return 'Checking fal.ai…'
+  const { totalDrivers } = entryStore
+  return `Bundled roster · ${totalDrivers} drivers`
 }
 
 function statusClass(): string {
-  const { falStatus, selectedSlot } = entryStore
-  if (selectedSlot.error) {
-    return 'entry-status is-warn'
-  }
-  if (falStatus === 'missing') {
-    return 'entry-status is-warn'
-  }
   return 'entry-status is-ok'
 }
 
@@ -56,10 +38,6 @@ export const EntryScreen = observer(function EntryScreen() {
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
-    void entryStore.checkFal()
-  }, [])
-
-  useEffect(() => {
     const video = videoRef.current
     if (!video) {
       return
@@ -83,7 +61,6 @@ export const EntryScreen = observer(function EntryScreen() {
 
   const selected = selectedSlot.driver
   const previewReady = selectedSlot.status === 'ready' && previewAtlasUrl
-  const previewBusy = selectedSlot.status === 'generating'
 
   return (
     <div className="entry-screen">
@@ -171,7 +148,6 @@ export const EntryScreen = observer(function EntryScreen() {
             maxLength={NICKNAME_LIMIT}
             placeholder="Your name"
             value={nickname}
-            disabled={previewBusy}
             onChange={(event) => {
               entryStore.setNickname(event.target.value)
             }}
@@ -181,19 +157,6 @@ export const EntryScreen = observer(function EntryScreen() {
 
         <div className="entry-actions">
           <button
-            type="button"
-            className="entry-btn entry-btn-ghost"
-            disabled={
-              entryStore.falStatus !== 'ready' ||
-              selectedSlot.status === 'generating'
-            }
-            onClick={() => {
-              void entryStore.regenerateSelected()
-            }}
-          >
-            {selectedSlot.status === 'generating' ? 'Generating' : 'Reroll'}
-          </button>
-          <button
             type="submit"
             className="entry-btn entry-btn-start"
             disabled={!canStart}
@@ -201,6 +164,16 @@ export const EntryScreen = observer(function EntryScreen() {
             Start
           </button>
         </div>
+
+        <button
+          type="button"
+          className="entry-btn entry-btn-ghost"
+          onClick={() => {
+            leaderboardStore.toggle()
+          }}
+        >
+          Leaderboard
+        </button>
 
         <p className={statusClass()} role="status">
           {falLine()}
