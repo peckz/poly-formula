@@ -212,18 +212,7 @@ body,
   color: #999;
 }
 
-.race-hud-brake {
-  padding: 4px 0;
-  color: #fff;
-  background: #d0181c;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-align: center;
-  animation: race-hud-brake-pulse 0.4s steps(2, jump-none) infinite;
-}
-
-.race-hud-assist {
+.race-hud-slowing {
   padding: 4px 0;
   color: #111;
   background: #ffb347;
@@ -233,26 +222,27 @@ body,
   text-align: center;
 }
 
-@keyframes race-hud-brake-pulse {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0.55;
-  }
+.race-hud-attack {
+  padding: 4px 0;
+  color: #fff;
+  background: #2a7dff;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-align: center;
 }
 
-.race-hud-pedal {
+.race-hud-boost {
   height: 6px;
   margin-top: 8px;
   background: #2a2a2a;
   overflow: hidden;
 }
 
-.race-hud-pedal-fill {
+.race-hud-boost-fill {
   height: 100%;
-  background: #d0181c;
-  transition: width 60ms linear;
+  background: linear-gradient(90deg, #2a7dff, #7dff9a);
+  transition: width 80ms linear;
 }
 
 .game-overlay {

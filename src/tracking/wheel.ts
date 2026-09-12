@@ -14,20 +14,14 @@ const STEER_DEAD = 2
 const STEER_FULL = 32
 // Response curve: precise near center, quicker toward full lock.
 const STEER_EXPO = 1.35
-// Brake gesture: pulling the hands back toward the body moves them away
-// from the webcam, so they look smaller. Brake ramps from PULL_START to
-// PULL_FULL shrink of apparent hand size relative to the calibrated grip.
-const BRAKE_PULL_START = 0.06
-const BRAKE_PULL_FULL = 0.2
-const BRAKE_SMOOTH = 0.4
-// Pushing the hands forward of neutral is an explicit "go": the brake
-// releases instantly instead of easing off, so launches feel immediate.
-const BRAKE_PUSH_RELEASE = -0.02
-// Below this the smoothed brake snaps to zero so it never sits on the
-// throttle gate after a release.
-const BRAKE_SNAP = 0.04
+// Longitudinal gesture: pull hands back (smaller on camera) = cautious,
+// push forward (larger) = attack. Deadzone keeps idle hands neutral.
+const LONG_DEAD = 0.05
+const LONG_FULL = 0.2
+const LONG_SMOOTH = 0.4
+const LONG_SNAP = 0.04
 // Slow drift correction so slouching closer/further does not become a
-// phantom brake over time.
+// phantom aggression over time.
 const SIZE_ADAPT = 0.008
 
 export type HandPair = {
@@ -43,8 +37,11 @@ export type WheelFrame = HandPair & {
   held: boolean
   grabbing: boolean
   steering: number
-  /** 0..1, driven by pulling the hands back toward the body. */
-  brake: number
+  /**
+   * -1..1 longitudinal aggression: negative = pull-back (cautious),
+   * positive = push-forward (attack).
+   */
+  longitudinal: number
 }
 
 function wrapAngle(value: number) {
@@ -150,6 +147,19 @@ export function steeringValue(angle: number, neutral: number) {
   return Math.sign(degrees) * Math.pow(linear, STEER_EXPO)
 }
 
+/** Map size-relative pull (+ shrink) / push (− grow) into −1..1 aggression. */
+export function longitudinalValue(pull: number) {
+  if (Math.abs(pull) <= LONG_DEAD) {
+    return 0
+  }
+  const signed = -Math.sign(pull) // push (negative pull) → positive aggression
+  const magnitude = Math.min(
+    1,
+    Math.max(0, (Math.abs(pull) - LONG_DEAD) / (LONG_FULL - LONG_DEAD)),
+  )
+  return signed * magnitude
+}
+
 const idleWheel = (): WheelFrame => ({
   held: false,
   grabbing: false,
@@ -159,13 +169,13 @@ const idleWheel = (): WheelFrame => ({
   angle: 0,
   size: 0,
   steering: 0,
-  brake: 0,
+  longitudinal: 0,
 })
 
 export class WheelTracker {
   private visual: HandPair | null = null
   private steering = 0
-  private brake = 0
+  private longitudinal = 0
   private neutral: number | null = null
   private neutralSize = 0
   private gripAngle: number | null = null
@@ -211,27 +221,18 @@ export class WheelTracker {
       this.neutral === null ? 0 : steeringValue(pair.angle, this.neutral)
     this.steering += STEER_SMOOTH * (target - this.steering)
 
-    let brakeTarget = 0
-    let pushRelease = false
+    let longTarget = 0
     if (this.neutral !== null && this.neutralSize > 0) {
-      // Positive when hands shrink, i.e. move back away from the camera.
+      // Positive when hands shrink (pull back away from the camera).
       const pull = 1 - pair.size / this.neutralSize
-      if (Math.abs(pull) < BRAKE_PULL_START * 0.5) {
+      if (Math.abs(pull) < LONG_DEAD * 0.5) {
         this.neutralSize += SIZE_ADAPT * (pair.size - this.neutralSize)
       }
-      pushRelease = pull <= BRAKE_PUSH_RELEASE
-      brakeTarget = Math.min(
-        1,
-        Math.max(0, (pull - BRAKE_PULL_START) / (BRAKE_PULL_FULL - BRAKE_PULL_START)),
-      )
+      longTarget = longitudinalValue(pull)
     }
-    if (pushRelease) {
-      this.brake = 0
-    } else {
-      this.brake += BRAKE_SMOOTH * (brakeTarget - this.brake)
-      if (brakeTarget === 0 && this.brake < BRAKE_SNAP) {
-        this.brake = 0
-      }
+    this.longitudinal += LONG_SMOOTH * (longTarget - this.longitudinal)
+    if (longTarget === 0 && Math.abs(this.longitudinal) < LONG_SNAP) {
+      this.longitudinal = 0
     }
 
     return {
@@ -239,14 +240,14 @@ export class WheelTracker {
       grabbing: this.neutral === null,
       ...this.visual,
       steering: this.steering,
-      brake: this.brake,
+      longitudinal: this.longitudinal,
     }
   }
 
   reset() {
     this.visual = null
     this.steering = 0
-    this.brake = 0
+    this.longitudinal = 0
     this.neutral = null
     this.neutralSize = 0
     this.gripAngle = null
@@ -260,7 +261,7 @@ export class WheelTracker {
     }
 
     this.steering += STEER_SMOOTH * (0 - this.steering)
-    this.brake += BRAKE_SMOOTH * (0 - this.brake)
+    this.longitudinal += LONG_SMOOTH * (0 - this.longitudinal)
     if (now - this.lostAt > LOST_CLEAR_MS) {
       this.neutral = null
       this.neutralSize = 0
@@ -277,7 +278,7 @@ export class WheelTracker {
       grabbing: false,
       ...this.visual,
       steering: this.steering,
-      brake: this.brake,
+      longitudinal: this.longitudinal,
     }
   }
 }

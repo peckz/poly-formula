@@ -99,7 +99,7 @@ export const TrackingHud = observer(function TrackingHud() {
           </span>
         </h2>
         <p>steer {fmt(wheel.steering)}</p>
-        <p>brake {fmt(wheel.brake)}</p>
+        <p>long {fmt(wheel.longitudinal)}</p>
       </section>
     </aside>
   )

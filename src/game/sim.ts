@@ -8,14 +8,18 @@ export type SimControls = {
   brake: number
   /** -1..1, positive = left */
   steer: number
+  /** 0..1 extra thrust while spending boost (can exceed the drag balance). */
+  boost?: number
 }
 
-const MAX_SPEED = 92 // m/s, ~330 km/h
-const ENGINE = 26 // m/s^2 at low speed
+export const MAX_SPEED = 92 // m/s, ~330 km/h
+export const ENGINE = 26 // m/s^2 at low speed
+export const BRAKE_DECEL = 46
 const DRAG = ENGINE / (MAX_SPEED * MAX_SPEED) // balances engine at top speed
 const ROLLING = 1.4
 const OFF_TRACK_DRAG = 14
-const BRAKE_DECEL = 46
+/** Lateral grip for yaw — above ENVELOPE_LAT_ACCEL so corners stay makeable. */
+const YAW_LAT = 55
 const SPAWN_S = monzaPath.length - 60 // on the grid, just before the line
 
 function clamp(value: number, min: number, max: number) {
@@ -66,10 +70,13 @@ export class CarSim {
 
   step(dt: number, controls: SimControls) {
     const target = clamp(controls.steer, -1, 1)
-    this.steer += (target - this.steer) * Math.min(1, dt * 9)
+    this.steer += (target - this.steer) * Math.min(1, dt * 12)
 
     // Forward-only: brakes bring the car to a stop, never into reverse.
     let force = controls.throttle * ENGINE * (this.offTrack ? 0.35 : 1)
+    if ((controls.boost ?? 0) > 0 && !this.offTrack) {
+      force += controls.boost! * ENGINE * 0.4
+    }
     if (controls.brake > 0 && this.speed > 0) {
       force -= BRAKE_DECEL * controls.brake
     }
@@ -78,12 +85,12 @@ export class CarSim {
       force -= this.offTrack ? OFF_TRACK_DRAG : ROLLING
     }
 
-    this.speed = clamp(this.speed + force * dt, 0, MAX_SPEED)
+    this.speed = clamp(this.speed + force * dt, 0, MAX_SPEED * 1.15)
 
     // Grip-limited yaw: quick at parking speed, gentle at 300 km/h.
     const yawRate =
       this.steer *
-      Math.min(1.6, 30 / Math.max(this.speed, 2)) *
+      Math.min(1.8, YAW_LAT / Math.max(this.speed, 2)) *
       Math.min(1, this.speed / 4)
     this.heading += yawRate * dt
 

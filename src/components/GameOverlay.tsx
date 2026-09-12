@@ -23,7 +23,8 @@ export const GameOverlay = observer(function GameOverlay() {
         <p className="game-overlay-title">{title}</p>
         <p className="game-overlay-line">{line}</p>
         <p className="game-overlay-hint">
-          auto gas · pull hands back to brake · twist to steer
+          just steer · gas and brake are automatic · ride the green line for
+          boost
         </p>
       </div>
     </div>

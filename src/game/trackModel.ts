@@ -1,10 +1,6 @@
 import * as THREE from 'three'
-import {
-  BRAKE_DECEL,
-  ENGINE_ACCEL,
-  LAT_ACCEL,
-  MAX_SPEED,
-} from './brakingAid'
+import { ENVELOPE_LAT_ACCEL } from './driveAssist'
+import { BRAKE_DECEL, ENGINE, MAX_SPEED } from './sim'
 import type { LinePoint } from './racingLine'
 import { computeRacingLine, computeSpeedProfile } from './racingLine'
 import { buildScenery } from './scenery'
@@ -345,9 +341,9 @@ function racingLineTrail(path: TrackPath): RacingLineHandle {
   const line = computeRacingLine(path, ROAD_HALF_WIDTH - 1.6)
   const profile = computeSpeedProfile(
     line,
-    LAT_ACCEL,
+    ENVELOPE_LAT_ACCEL,
     BRAKE_DECEL,
-    ENGINE_ACCEL,
+    ENGINE,
     MAX_SPEED,
   )
 

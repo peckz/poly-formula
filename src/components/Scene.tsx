@@ -1,10 +1,14 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { buildCar } from '../game/carModel'
+import {
+  allowedSpeed,
+  buildSpeedEnvelope,
+  speedControls,
+} from '../game/driveAssist'
 import { Keyboard } from '../game/input'
 import { CarSim } from '../game/sim'
 import { raceStore } from '../game/store'
-import { assistBrake, brakingAdvice } from '../game/brakingAid'
 import { buildTrack } from '../game/trackModel'
 import { monzaPath } from '../game/trackPath'
 import { trackingStore } from '../tracking/store'
@@ -12,8 +16,6 @@ import { trackingStore } from '../tracking/store'
 const SKY = 0xa9c3e0
 // Flip if the hand wheel steers the wrong way.
 const WHEEL_STEER_SIGN = -1
-// Auto gas while the wheel is held; braking is the pull-back gesture.
-const WHEEL_AUTO_THROTTLE = 1
 // Hands must be gone this long before the game pauses, so a single
 // dropped tracking frame does not stutter the race.
 const PAUSE_GRACE_MS = 400
@@ -23,6 +25,11 @@ const STUCK_MS = 2000
 const STUCK_SPEED = 3
 const LOST_DIST = 40
 const RECOVER_SPEED = 12
+// Boost charges while riding the green ghost line; auto-spends for pace.
+const BOOST_LINE_M = 1.8
+const BOOST_CHARGE_S = 5
+const BOOST_DRAIN_S = 4
+const BOOST_AUTO_MIN = 0.2
 
 function gearFor(speedKmh: number): string {
   if (speedKmh < 1) {
@@ -61,6 +68,7 @@ export function Scene() {
     scene.add(car.group)
 
     const sim = new CarSim()
+    const envelope = buildSpeedEnvelope(monzaPath)
     const keyboard = new Keyboard()
     keyboard.attach()
 
@@ -84,6 +92,7 @@ export function Scene() {
     let wheelDriven = false
     let handsLostAt = 0
     let stuckSince = 0
+    let boost = 0
 
     const animate = (now: number) => {
       frame = requestAnimationFrame(animate)
@@ -121,28 +130,47 @@ export function Scene() {
       let steer = keyboard.steer
       let throttle = keyboard.throttle
       let brake = keyboard.brake
+      let slowing = false
+      let attacking = false
 
       if (usingWheel && steer === 0) {
         steer = WHEEL_STEER_SIGN * wheel.steering
       }
-      // Auto gas plus a safety-net brake: the assist only takes over at
-      // the last makeable braking point, so player braking still pays.
-      let assistOn = false
-      if (usingWheel && throttle === 0 && brake === 0) {
-        const assist = assistBrake(sim.s, sim.speed)
-        assistOn = assist > wheel.brake && assist > 0.05
-        brake = Math.max(wheel.brake, assist)
-        throttle = brake > 0.02 ? 0 : WHEEL_AUTO_THROTTLE
+
+      // Wheel mode: pedals are fully automatic. Hands only steer.
+      // Boost auto-spends whenever the meter has charge and we are not
+      // mid-braking for a corner.
+      if (usingWheel && !keysActive) {
+        const spending = boost >= BOOST_AUTO_MIN
+        const allowed = allowedSpeed({
+          envelope,
+          path: monzaPath,
+          s: sim.s,
+          distFromCenter: sim.distFromCenter,
+          boost: spending ? boost : 0,
+        })
+        const pedals = speedControls({
+          speed: sim.speed,
+          allowed,
+          offTrack: sim.offTrack,
+        })
+        throttle = pedals.throttle
+        brake = pedals.brake
+        slowing = brake > 0.12
+        attacking = spending && !slowing
       }
 
       if (keyboard.reset && !resetHeld) {
         sim.resetToTrack()
         cameraReady = false
+        boost = 0
       }
       resetHeld = keyboard.reset
 
       if (phase === 'running') {
-        sim.step(dt, { throttle, brake, steer })
+        const boostThrust =
+          usingWheel && attacking ? Math.min(1, boost * 1.2) : 0
+        sim.step(dt, { throttle, brake, steer, boost: boostThrust })
 
         // Never leave the player beached: crawling off track (or fully
         // lost in the scenery) rolls the car back onto the centerline.
@@ -189,26 +217,35 @@ export function Scene() {
       cameraTarget.set(sim.x, 1.1, sim.z).addScaledVector(back, -6)
       camera.lookAt(cameraTarget)
 
-      // Racing line glows brighter while you are actually riding it.
+      // Racing line glow + boost charge while riding it.
       const linePoint = track.racingLine.points[monzaPath.indexAt(sim.s)]
       const distToLine = Math.hypot(sim.x - linePoint.x, sim.z - linePoint.z)
-      const lineOpacity = distToLine < 1.3 ? 0.95 : 0.5
+      const onLine = distToLine < BOOST_LINE_M
+      const lineOpacity = onLine ? 0.95 : 0.5
       track.racingLine.material.opacity +=
         (lineOpacity - track.racingLine.material.opacity) * Math.min(1, dt * 8)
 
+      if (phase === 'running' && usingWheel) {
+        if (attacking) {
+          boost = Math.max(0, boost - dt / BOOST_DRAIN_S)
+        } else if (onLine && !sim.offTrack) {
+          boost = Math.min(1, boost + dt / BOOST_CHARGE_S)
+        }
+      }
+
       const speedKmh = Math.round(Math.abs(sim.speed) * 3.6)
-      const advice = brakingAdvice(sim.s, sim.speed)
+      const { corner, distance } = monzaPath.nextCorner(sim.s)
       raceStore.update({
         speedKmh,
         gear: gearFor(speedKmh),
         lap: Math.max(1, sim.lap),
         steerSource: usingWheel ? 'wheel' : 'keys',
         offTrack: sim.offTrack,
-        cornerName: advice.corner.name,
-        cornerDistM: Math.round(advice.distance / 10) * 10,
-        cornerTargetKmh: Math.round((advice.targetSpeed * 3.6) / 5) * 5,
-        brakeNow: advice.brakeNow,
-        assistOn,
+        cornerName: corner.name,
+        cornerDistM: Math.round(distance / 10) * 10,
+        slowing,
+        attacking,
+        boost,
         carX: Math.round(sim.x / 4) * 4,
         carZ: Math.round(sim.z / 4) * 4,
       })

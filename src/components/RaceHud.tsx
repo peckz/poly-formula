@@ -1,7 +1,6 @@
 import { observer } from 'mobx-react-lite'
 import { raceStore } from '../game/store'
 import { monzaPath } from '../game/trackPath'
-import { trackingStore } from '../tracking/store'
 
 const MAP_PAD = 60
 
@@ -38,9 +37,9 @@ export const RaceHud = observer(function RaceHud() {
     offTrack,
     cornerName,
     cornerDistM,
-    cornerTargetKmh,
-    brakeNow,
-    assistOn,
+    slowing,
+    attacking,
+    boost,
     carX,
     carZ,
   } = raceStore
@@ -61,10 +60,10 @@ export const RaceHud = observer(function RaceHud() {
         />
         <circle cx={carX} cy={carZ} r="34" fill="#ff2a2a" />
       </svg>
-      {assistOn ? (
-        <p className="race-hud-assist">AUTO BRAKE</p>
-      ) : brakeNow ? (
-        <p className="race-hud-brake">BRAKE</p>
+      {attacking ? (
+        <p className="race-hud-attack">BOOST</p>
+      ) : slowing ? (
+        <p className="race-hud-slowing">SLOWING</p>
       ) : null}
       <p className="race-hud-speed">
         {speedKmh}
@@ -77,14 +76,11 @@ export const RaceHud = observer(function RaceHud() {
       <p className="race-hud-corner">
         {cornerName} <span>{cornerDistM}m</span>
       </p>
-      <p className="race-hud-corner">
-        take at <span>~{cornerTargetKmh} km/h</span>
-      </p>
       {steerSource === 'wheel' ? (
-        <div className="race-hud-pedal" aria-label="brake input">
+        <div className="race-hud-boost" aria-label="boost">
           <div
-            className="race-hud-pedal-fill"
-            style={{ width: `${Math.round(trackingStore.wheel.brake * 100)}%` }}
+            className="race-hud-boost-fill"
+            style={{ width: `${Math.round(boost * 100)}%` }}
           />
         </div>
       ) : null}
