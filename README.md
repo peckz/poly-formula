@@ -25,7 +25,9 @@ The camera loop does not go through React. It writes numbers into a store once p
 Real circuits come in as data files, researched separately (possibly by other agents) and consumed by the game as-is.
 
 - [`docs/track-format.md`](docs/track-format.md) — the shared standard: coordinate system, arc-length convention, JSON schema, acceptance checklist. Any track research must deliver this format.
-- Track files live in `src/tracks/<slug>.json`, research notes in `docs/research/<slug>-notes.md`.
+- [`docs/scenery-format.md`](docs/scenery-format.md) — companion standard for the surroundings: grandstands, pits, forest, the old banking, as footprints in the same frame.
+- [`docs/research/monza-scenery-prompt.md`](docs/research/monza-scenery-prompt.md) — ready-to-share prompt for researching Monza's real surroundings (OSM footprints, aerial verification).
+- Track files live in `src/tracks/<slug>.json`, scenery in `src/tracks/<slug>.scenery.json`, research notes in `docs/research/`.
 - `src/game/trackPath.ts` loads a track file and answers geometry questions (sample at arc length, nearest point, next corner); `src/game/trackModel.ts` builds the meshes from it.
 
 ## Now
