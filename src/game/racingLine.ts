@@ -1,3 +1,4 @@
+import racingLineData from '../tracks/monza.racingline.json' with { type: 'json' }
 import type { TrackPath } from './trackPath'
 
 export type LinePoint = {
@@ -5,12 +6,107 @@ export type LinePoint = {
   z: number
 }
 
+export type RacingLineSample = LinePoint & {
+  s: number
+  offsetM: number
+  onKerb?: boolean
+  phase?: string
+}
+
+type RawSample = {
+  s: number
+  offsetM: number
+  x: number
+  z: number
+  onKerb?: boolean
+  phase?: string
+}
+
+function wrapS(value: number, length: number) {
+  return ((value % length) + length) % length
+}
+
 /**
- * Minimum-curvature racing line, approximated with an elastic band:
- * each point carries a lateral offset from the centerline, repeatedly
- * pulled toward the midpoint of its neighbors (which straightens the
- * path and cuts apexes) while clamped to the road width. No external
- * data needed — it derives from the centerline.
+ * Sourced F1 racing line (Norris 2024 pole geometry), closed and ordered
+ * by arc length. Drops a duplicate closing sample when present.
+ */
+export function loadSourcedRacingLine(
+  lengthM = (racingLineData.samples as RawSample[]).at(-1)?.s ?? 5793.4,
+): RacingLineSample[] {
+  const raw = racingLineData.samples as RawSample[]
+  if (raw.length < 2) {
+    return []
+  }
+
+  const out: RacingLineSample[] = raw.map((sample) => ({
+    s: sample.s,
+    offsetM: sample.offsetM,
+    x: sample.x,
+    z: sample.z,
+    onKerb: sample.onKerb,
+    phase: sample.phase,
+  }))
+
+  // polylineStrip treats the array as a closed loop — drop the S/F twin.
+  const first = out[0]
+  const last = out[out.length - 1]
+  if (
+    Math.hypot(first.x - last.x, first.z - last.z) < 0.5 &&
+    (last.s >= lengthM - 1 || Math.abs(last.s - first.s) > lengthM * 0.5)
+  ) {
+    out.pop()
+  }
+  return out
+}
+
+/**
+ * Interpolate the sourced line at arc length s (wrapped).
+ */
+export function sampleRacingLineAt(
+  line: RacingLineSample[],
+  s: number,
+  lengthM: number,
+): LinePoint {
+  const n = line.length
+  if (n === 0) {
+    return { x: 0, z: 0 }
+  }
+  if (n === 1) {
+    return { x: line[0].x, z: line[0].z }
+  }
+
+  const target = wrapS(s, lengthM)
+  let lo = 0
+  let hi = n - 1
+  while (lo < hi) {
+    const mid = (lo + hi + 1) >> 1
+    if (line[mid].s <= target) {
+      lo = mid
+    } else {
+      hi = mid - 1
+    }
+  }
+
+  const a = line[lo]
+  const b = line[(lo + 1) % n]
+  let span = b.s - a.s
+  let along = target - a.s
+  if (span <= 0) {
+    span += lengthM
+    if (along < 0) {
+      along += lengthM
+    }
+  }
+  const t = span > 0.001 ? Math.min(1, Math.max(0, along / span)) : 0
+  return {
+    x: a.x + (b.x - a.x) * t,
+    z: a.z + (b.z - a.z) * t,
+  }
+}
+
+/**
+ * Minimum-curvature racing line fallback (elastic band). Prefer
+ * {@link loadSourcedRacingLine} when monza.racingline.json is present.
  */
 export function computeRacingLine(
   path: TrackPath,
@@ -97,7 +193,6 @@ export function computeSpeedProfile(
     const next = line[(i + 1) % n]
     ds.push(Math.hypot(next.x - line[i].x, next.z - line[i].z))
 
-    // Curvature from the angle between adjacent chords.
     const ax = line[i].x - prev.x
     const az = line[i].z - prev.z
     const bx = next.x - line[i].x
@@ -116,7 +211,6 @@ export function computeSpeedProfile(
     )
   }
 
-  // Smooth the grip cap a little; chord curvature is noisy.
   const smoothed = speeds.map((_, i) => {
     let sum = 0
     for (let k = -3; k <= 3; k++) {
@@ -128,7 +222,6 @@ export function computeSpeedProfile(
     speeds[i] = smoothed[i]
   }
 
-  // Two loops each so the passes settle across the start/finish wrap.
   for (let pass = 0; pass < 2; pass++) {
     for (let k = 0; k < n; k++) {
       const i = k % n

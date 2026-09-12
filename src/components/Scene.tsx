@@ -218,7 +218,7 @@ export function Scene() {
       camera.lookAt(cameraTarget)
 
       // Racing line glow + boost charge while riding it.
-      const linePoint = track.racingLine.points[monzaPath.indexAt(sim.s)]
+      const linePoint = track.racingLine.sampleAt(sim.s)
       const distToLine = Math.hypot(sim.x - linePoint.x, sim.z - linePoint.z)
       const onLine = distToLine < BOOST_LINE_M
       const lineOpacity = onLine ? 0.95 : 0.5

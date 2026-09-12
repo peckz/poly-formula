@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { sourcedSpeedKmh } from './driveAssist'
-import type { LinePoint } from './racingLine'
-import { computeRacingLine } from './racingLine'
+import type { LinePoint, RacingLineSample } from './racingLine'
+import { loadSourcedRacingLine, sampleRacingLineAt } from './racingLine'
 import { buildBarriers } from './barriers'
 import { buildScenery } from './scenery'
 import type { TrackPath } from './trackPath'
@@ -278,8 +278,10 @@ function polylineStrip(
 export type RacingLineHandle = {
   mesh: THREE.Mesh
   material: THREE.MeshBasicMaterial
-  /** Line point per centerline point index (parallel to path.points). */
-  points: LinePoint[]
+  /** Dense sourced line samples (for draw / debug). */
+  points: RacingLineSample[]
+  /** World position of the racing line at arc length s. */
+  sampleAt: (s: number) => LinePoint
 }
 
 const LINE_GREEN: [number, number, number] = [0.15, 0.85, 0.4]
@@ -333,21 +335,16 @@ function brakingZoneMask(decel: number[]): boolean[] {
 }
 
 /**
- * Ghost racing line: dashed translucent trail hugging the apexes.
- * Green where you can stay on power; solid orange-red across each
- * braking zone — zones come from the sourced F1 speed profile.
+ * Ghost racing line from the sourced F1 file. Green on power; solid
+ * orange-red across braking zones from the sourced speed profile.
  */
 function racingLineTrail(path: TrackPath): RacingLineHandle {
-  const line = computeRacingLine(path, ROAD_HALF_WIDTH - 1.6)
+  const samples = loadSourcedRacingLine(path.length)
+  const line: LinePoint[] = samples.map((p) => ({ x: p.x, z: p.z }))
 
-  // Map each racing-line point to the sourced centreline speed (m/s).
-  const speeds = new Float64Array(line.length)
-  for (let i = 0; i < line.length; i++) {
-    const s = path.nearest(line[i].x, line[i].z).s
-    speeds[i] = sourcedSpeedKmh(s, path.length) / 3.6
-  }
+  // Sourced centreline speed (m/s) at each racing-line sample's s.
+  const speeds = samples.map((p) => sourcedSpeedKmh(p.s, path.length) / 3.6)
 
-  // Deceleration along the ghost polyline (positive = braking).
   const decel: number[] = []
   for (let i = 0; i < line.length; i++) {
     const a = line[i]
@@ -362,8 +359,6 @@ function racingLineTrail(path: TrackPath): RacingLineHandle {
     braking ? LINE_BRAKE : LINE_GREEN,
   )
 
-  // Dashes come from the geometry itself (skipped quads) — no texture,
-  // no winding sensitivity, drawn after everything else.
   const material = new THREE.MeshBasicMaterial({
     vertexColors: true,
     transparent: true,
@@ -373,7 +368,12 @@ function racingLineTrail(path: TrackPath): RacingLineHandle {
   })
   const mesh = polylineStrip(line, 0.55, 0.06, material, colors, 4)
   mesh.renderOrder = 2
-  return { mesh, material, points: line }
+  return {
+    mesh,
+    material,
+    points: samples,
+    sampleAt: (s) => sampleRacingLineAt(samples, s, path.length),
+  }
 }
 
 export type BuiltTrack = {
