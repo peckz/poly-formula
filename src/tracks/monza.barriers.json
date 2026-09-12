@@ -1,0 +1,2247 @@
+{
+  "formatVersion": 1,
+  "trackId": "monza",
+  "name": "Autodromo Nazionale di Monza \u2014 barriers",
+  "units": "m",
+  "frame": {
+    "groundAxes": [
+      "x",
+      "z"
+    ],
+    "up": "y",
+    "origin": "startFinishCenter",
+    "racingDirectionAtOrigin": [
+      0,
+      0,
+      -1
+    ],
+    "xPositive": "driverRight"
+  },
+  "controlPoints": [
+    {
+      "id": "start-finish",
+      "name": "Start/finish centreline",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "wgs84": {
+        "lat": 45.6189632,
+        "lon": 9.2811729
+      },
+      "osmNodeId": 1828499259,
+      "errorVsTrackM": 0.0
+    },
+    {
+      "id": "t1-apex",
+      "name": "Variante del Rettifilo apex",
+      "s": 622.279,
+      "x": -15.999,
+      "y": 0.0,
+      "z": -621.625,
+      "errorVsTrackM": 0.0,
+      "notes": "Copied from src/tracks/monza.json centreline sample at s=622.279 (x=-15.999, z=-621.625). Independent OSM way 179968242 vertex projects to (-15.999405, -621.625197), residual 0.0005 m."
+    }
+  ],
+  "source": {
+    "kind": "openstreetmap+published",
+    "license": "ODbL",
+    "trackFile": "src/tracks/monza.json",
+    "sceneryFile": "src/tracks/monza.scenery.json",
+    "retrievedAt": "2026-09-12T13:02:33Z",
+    "overpassTimestampOsmBase": "2026-07-24T11:04:51Z",
+    "overpassEndpoint": "https://overpass.kumi.systems/api/interpreter",
+    "bboxWgs84": [
+      45.605,
+      9.27,
+      45.635,
+      9.3
+    ],
+    "transform": {
+      "originWgs84": {
+        "lat": 45.6189632,
+        "lon": 9.2811729
+      },
+      "ellipsoid": {
+        "a": 6378137.0,
+        "f": 0.0033528106647474805
+      },
+      "headingEnu": {
+        "east": 0.120807,
+        "north": 0.992676
+      },
+      "headingDegEastOfNorth": 6.9387,
+      "headingSource": "published-notes"
+    },
+    "attribution": "\u00a9 OpenStreetMap contributors, ODbL. Barrier types at corners from FIA / monzanet / TEC PRO / GPToday citations. Commercial aerial/video not traced."
+  },
+  "metrics": {
+    "featureCount": 88,
+    "byKind": {
+      "concrete-wall": 5,
+      "debris-fence": 15,
+      "gravel-trap": 11,
+      "guardrail": 40,
+      "spectator-fence": 6,
+      "tecpro": 5,
+      "tyre-barrier": 5,
+      "wall": 1
+    },
+    "controlPointErrorsM": {
+      "start-finish": 0.0,
+      "t1-apex": 0.0,
+      "t1OsmChordResidualM": 0.0005
+    },
+    "clearanceMinM": 7.0,
+    "clearanceMinFeatureId": "gravel-trap-rettifilo-cut-strip-right",
+    "halfWidthClearanceM": 6.7,
+    "coverageGapsOver50m": {
+      "left": [],
+      "right": []
+    },
+    "geometryKeys": {
+      "alongTrack": 75,
+      "polyline": 13,
+      "polygon": 0
+    }
+  },
+  "features": [
+    {
+      "id": "guardrail-osm-243090151-pit-straight-left",
+      "kind": "guardrail",
+      "polyline": [
+        {
+          "x": -11.278,
+          "z": -2.479
+        },
+        {
+          "x": -10.247,
+          "z": -5.762
+        },
+        {
+          "x": -10.719,
+          "z": -35.722
+        },
+        {
+          "x": -12.353,
+          "z": -128.296
+        },
+        {
+          "x": -13.253,
+          "z": -172.681
+        }
+      ],
+      "source": {
+        "kind": "openstreetmap",
+        "license": "ODbL",
+        "osmType": "way",
+        "osmId": 243090151,
+        "approxSRangeM": [
+          2.5,
+          173.1
+        ]
+      },
+      "notes": "OSM barrier=guard_rail. Vertex offsets 9.8\u201311.3 m, side left. Approx s 2\u2013173 m (wraps S/F if max<min on pit-exit piece).",
+      "heightM": 0.8,
+      "heightEstimated": true,
+      "widthM": 0.4,
+      "widthEstimated": true
+    },
+    {
+      "id": "guardrail-osm-243090145-pit-straight-left",
+      "kind": "guardrail",
+      "polyline": [
+        {
+          "x": -17.49,
+          "z": -172.513
+        },
+        {
+          "x": -15.059,
+          "z": -237.042
+        },
+        {
+          "x": -16.193,
+          "z": -264.179
+        }
+      ],
+      "source": {
+        "kind": "openstreetmap",
+        "license": "ODbL",
+        "osmType": "way",
+        "osmId": 243090145,
+        "approxSRangeM": [
+          173.0,
+          264.6
+        ]
+      },
+      "notes": "OSM barrier=guard_rail. Vertex offsets 9.5\u201314.0 m, side left. Approx s 173\u2013265 m (wraps S/F if max<min on pit-exit piece).",
+      "heightM": 0.8,
+      "heightEstimated": true,
+      "widthM": 0.4,
+      "widthEstimated": true
+    },
+    {
+      "id": "guardrail-osm-243090146-pit-exit-left",
+      "kind": "guardrail",
+      "polyline": [
+        {
+          "x": -10.492,
+          "z": 152.473
+        },
+        {
+          "x": -8.746,
+          "z": 124.269
+        },
+        {
+          "x": -7.726,
+          "z": 98.371
+        },
+        {
+          "x": -9.67,
+          "z": -1.857
+        }
+      ],
+      "source": {
+        "kind": "openstreetmap",
+        "license": "ODbL",
+        "osmType": "way",
+        "osmId": 243090146,
+        "approxSRangeM": [
+          1.9,
+          5695.2
+        ]
+      },
+      "notes": "OSM barrier=guard_rail. Vertex offsets 9.6\u201313.4 m, side left. Approx s 2\u20135695 m (wraps S/F if max<min on pit-exit piece).",
+      "heightM": 0.8,
+      "heightEstimated": true,
+      "widthM": 0.4,
+      "widthEstimated": true
+    },
+    {
+      "id": "guardrail-osm-243090144-laterale-destra-left",
+      "kind": "guardrail",
+      "polyline": [
+        {
+          "x": -9.172,
+          "z": 258.555
+        },
+        {
+          "x": -5.53,
+          "z": 227.792
+        },
+        {
+          "x": -6.644,
+          "z": 152.005
+        }
+      ],
+      "source": {
+        "kind": "openstreetmap",
+        "license": "ODbL",
+        "osmType": "way",
+        "osmId": 243090144,
+        "approxSRangeM": [
+          5535.1,
+          5641.6
+        ]
+      },
+      "notes": "OSM barrier=guard_rail. Vertex offsets 9.6\u201314.1 m, side left. Approx s 5535\u20135642 m (wraps S/F if max<min on pit-exit piece).",
+      "heightM": 0.8,
+      "heightEstimated": true,
+      "widthM": 0.4,
+      "widthEstimated": true
+    },
+    {
+      "id": "guardrail-osm-243090139-parabolica-exit-left",
+      "kind": "guardrail",
+      "polyline": [
+        {
+          "x": -3.964,
+          "z": 307.286
+        },
+        {
+          "x": -4.977,
+          "z": 257.316
+        }
+      ],
+      "source": {
+        "kind": "openstreetmap",
+        "license": "ODbL",
+        "osmType": "way",
+        "osmId": 243090139,
+        "approxSRangeM": [
+          5486.3,
+          5536.3
+        ]
+      },
+      "notes": "OSM barrier=guard_rail. Vertex offsets 9.9\u20139.9 m, side left. Approx s 5486\u20135536 m (wraps S/F if max<min on pit-exit piece).",
+      "heightM": 0.8,
+      "heightEstimated": true,
+      "widthM": 0.4,
+      "widthEstimated": true
+    },
+    {
+      "id": "guardrail-osm-243090143-parabolica-exit-left",
+      "kind": "guardrail",
+      "polyline": [
+        {
+          "x": -3.134,
+          "z": 518.796
+        },
+        {
+          "x": -3.495,
+          "z": 329.028
+        },
+        {
+          "x": -3.985,
+          "z": 313.054
+        }
+      ],
+      "source": {
+        "kind": "openstreetmap",
+        "license": "ODbL",
+        "osmType": "way",
+        "osmId": 243090143,
+        "approxSRangeM": [
+          5277.6,
+          5480.6
+        ]
+      },
+      "notes": "OSM barrier=guard_rail. Vertex offsets 10.0\u201329.5 m, side left. Approx s 5278\u20135481 m (wraps S/F if max<min on pit-exit piece).",
+      "heightM": 0.8,
+      "heightEstimated": true,
+      "widthM": 0.4,
+      "widthEstimated": true
+    },
+    {
+      "id": "spectator-fence-osm-1304624805-lesmo-serraglio-left",
+      "kind": "spectator-fence",
+      "polyline": [
+        {
+          "x": 1108.193,
+          "z": -1124.739
+        },
+        {
+          "x": 971.85,
+          "z": -1071.865
+        },
+        {
+          "x": 951.196,
+          "z": -1070.905
+        },
+        {
+          "x": 822.394,
+          "z": -977.47
+        },
+        {
+          "x": 779.059,
+          "z": -951.689
+        },
+        {
+          "x": 734.867,
+          "z": -906.77
+        },
+        {
+          "x": 573.315,
+          "z": -713.487
+        },
+        {
+          "x": 567.329,
+          "z": -711.683
+        },
+        {
+          "x": 563.905,
+          "z": -714.636
+        },
+        {
+          "x": 560.666,
+          "z": -710.726
+        }
+      ],
+      "source": {
+        "kind": "openstreetmap",
+        "license": "ODbL",
+        "osmType": "way",
+        "osmId": 1304624805,
+        "approxSRangeM": [
+          2598.2,
+          3292.1
+        ],
+        "osmTags": {
+          "barrier": "fence",
+          "fence_type": "chain_link",
+          "material": "metal"
+        }
+      },
+      "notes": "Chain-link park fence, Lesmo 2 \u2192 Serraglio / oval underpass (outside, driver-left). Approx s 2598\u20133292 m.",
+      "heightM": 2.0,
+      "heightEstimated": true,
+      "widthM": 0.2,
+      "widthEstimated": true
+    },
+    {
+      "id": "spectator-fence-osm-1409146330-parabolica-exit-left",
+      "kind": "spectator-fence",
+      "polyline": [
+        {
+          "x": -12.651,
+          "z": 360.193
+        },
+        {
+          "x": -12.753,
+          "z": 328.688
+        },
+        {
+          "x": -15.092,
+          "z": 321.997
+        },
+        {
+          "x": -28.979,
+          "z": 312.994
+        },
+        {
+          "x": -28.315,
+          "z": 301.919
+        },
+        {
+          "x": -19.497,
+          "z": 302.973
+        },
+        {
+          "x": -5.927,
+          "z": 294.066
+        },
+        {
+          "x": -6.041,
+          "z": 282.212
+        },
+        {
+          "x": -11.744,
+          "z": 273.96
+        },
+        {
+          "x": -39.096,
+          "z": 276.919
+        },
+        {
+          "x": -49.11,
+          "z": 33.732
+        }
+      ],
+      "source": {
+        "kind": "openstreetmap",
+        "license": "ODbL",
+        "osmType": "way",
+        "osmId": 1409146330,
+        "approxSRangeM": [
+          5434.1,
+          5760.7
+        ],
+        "osmTags": {
+          "barrier": "fence",
+          "fence_type": "chain_link",
+          "material": null
+        }
+      },
+      "notes": "Chain-link fence at Parabolica exit / pit-straight entry, driver-left. Approx s 5434\u20135761 m.",
+      "heightM": 2.0,
+      "heightEstimated": true,
+      "widthM": 0.2,
+      "widthEstimated": true
+    },
+    {
+      "id": "spectator-fence-osm-1409146336-parabolica-exit-left",
+      "kind": "spectator-fence",
+      "polyline": [
+        {
+          "x": -9.244,
+          "z": 296.25
+        },
+        {
+          "x": -5.253,
+          "z": 303.669
+        },
+        {
+          "x": -5.122,
+          "z": 315.656
+        },
+        {
+          "x": -11.979,
+          "z": 324.205
+        },
+        {
+          "x": -15.092,
+          "z": 321.997
+        }
+      ],
+      "source": {
+        "kind": "openstreetmap",
+        "license": "ODbL",
+        "osmType": "way",
+        "osmId": 1409146336,
+        "approxSRangeM": [
+          5469.7,
+          5497.4
+        ],
+        "osmTags": {
+          "barrier": "fence",
+          "fence_type": "chain_link",
+          "material": null
+        }
+      },
+      "notes": "Short chain-link return at Parabolica exit, driver-left. Approx s 5470\u20135497 m.",
+      "heightM": 2.0,
+      "heightEstimated": true,
+      "widthM": 0.2,
+      "widthEstimated": true
+    },
+    {
+      "id": "spectator-fence-osm-243090147-parabolica-exit-left",
+      "kind": "spectator-fence",
+      "polyline": [
+        {
+          "x": -11.336,
+          "z": 325.739
+        },
+        {
+          "x": -9.855,
+          "z": 518.058
+        },
+        {
+          "x": -26.915,
+          "z": 517.659
+        }
+      ],
+      "source": {
+        "kind": "openstreetmap",
+        "license": "ODbL",
+        "osmType": "way",
+        "osmId": 243090147,
+        "approxSRangeM": [
+          5279.2,
+          5468.2
+        ],
+        "osmTags": {
+          "barrier": "fence",
+          "fence_type": "chain_link",
+          "material": null
+        }
+      },
+      "notes": "Chain-link behind the Parabolica-exit guardrail, driver-left. Approx s 5279\u20135468 m.",
+      "heightM": 2.0,
+      "heightEstimated": true,
+      "widthM": 0.2,
+      "widthEstimated": true
+    },
+    {
+      "id": "spectator-fence-osm-243090149-centrale-left",
+      "kind": "spectator-fence",
+      "polyline": [
+        {
+          "x": -49.137,
+          "z": -33.577
+        },
+        {
+          "x": -49.704,
+          "z": -126.427
+        },
+        {
+          "x": -18.925,
+          "z": -124.261
+        }
+      ],
+      "source": {
+        "kind": "openstreetmap",
+        "license": "ODbL",
+        "osmType": "way",
+        "osmId": 243090149,
+        "approxSRangeM": [
+          33.6,
+          128.1
+        ],
+        "osmTags": {
+          "barrier": "fence",
+          "fence_type": "chain_link",
+          "material": null
+        }
+      },
+      "notes": "Short chain-link behind Tribuna Centrale / Gradinate, driver-left. Approx s 34\u2013128 m.",
+      "heightM": 2.0,
+      "heightEstimated": true,
+      "widthM": 0.2,
+      "widthEstimated": true
+    },
+    {
+      "id": "wall-osm-193475069-roggia-lesmo-park",
+      "kind": "wall",
+      "polyline": [
+        {
+          "x": 371.455,
+          "z": -1311.586
+        },
+        {
+          "x": 414.122,
+          "z": -1331.931
+        },
+        {
+          "x": 445.716,
+          "z": -1333.551
+        },
+        {
+          "x": 464.41,
+          "z": -1350.842
+        },
+        {
+          "x": 674.543,
+          "z": -1425.817
+        },
+        {
+          "x": 735.227,
+          "z": -1431.027
+        },
+        {
+          "x": 787.234,
+          "z": -1448.46
+        },
+        {
+          "x": 824.775,
+          "z": -1468.956
+        }
+      ],
+      "source": {
+        "kind": "openstreetmap",
+        "license": "ODbL",
+        "osmType": "way",
+        "osmId": 193475069,
+        "approxSRangeM": [
+          1569.2,
+          2077.1
+        ]
+      },
+      "notes": "OSM barrier=wall with no material/height. Park-side wall outside Roggia\u2192Lesmo 1 (driver-left, 16\u201349 m). Kind is wall because the OSM type is unknown (not tagged guard_rail / concrete). Approx s 1569\u20132077 m.",
+      "heightM": 1.5,
+      "heightEstimated": true,
+      "widthM": 0.4,
+      "widthEstimated": true
+    },
+    {
+      "id": "concrete-wall-osm-243090150-sf-pits-right",
+      "kind": "concrete-wall",
+      "polyline": [
+        {
+          "x": 23.724,
+          "z": 402.713
+        },
+        {
+          "x": 19.732,
+          "z": 327.87
+        },
+        {
+          "x": 13.531,
+          "z": -18.262
+        },
+        {
+          "x": 13.472,
+          "z": -21.457
+        }
+      ],
+      "source": {
+        "kind": "openstreetmap",
+        "license": "ODbL",
+        "osmType": "way",
+        "osmId": 243090150,
+        "approxSRangeM": [
+          5389.3,
+          21.5
+        ]
+      },
+      "notes": "OSM barrier=wall, four vertices on the pit / paddock side of S/F (driver-right, ~12\u201314 m). Typed concrete-wall because it sits on the Palazzina Box / hospitality face; it is not the full pit wall (that envelope is alongTrack).",
+      "heightM": 1.2,
+      "heightEstimated": true,
+      "widthM": 0.5,
+      "widthEstimated": true
+    },
+    {
+      "id": "concrete-wall-pit-wall-right-a",
+      "kind": "concrete-wall",
+      "alongTrack": {
+        "fromS": 5380.0,
+        "toS": 5793.44,
+        "side": "right",
+        "offsetM": 7.6,
+        "widthM": 0.5
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "OSM pit-lane way 38168747 (mean ~11 m right of GP) + Palazzina Box scenery; pit wall is the track-side face between racing surface and pit lane. Offset estimated.",
+        "offsetEstimated": true,
+        "estimated": true,
+        "trackSideOf": "pit-lane-38168747"
+      },
+      "widthEstimated": true,
+      "name": "Pit wall (south / S/F)",
+      "notes": "Driver-right from Parabolica exit through S/F. Opening at pit entry (~s 5200\u20135380) left as a noted gap.",
+      "heightM": 1.2,
+      "heightEstimated": true
+    },
+    {
+      "id": "concrete-wall-pit-wall-right-b",
+      "kind": "concrete-wall",
+      "alongTrack": {
+        "fromS": 0.0,
+        "toS": 380.0,
+        "side": "right",
+        "offsetM": 7.6,
+        "widthM": 0.5
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "Same pit-wall envelope, north of S/F toward pit exit / T1. Offset estimated from pit-lane OSM.",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "Pit wall (north / pit exit)",
+      "notes": "Ends before pit-exit blend (~s 380\u2013450). Pit-exit gate is an explained gap.",
+      "heightM": 1.2,
+      "heightEstimated": true
+    },
+    {
+      "id": "debris-fence-pit-wall-right-a",
+      "kind": "debris-fence",
+      "alongTrack": {
+        "fromS": 5380.0,
+        "toS": 5793.44,
+        "side": "right",
+        "offsetM": 7.9,
+        "widthM": 0.3
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "Standard FIA catch fence on pit-wall coping. Height estimated. FIA 2026 Italian GP Race Director's Competition Notes, \u00a727 Changes to the Circuit (https://www.fia.com/system/files/decision-document/2026_italian_grand_prix_-_race_directors_competition_notes.pdf) names a new debris fence on the opposite (left) side of the main straight.",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "notes": "On top of / immediately behind the pit wall, not a second offset into the lane.",
+      "heightM": 3.0,
+      "heightEstimated": true,
+      "behind": "concrete-wall-pit-wall-right-a"
+    },
+    {
+      "id": "debris-fence-pit-wall-right-b",
+      "kind": "debris-fence",
+      "alongTrack": {
+        "fromS": 0.0,
+        "toS": 380.0,
+        "side": "right",
+        "offsetM": 7.9,
+        "widthM": 0.3
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "Continuation of pit-wall debris fence north of S/F.",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "heightM": 3.0,
+      "heightEstimated": true,
+      "behind": "concrete-wall-pit-wall-right-b"
+    },
+    {
+      "id": "concrete-wall-2026-main-straight-left-a",
+      "kind": "concrete-wall",
+      "alongTrack": {
+        "fromS": 5480.0,
+        "toS": 5793.44,
+        "side": "left",
+        "offsetM": 10.8,
+        "widthM": 0.5
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "FIA 2026 Italian GP Race Director's Competition Notes, \u00a727 Changes to the Circuit (https://www.fia.com/system/files/decision-document/2026_italian_grand_prix_-_race_directors_competition_notes.pdf)",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "2026 main-straight wall (south)",
+      "notes": "FIA: 'New wall and debris fence on the left-hand side of the main straight.' s-range is an envelope along the pit-straight spectator side (stands at 19\u201337 m). Offset outside OSM guard_rail (~9.5\u201311 m). Offset estimated.",
+      "heightM": 1.2,
+      "heightEstimated": true
+    },
+    {
+      "id": "concrete-wall-2026-main-straight-left-b",
+      "kind": "concrete-wall",
+      "alongTrack": {
+        "fromS": 0.0,
+        "toS": 280.0,
+        "side": "left",
+        "offsetM": 10.8,
+        "widthM": 0.5
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "FIA 2026 Italian GP Race Director's Competition Notes, \u00a727 Changes to the Circuit (https://www.fia.com/system/files/decision-document/2026_italian_grand_prix_-_race_directors_competition_notes.pdf)",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "2026 main-straight wall (north)",
+      "heightM": 1.2,
+      "heightEstimated": true
+    },
+    {
+      "id": "debris-fence-2026-main-straight-left-a",
+      "kind": "debris-fence",
+      "alongTrack": {
+        "fromS": 5480.0,
+        "toS": 5793.44,
+        "side": "left",
+        "offsetM": 11.2,
+        "widthM": 0.3
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "FIA 2026 Italian GP Race Director's Competition Notes, \u00a727 Changes to the Circuit (https://www.fia.com/system/files/decision-document/2026_italian_grand_prix_-_race_directors_competition_notes.pdf)",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "notes": "Cross-ref scenery tribuna-centrale-193647796, tribuna-laterale-destra-34404645, tribuna-vedano-231026020.",
+      "heightM": 3.0,
+      "heightEstimated": true,
+      "behind": "concrete-wall-2026-main-straight-left-a"
+    },
+    {
+      "id": "debris-fence-2026-main-straight-left-b",
+      "kind": "debris-fence",
+      "alongTrack": {
+        "fromS": 0.0,
+        "toS": 280.0,
+        "side": "left",
+        "offsetM": 11.2,
+        "widthM": 0.3
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "FIA 2026 Italian GP Race Director's Competition Notes, \u00a727 Changes to the Circuit (https://www.fia.com/system/files/decision-document/2026_italian_grand_prix_-_race_directors_competition_notes.pdf)",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "notes": "Cross-ref scenery tribuna-centrale-193647796, tribuna-laterale-sinistra-193647795, tribuna-piscina-231257063.",
+      "heightM": 3.0,
+      "heightEstimated": true,
+      "behind": "concrete-wall-2026-main-straight-left-b"
+    },
+    {
+      "id": "gravel-trap-rettifilo-t1-outside-right",
+      "kind": "gravel-trap",
+      "alongTrack": {
+        "fromS": 580.0,
+        "toS": 690.0,
+        "side": "right",
+        "offsetM": 7.2,
+        "widthM": 26.0
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "monzanet.it modernization works (2024-01) + PlanetF1 2024-01-09 + grandprix.com 'Monza goes back to gravel run-off areas' \u2014 Rettifilo and Roggia gravel return | FIA 2026 Competition Notes \u00a725.1 Escape Road T1\u2013T2: four rows of polystyrene blocks (escape furniture, not encoded as a barrier kind)",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "Rettifilo T1 outside gravel",
+      "notes": "Outside of the first right. Envelope; OSM has landuse=grass 231260685 here, not surface=gravel (2024 resurfacing not remapped)."
+    },
+    {
+      "id": "gravel-trap-rettifilo-t1-t2-left",
+      "kind": "gravel-trap",
+      "alongTrack": {
+        "fromS": 600.0,
+        "toS": 760.0,
+        "side": "left",
+        "offsetM": 7.2,
+        "widthM": 30.0
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "monzanet.it modernization works (2024-01) + PlanetF1 2024-01-09 + grandprix.com 'Monza goes back to gravel run-off areas' \u2014 Rettifilo and Roggia gravel return",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "Rettifilo T1\u2013T2 / escape-side gravel",
+      "notes": "Driver-left / park side including the T2 left-outside and the straight-on runoff. FIA polystyrene rows sit on the escape road (not a barrier kind). Cross-ref tribuna-prima-variante-esterna-231026019."
+    },
+    {
+      "id": "gravel-trap-rettifilo-cut-strip-right",
+      "kind": "gravel-trap",
+      "alongTrack": {
+        "fromS": 618.0,
+        "toS": 700.0,
+        "side": "right",
+        "offsetM": 7.0,
+        "widthM": 8.0
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "monzanet.it modernization works (2024-01) + PlanetF1 2024-01-09 + grandprix.com 'Monza goes back to gravel run-off areas' \u2014 Rettifilo and Roggia gravel return; r/F1Technical 2024-09 discussion of gravel strips inside both Rettifilo kerbs (geometry not traced).",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "Rettifilo infield gravel strip (T2)",
+      "notes": "Narrow deterrent strip, not a full trap. Offset/width estimated."
+    },
+    {
+      "id": "tyre-barrier-rettifilo-t1-right",
+      "kind": "tyre-barrier",
+      "alongTrack": {
+        "fromS": 600.0,
+        "toS": 680.0,
+        "side": "right",
+        "offsetM": 34.0,
+        "widthM": 1.2
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "GPToday 2017-08-30 'Monza strengthens barriers in anticipation for 2018 cars': new TecPro at Roggia and Ascari entry/exit; tyre walls + conveyor belts at Lesmos and Ascari (Lesmo/Ascari/Roggia named; Rettifilo product not named). End-of-runoff stack estimated as tyre wall \u2014 flagged.",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "notes": "Type estimated. SIAS 2022 ordered 74 TecPro R-1 without listing this corner.",
+      "heightM": 2.4,
+      "heightEstimated": true,
+      "rowsOfTyres": 3,
+      "behind": "gravel-trap-rettifilo-t1-outside-right"
+    },
+    {
+      "id": "tyre-barrier-rettifilo-t2-left",
+      "kind": "tyre-barrier",
+      "alongTrack": {
+        "fromS": 640.0,
+        "toS": 750.0,
+        "side": "left",
+        "offsetM": 38.0,
+        "widthM": 1.2
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "End of T1\u2013T2 gravel / escape; product estimated (tyre vs TecPro not cited for Rettifilo).",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "heightM": 2.4,
+      "heightEstimated": true,
+      "rowsOfTyres": 3,
+      "behind": "gravel-trap-rettifilo-t1-t2-left"
+    },
+    {
+      "id": "debris-fence-rettifilo-esterna-left",
+      "kind": "debris-fence",
+      "alongTrack": {
+        "fromS": 680.0,
+        "toS": 820.0,
+        "side": "left",
+        "offsetM": 16.0,
+        "widthM": 0.3
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "Debris fence in front of Tribuna Prima Variante Esterna (scenery tribuna-prima-variante-esterna-231026019, min ~21 m).",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "notes": "Cross-ref tribuna-prima-variante-esterna-231026019, grandstand-561721691.",
+      "heightM": 3.0,
+      "heightEstimated": true
+    },
+    {
+      "id": "debris-fence-alta-velocita-right",
+      "kind": "debris-fence",
+      "alongTrack": {
+        "fromS": 360.0,
+        "toS": 580.0,
+        "side": "right",
+        "offsetM": 14.0,
+        "widthM": 0.3
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "Debris fence in front of Tribuna Alta Velocit\u00e0 A\u2013C (scenery 231026018/024/025, min ~20 m).",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "notes": "Cross-ref tribuna-alta-velocit\u00e0-231026018, 231026024, 231026025.",
+      "heightM": 3.0,
+      "heightEstimated": true
+    },
+    {
+      "id": "gravel-trap-roggia-t4-outside-left",
+      "kind": "gravel-trap",
+      "alongTrack": {
+        "fromS": 1760.0,
+        "toS": 1865.0,
+        "side": "left",
+        "offsetM": 7.2,
+        "widthM": 24.0
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "monzanet.it modernization works (2024-01) + PlanetF1 2024-01-09 + grandprix.com 'Monza goes back to gravel run-off areas' \u2014 Rettifilo and Roggia gravel return | FIA 2026 Competition Notes \u00a725.2 Escape Road T4\u2013T5: miss T4 and pass to the right of the gravel trap; \u00a727 first part of T5 LHS gravel bed replaced by asphalt",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "Roggia T4 outside gravel",
+      "notes": "Outside of the first left. OSM landuse=grass 231265134 adjacent; 2024 gravel not remapped."
+    },
+    {
+      "id": "gravel-trap-roggia-t5-left",
+      "kind": "gravel-trap",
+      "alongTrack": {
+        "fromS": 1865.0,
+        "toS": 1945.0,
+        "side": "left",
+        "offsetM": 8.8,
+        "widthM": 16.0
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "FIA 2026 Competition Notes \u00a725.2 Escape Road T4\u2013T5: miss T4 and pass to the right of the gravel trap; \u00a727 first part of T5 LHS gravel bed replaced by asphalt",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "Roggia T5 LHS gravel (post-2026)",
+      "notes": "FIA 2026: first part of T5 LHS gravel replaced by asphalt \u2014 offset stepped out to start after that patch. Width estimated."
+    },
+    {
+      "id": "gravel-trap-roggia-t5-outside-right",
+      "kind": "gravel-trap",
+      "alongTrack": {
+        "fromS": 1835.0,
+        "toS": 1935.0,
+        "side": "right",
+        "offsetM": 7.2,
+        "widthM": 22.0
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "monzanet.it modernization works (2024-01) + PlanetF1 2024-01-09 + grandprix.com 'Monza goes back to gravel run-off areas' \u2014 Rettifilo and Roggia gravel return | FIA 2026 Competition Notes \u00a725.2 Escape Road T4\u2013T5: miss T4 and pass to the right of the gravel trap; \u00a727 first part of T5 LHS gravel bed replaced by asphalt",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "Roggia T5 outside / T4-miss gravel",
+      "notes": "FIA: drivers who miss T4 and pass to the right of the gravel trap stay right of the yellow bollard."
+    },
+    {
+      "id": "tecpro-roggia-left",
+      "kind": "tecpro",
+      "alongTrack": {
+        "fromS": 1780.0,
+        "toS": 1880.0,
+        "side": "left",
+        "offsetM": 32.0,
+        "widthM": 1.0
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "TEC PRO International F1 booklet: first F1 install September 2006 Italian GP, Variante della Roggia and Curva Parabolica | GPToday 2017-08-30 'Monza strengthens barriers in anticipation for 2018 cars': new TecPro at Roggia and Ascari entry/exit; tyre walls + conveyor belts at Lesmos and Ascari",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "Roggia TecPro (outside T4)",
+      "heightM": 1.1,
+      "heightEstimated": true,
+      "behind": "gravel-trap-roggia-t4-outside-left"
+    },
+    {
+      "id": "tecpro-roggia-right",
+      "kind": "tecpro",
+      "alongTrack": {
+        "fromS": 1840.0,
+        "toS": 1930.0,
+        "side": "right",
+        "offsetM": 30.0,
+        "widthM": 1.0
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "GPToday 2017-08-30 'Monza strengthens barriers in anticipation for 2018 cars': new TecPro at Roggia and Ascari entry/exit; tyre walls + conveyor belts at Lesmos and Ascari | TEC PRO International F1 booklet: first F1 install September 2006 Italian GP, Variante della Roggia and Curva Parabolica",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "Roggia TecPro (T5 / escape)",
+      "heightM": 1.1,
+      "heightEstimated": true,
+      "behind": "gravel-trap-roggia-t5-outside-right"
+    },
+    {
+      "id": "debris-fence-roggia-stands-right",
+      "kind": "debris-fence",
+      "alongTrack": {
+        "fromS": 1920.0,
+        "toS": 2020.0,
+        "side": "right",
+        "offsetM": 22.0,
+        "widthM": 0.3
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "Debris fence in front of Tribuna Seconda Variante / Roggia (scenery tribuna-seconda-variante-231265139, tribuna-roggia-231265140).",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "notes": "Cross-ref tribuna-seconda-variante-231265139 (n\u00b0 9), tribuna-roggia-231265140 (n\u00b0 10).",
+      "heightM": 3.0,
+      "heightEstimated": true
+    },
+    {
+      "id": "gravel-trap-lesmo1-outside-right",
+      "kind": "gravel-trap",
+      "alongTrack": {
+        "fromS": 2160.0,
+        "toS": 2290.0,
+        "side": "right",
+        "offsetM": 7.5,
+        "widthM": 22.0
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "Wikipedia Monza Circuit (Lesmo 1/2: mistake \u2192 gravel); sportchaos Monza guide: Lesmo 1 'easy to run wide into the gravel'",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "Lesmo 1 outside gravel"
+    },
+    {
+      "id": "tyre-barrier-lesmo1-right",
+      "kind": "tyre-barrier",
+      "alongTrack": {
+        "fromS": 2170.0,
+        "toS": 2280.0,
+        "side": "right",
+        "offsetM": 30.5,
+        "widthM": 1.2
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "GPToday 2017-08-30 'Monza strengthens barriers in anticipation for 2018 cars': new TecPro at Roggia and Ascari entry/exit; tyre walls + conveyor belts at Lesmos and Ascari",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "Lesmo 1 tyre wall",
+      "notes": "2017: conveyor belts, tyre walls and tube inserts at the Lesmo corners.",
+      "heightM": 2.4,
+      "heightEstimated": true,
+      "rowsOfTyres": 3,
+      "behind": "gravel-trap-lesmo1-outside-right"
+    },
+    {
+      "id": "gravel-trap-lesmo2-outside-right",
+      "kind": "gravel-trap",
+      "alongTrack": {
+        "fromS": 2530.0,
+        "toS": 2650.0,
+        "side": "right",
+        "offsetM": 7.5,
+        "widthM": 20.0
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "Wikipedia Monza Circuit (Lesmo 1/2: mistake \u2192 gravel); sportchaos Monza guide: Lesmo 1 'easy to run wide into the gravel'",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "Lesmo 2 outside gravel"
+    },
+    {
+      "id": "tyre-barrier-lesmo2-right",
+      "kind": "tyre-barrier",
+      "alongTrack": {
+        "fromS": 2540.0,
+        "toS": 2640.0,
+        "side": "right",
+        "offsetM": 28.5,
+        "widthM": 1.2
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "GPToday 2017-08-30 'Monza strengthens barriers in anticipation for 2018 cars': new TecPro at Roggia and Ascari entry/exit; tyre walls + conveyor belts at Lesmos and Ascari",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "Lesmo 2 tyre wall",
+      "heightM": 2.4,
+      "heightEstimated": true,
+      "rowsOfTyres": 3,
+      "behind": "gravel-trap-lesmo2-outside-right"
+    },
+    {
+      "id": "gravel-trap-ascari-t8-left",
+      "kind": "gravel-trap",
+      "alongTrack": {
+        "fromS": 3580.0,
+        "toS": 3690.0,
+        "side": "left",
+        "offsetM": 7.2,
+        "widthM": 20.0
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "F1.com Need-to-Know 2026-09-03 Palmer: gravel if you carry too much speed into T8/9/10 Ascari; ScuderiaFans 2025 Italian GP: loose gravel from Ascari runoff",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "Ascari T8 (Vialone) gravel",
+      "notes": "Palmer 2026: first part of Ascari is the crucial gravel area."
+    },
+    {
+      "id": "gravel-trap-ascari-t9-right",
+      "kind": "gravel-trap",
+      "alongTrack": {
+        "fromS": 3660.0,
+        "toS": 3800.0,
+        "side": "right",
+        "offsetM": 7.5,
+        "widthM": 18.0
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "F1.com Need-to-Know 2026-09-03 Palmer: gravel if you carry too much speed into T8/9/10 Ascari; ScuderiaFans 2025 Italian GP: loose gravel from Ascari runoff",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "Ascari T9 outside gravel"
+    },
+    {
+      "id": "gravel-trap-ascari-t10-left",
+      "kind": "gravel-trap",
+      "alongTrack": {
+        "fromS": 3740.0,
+        "toS": 3880.0,
+        "side": "left",
+        "offsetM": 7.5,
+        "widthM": 16.0
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "F1.com Need-to-Know 2026-09-03 Palmer: gravel if you carry too much speed into T8/9/10 Ascari; ScuderiaFans 2025 Italian GP: loose gravel from Ascari runoff",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "Ascari T10 exit gravel"
+    },
+    {
+      "id": "tecpro-ascari-entry-left",
+      "kind": "tecpro",
+      "alongTrack": {
+        "fromS": 3585.0,
+        "toS": 3685.0,
+        "side": "left",
+        "offsetM": 28.0,
+        "widthM": 1.0
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "GPToday 2017-08-30 'Monza strengthens barriers in anticipation for 2018 cars': new TecPro at Roggia and Ascari entry/exit; tyre walls + conveyor belts at Lesmos and Ascari",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "Ascari entry TecPro",
+      "notes": "2017: new TecPro walls at entry of Ascari.",
+      "heightM": 1.1,
+      "heightEstimated": true,
+      "behind": "gravel-trap-ascari-t8-left"
+    },
+    {
+      "id": "tecpro-ascari-exit-left",
+      "kind": "tecpro",
+      "alongTrack": {
+        "fromS": 3760.0,
+        "toS": 3880.0,
+        "side": "left",
+        "offsetM": 24.5,
+        "widthM": 1.0
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "GPToday 2017-08-30 'Monza strengthens barriers in anticipation for 2018 cars': new TecPro at Roggia and Ascari entry/exit; tyre walls + conveyor belts at Lesmos and Ascari",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "Ascari exit TecPro",
+      "heightM": 1.1,
+      "heightEstimated": true,
+      "behind": "gravel-trap-ascari-t10-left"
+    },
+    {
+      "id": "tyre-barrier-ascari-right",
+      "kind": "tyre-barrier",
+      "alongTrack": {
+        "fromS": 3670.0,
+        "toS": 3790.0,
+        "side": "right",
+        "offsetM": 26.5,
+        "widthM": 1.2
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "GPToday 2017-08-30 'Monza strengthens barriers in anticipation for 2018 cars': new TecPro at Roggia and Ascari entry/exit; tyre walls + conveyor belts at Lesmos and Ascari",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "Ascari tyre wall (T9)",
+      "notes": "2017: tyre barriers at Ascari plus a TecPro layer (entry/exit walls are separate features).",
+      "heightM": 2.4,
+      "heightEstimated": true,
+      "rowsOfTyres": 3,
+      "behind": "gravel-trap-ascari-t9-right"
+    },
+    {
+      "id": "debris-fence-ascari-stands-right",
+      "kind": "debris-fence",
+      "alongTrack": {
+        "fromS": 3610.0,
+        "toS": 4100.0,
+        "side": "right",
+        "offsetM": 16.0,
+        "widthM": 0.3
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "Debris fence in front of the Ascari tribune row (scenery n\u00b0 12\u201316, 18\u201319, Museo).",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "notes": "Cross-ref tribuna-ascari-tre-231026027, tribuna-ascari-due-194457674, tribuna-amici-autodromo-194457677, tribuna-ascari-uno-194457685, tribuna-ascari-231260684, tribuna-uscita-ascari-a-194457688, tribuna-uscita-ascari-b-194457680, tribuna-museo-194457686.",
+      "heightM": 3.0,
+      "heightEstimated": true
+    },
+    {
+      "id": "tecpro-parabolica-outside-right",
+      "kind": "tecpro",
+      "alongTrack": {
+        "fromS": 4720.0,
+        "toS": 5120.0,
+        "side": "right",
+        "offsetM": 22.0,
+        "widthM": 1.0
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "TEC PRO International F1 booklet: first F1 install September 2006 Italian GP, Variante della Roggia and Curva Parabolica | Crash.net 2014 Parabolica gravel replaced by tarmac; F1.com Need-to-Know 2026-09-03 Jolyon Palmer: Parabolica / Alboreto now tarmac run-off",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "Parabolica / Alboreto TecPro",
+      "notes": "2006 first F1 TecPro install at Curva Parabolica. Runoff is tarmac since 2014 (not encoded as gravel-trap). Offset is the wall at the back of the asphalt bed \u2014 estimated.",
+      "heightM": 1.1,
+      "heightEstimated": true
+    },
+    {
+      "id": "debris-fence-laterale-parabolica-left",
+      "kind": "debris-fence",
+      "alongTrack": {
+        "fromS": 4560.0,
+        "toS": 4820.0,
+        "side": "left",
+        "offsetM": 14.0,
+        "widthM": 0.3
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "Debris fence in front of Tribuna Laterale Parabolica A\u2013E (scenery officialRef 21).",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "notes": "Cross-ref tribuna-laterale-parabolica-194457679/667/675/672/692.",
+      "heightM": 3.0,
+      "heightEstimated": true
+    },
+    {
+      "id": "debris-fence-parabolica-left",
+      "kind": "debris-fence",
+      "alongTrack": {
+        "fromS": 4820.0,
+        "toS": 4980.0,
+        "side": "left",
+        "offsetM": 12.5,
+        "widthM": 0.3
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "Debris fence in front of Tribuna Parabolica n\u00b0 22 (scenery tribuna-parabolica-179794158, min ~14 m).",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "notes": "Cross-ref tribuna-parabolica-179794158.",
+      "heightM": 3.0,
+      "heightEstimated": true
+    },
+    {
+      "id": "debris-fence-traguardo-right",
+      "kind": "debris-fence",
+      "alongTrack": {
+        "fromS": 5100.0,
+        "toS": 5340.0,
+        "side": "right",
+        "offsetM": 12.0,
+        "widthM": 0.3
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "Debris fence in front of Gradinate Traguardo 27D\u201330 and Parabolica interna (scenery unnamed Tribune cluster + officialRef 23).",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "notes": "Cross-ref tribune-194457687/664/670/684/668/682/690/689/671/666/693, tribuna-parabolica-interna-194457681/691.",
+      "heightM": 3.0,
+      "heightEstimated": true
+    },
+    {
+      "id": "spectator-fence-2026-t10-t11-left",
+      "kind": "spectator-fence",
+      "alongTrack": {
+        "fromS": 3880.0,
+        "toS": 4780.0,
+        "side": "left",
+        "offsetM": 12.0,
+        "widthM": 0.2
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "FIA 2026 Italian GP Race Director's Competition Notes, \u00a727 Changes to the Circuit (https://www.fia.com/system/files/decision-document/2026_italian_grand_prix_-_race_directors_competition_notes.pdf)",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "name": "2026 fences T10\u2013T11 left",
+      "notes": "FIA: 'New fences on the left-hand side between Turn 10 and Turn 11.' T10 = Ascari last left, T11 = Parabolica. Kind spectator-fence (document says fences, not debris fence / guardrail). Offset estimated.",
+      "heightM": 2.0,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-left-t1-approach",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 265.0,
+        "toS": 590.0,
+        "side": "left",
+        "offsetM": 9.0,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. T1 braking, park side. OSM rail ends ~s 265."
+      },
+      "widthEstimated": true,
+      "notes": "T1 braking, park side. OSM rail ends ~s 265. Offset estimated (OSM pit-straight rails calibrate ~9.5\u201311 m).",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-left-t1-behind-gravel",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 590.0,
+        "toS": 760.0,
+        "side": "left",
+        "offsetM": 38.5,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Behind T1\u2013T2 gravel / tyre."
+      },
+      "widthEstimated": true,
+      "notes": "Behind T1\u2013T2 gravel / tyre. Offset estimated (OSM pit-straight rails calibrate ~9.5\u201311 m).",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-left-biassono-in",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 760.0,
+        "toS": 1000.0,
+        "side": "left",
+        "offsetM": 8.8,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Rettifilo exit \u2192 Curva Grande."
+      },
+      "widthEstimated": true,
+      "notes": "Rettifilo exit \u2192 Curva Grande. Offset estimated (OSM pit-straight rails calibrate ~9.5\u201311 m).",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-left-biassono",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 1000.0,
+        "toS": 1320.0,
+        "side": "left",
+        "offsetM": 9.0,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Curva Biassono / Grande inside."
+      },
+      "widthEstimated": true,
+      "notes": "Curva Biassono / Grande inside. Offset estimated (OSM pit-straight rails calibrate ~9.5\u201311 m).",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-left-biassono-roggia",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 1320.0,
+        "toS": 1755.0,
+        "side": "left",
+        "offsetM": 8.8,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Straight to Roggia."
+      },
+      "widthEstimated": true,
+      "notes": "Straight to Roggia. Offset estimated (OSM pit-straight rails calibrate ~9.5\u201311 m).",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-left-roggia-behind",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 1755.0,
+        "toS": 1950.0,
+        "side": "left",
+        "offsetM": 33.5,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Behind Roggia gravel / TecPro."
+      },
+      "widthEstimated": true,
+      "notes": "Behind Roggia gravel / TecPro. Offset estimated (OSM pit-straight rails calibrate ~9.5\u201311 m).",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-left-roggia-lesmo1",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 1950.0,
+        "toS": 2185.0,
+        "side": "left",
+        "offsetM": 8.8,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Roggia exit \u2192 Lesmo 1. OSM wall 193475069 sits ~16\u201340 m outside."
+      },
+      "widthEstimated": true,
+      "notes": "Roggia exit \u2192 Lesmo 1. OSM wall 193475069 sits ~16\u201340 m outside. Offset estimated (OSM pit-straight rails calibrate ~9.5\u201311 m).",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-left-lesmo1",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 2185.0,
+        "toS": 2330.0,
+        "side": "left",
+        "offsetM": 9.0,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Lesmo 1 inside (left)."
+      },
+      "widthEstimated": true,
+      "notes": "Lesmo 1 inside (left). Offset estimated (OSM pit-straight rails calibrate ~9.5\u201311 m).",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-left-between-lesmi",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 2330.0,
+        "toS": 2545.0,
+        "side": "left",
+        "offsetM": 8.8,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Between Lesmo 1 and 2."
+      },
+      "widthEstimated": true,
+      "notes": "Between Lesmo 1 and 2. Offset estimated (OSM pit-straight rails calibrate ~9.5\u201311 m).",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-left-lesmo2",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 2545.0,
+        "toS": 2660.0,
+        "side": "left",
+        "offsetM": 9.0,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Lesmo 2 inside."
+      },
+      "widthEstimated": true,
+      "notes": "Lesmo 2 inside. Offset estimated (OSM pit-straight rails calibrate ~9.5\u201311 m).",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-left-lesmo-serraglio",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 2660.0,
+        "toS": 3240.0,
+        "side": "left",
+        "offsetM": 8.8,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Lesmo 2 \u2192 underpass. OSM chain-link 1304624805 is the park fence outside."
+      },
+      "widthEstimated": true,
+      "notes": "Lesmo 2 \u2192 underpass. OSM chain-link 1304624805 is the park fence outside. Offset estimated (OSM pit-straight rails calibrate ~9.5\u201311 m).",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-left-underpass",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 3240.0,
+        "toS": 3360.0,
+        "side": "left",
+        "offsetM": 8.5,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Oval north underpass. Concrete abutments not separately mapped in OSM."
+      },
+      "widthEstimated": true,
+      "notes": "Oval north underpass. Concrete abutments not separately mapped in OSM. Offset estimated (OSM pit-straight rails calibrate ~9.5\u201311 m).",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-left-underpass-ascari",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 3360.0,
+        "toS": 3575.0,
+        "side": "left",
+        "offsetM": 8.8,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. After underpass to Ascari."
+      },
+      "widthEstimated": true,
+      "notes": "After underpass to Ascari. Offset estimated (OSM pit-straight rails calibrate ~9.5\u201311 m).",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-left-ascari-behind",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 3575.0,
+        "toS": 3890.0,
+        "side": "left",
+        "offsetM": 29.5,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Behind Ascari gravel / TecPro."
+      },
+      "widthEstimated": true,
+      "notes": "Behind Ascari gravel / TecPro. Offset estimated (OSM pit-straight rails calibrate ~9.5\u201311 m).",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-left-back-straight",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 3890.0,
+        "toS": 4555.0,
+        "side": "left",
+        "offsetM": 8.8,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Opposite straight. 2026 spectator fence sits outside this rail."
+      },
+      "widthEstimated": true,
+      "notes": "Opposite straight. 2026 spectator fence sits outside this rail. Offset estimated (OSM pit-straight rails calibrate ~9.5\u201311 m).",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-left-parabolica-in",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 4555.0,
+        "toS": 4980.0,
+        "side": "left",
+        "offsetM": 15.0,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Inside Parabolica, outside the debris fence of Laterale / Tribuna Parabolica."
+      },
+      "widthEstimated": true,
+      "notes": "Inside Parabolica, outside the debris fence of Laterale / Tribuna Parabolica. Offset estimated (OSM pit-straight rails calibrate ~9.5\u201311 m).",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-left-parabolica-exit",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 4980.0,
+        "toS": 5275.0,
+        "side": "left",
+        "offsetM": 9.5,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Parabolica exit to OSM rail start (~s 5278)."
+      },
+      "widthEstimated": true,
+      "notes": "Parabolica exit to OSM rail start (~s 5278). Offset estimated (OSM pit-straight rails calibrate ~9.5\u201311 m).",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-right-pit-exit-t1",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 400.0,
+        "toS": 575.0,
+        "side": "right",
+        "offsetM": 8.8,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. After pit-exit blend to T1 braking. Explained gap s 380\u2013400 (pit-exit gate)."
+      },
+      "widthEstimated": true,
+      "notes": "After pit-exit blend to T1 braking. Explained gap s 380\u2013400 (pit-exit gate). Offset estimated.",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-right-t1-behind",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 575.0,
+        "toS": 700.0,
+        "side": "right",
+        "offsetM": 35.5,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Behind T1 outside gravel / tyre."
+      },
+      "widthEstimated": true,
+      "notes": "Behind T1 outside gravel / tyre. Offset estimated.",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-right-t1-exit-biassono",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 700.0,
+        "toS": 1000.0,
+        "side": "right",
+        "offsetM": 8.8,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Chicane exit / Curva Grande entry."
+      },
+      "widthEstimated": true,
+      "notes": "Chicane exit / Curva Grande entry. Offset estimated.",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-right-biassono",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 1000.0,
+        "toS": 1320.0,
+        "side": "right",
+        "offsetM": 9.2,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Curva Grande outside."
+      },
+      "widthEstimated": true,
+      "notes": "Curva Grande outside. Offset estimated.",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-right-biassono-roggia",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 1320.0,
+        "toS": 1830.0,
+        "side": "right",
+        "offsetM": 8.8,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Straight to Roggia."
+      },
+      "widthEstimated": true,
+      "notes": "Straight to Roggia. Offset estimated.",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-right-roggia-behind",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 1830.0,
+        "toS": 1940.0,
+        "side": "right",
+        "offsetM": 31.0,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Behind Roggia T5 gravel / TecPro."
+      },
+      "widthEstimated": true,
+      "notes": "Behind Roggia T5 gravel / TecPro. Offset estimated.",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-right-roggia-lesmo1",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 1940.0,
+        "toS": 2155.0,
+        "side": "right",
+        "offsetM": 8.8,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Roggia exit \u2192 Lesmo 1."
+      },
+      "widthEstimated": true,
+      "notes": "Roggia exit \u2192 Lesmo 1. Offset estimated.",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-right-lesmo1-behind",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 2155.0,
+        "toS": 2295.0,
+        "side": "right",
+        "offsetM": 31.5,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Behind Lesmo 1 gravel / tyre."
+      },
+      "widthEstimated": true,
+      "notes": "Behind Lesmo 1 gravel / tyre. Offset estimated.",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-right-between-lesmi",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 2295.0,
+        "toS": 2525.0,
+        "side": "right",
+        "offsetM": 8.8,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Between Lesmi, outside."
+      },
+      "widthEstimated": true,
+      "notes": "Between Lesmi, outside. Offset estimated.",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-right-lesmo2-behind",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 2525.0,
+        "toS": 2655.0,
+        "side": "right",
+        "offsetM": 29.5,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Behind Lesmo 2 gravel / tyre."
+      },
+      "widthEstimated": true,
+      "notes": "Behind Lesmo 2 gravel / tyre. Offset estimated.",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-right-lesmo-underpass",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 2655.0,
+        "toS": 3240.0,
+        "side": "right",
+        "offsetM": 8.8,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Lesmo 2 \u2192 Serraglio / underpass, infield side."
+      },
+      "widthEstimated": true,
+      "notes": "Lesmo 2 \u2192 Serraglio / underpass, infield side. Offset estimated.",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-right-underpass",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 3240.0,
+        "toS": 3360.0,
+        "side": "right",
+        "offsetM": 8.5,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Underpass infield. OSM oval wall 1304624806 crosses here (banking, omitted)."
+      },
+      "widthEstimated": true,
+      "notes": "Underpass infield. OSM oval wall 1304624806 crosses here (banking, omitted). Offset estimated.",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-right-underpass-ascari",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 3360.0,
+        "toS": 3575.0,
+        "side": "right",
+        "offsetM": 8.8,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. To Ascari."
+      },
+      "widthEstimated": true,
+      "notes": "To Ascari. Offset estimated.",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-right-ascari-behind",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 3575.0,
+        "toS": 3810.0,
+        "side": "right",
+        "offsetM": 27.5,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Behind Ascari T9 gravel / tyre."
+      },
+      "widthEstimated": true,
+      "notes": "Behind Ascari T9 gravel / tyre. Offset estimated.",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-right-back-straight",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 3810.0,
+        "toS": 4700.0,
+        "side": "right",
+        "offsetM": 8.8,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Opposite / back straight, outside."
+      },
+      "widthEstimated": true,
+      "notes": "Opposite / back straight, outside. Offset estimated.",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-right-parabolica-behind",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 4700.0,
+        "toS": 5140.0,
+        "side": "right",
+        "offsetM": 23.5,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Behind Parabolica TecPro / asphalt runoff."
+      },
+      "widthEstimated": true,
+      "notes": "Behind Parabolica TecPro / asphalt runoff. Offset estimated.",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "guardrail-right-parabolica-exit",
+      "kind": "guardrail",
+      "alongTrack": {
+        "fromS": 5140.0,
+        "toS": 5195.0,
+        "side": "right",
+        "offsetM": 9.0,
+        "widthM": 0.4
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "FIA Grade 1 practice: continuous lateral protection both sides of the GP lap. OSM maps guard_rail only on the pit-straight spectator side; remaining spine is alongTrack fill. Short rail to pit-entry opening."
+      },
+      "widthEstimated": true,
+      "notes": "Short rail to pit-entry opening. Offset estimated.",
+      "heightM": 0.8,
+      "heightEstimated": true
+    },
+    {
+      "id": "debris-fence-biassono-right",
+      "kind": "debris-fence",
+      "alongTrack": {
+        "fromS": 980.0,
+        "toS": 1280.0,
+        "side": "right",
+        "offsetM": 11.0,
+        "widthM": 0.3
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "High-speed Curva Grande outside catch fence. No permanent tribune (scenery omitted Biassono stands)."
+      },
+      "widthEstimated": true,
+      "notes": "No OSM grandstand; fence is the visible protection, not a spectator enclosure.",
+      "heightM": 3.0,
+      "heightEstimated": true
+    },
+    {
+      "id": "debris-fence-biassono-left",
+      "kind": "debris-fence",
+      "alongTrack": {
+        "fromS": 980.0,
+        "toS": 1280.0,
+        "side": "left",
+        "offsetM": 11.0,
+        "widthM": 0.3
+      },
+      "source": {
+        "kind": "derived-gap-fill",
+        "estimated": true,
+        "offsetEstimated": true,
+        "notes": "Curva Grande inside catch fence."
+      },
+      "widthEstimated": true,
+      "heightM": 3.0,
+      "heightEstimated": true
+    },
+    {
+      "id": "debris-fence-traguardo-sf-right",
+      "kind": "debris-fence",
+      "alongTrack": {
+        "fromS": 50.0,
+        "toS": 150.0,
+        "side": "right",
+        "offsetM": 14.0,
+        "widthM": 0.3
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "Debris fence in front of unnamed Tribune way 194742580 (Gradinate Traguardo 2e/3f, scenery).",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "notes": "Cross-ref tribune-194742580. Sits outside the pit wall / lane.",
+      "heightM": 3.0,
+      "heightEstimated": true
+    },
+    {
+      "id": "debris-fence-grandstand-1529562455-left",
+      "kind": "debris-fence",
+      "alongTrack": {
+        "fromS": 360.0,
+        "toS": 430.0,
+        "side": "left",
+        "offsetM": 14.0,
+        "widthM": 0.3
+      },
+      "source": {
+        "kind": "published-envelope",
+        "citation": "Debris fence in front of unnamed grandstand-1529562455 (pit-straight left, s\u2248393).",
+        "offsetEstimated": true,
+        "estimated": true
+      },
+      "widthEstimated": true,
+      "notes": "Cross-ref grandstand-1529562455.",
+      "heightM": 3.0,
+      "heightEstimated": true
+    }
+  ]
+}

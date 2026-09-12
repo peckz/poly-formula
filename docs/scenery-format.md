@@ -264,3 +264,8 @@ Same rule as the track format: invent nothing. If a pit garage, media centre, or
   ]
 }
 ```
+
+## Related: barrier files
+
+Machine-readable **safety furniture** for a format v1 track may live at `src/tracks/<trackId>.barriers.json`. It reuses this document’s frame, `controlPoints`, one-geometry-key rule, and per-feature `source`. Differences — extra kinds, `alongTrack` keys `fromS` / `toS` (same envelope as `s0` / `s1`), and a **half-width** clearance rule instead of 8 m — are recorded in that circuit’s research notes. For Monza see [`docs/research/monza-barriers-notes.md`](research/monza-barriers-notes.md).
+
