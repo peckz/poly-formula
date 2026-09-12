@@ -836,7 +836,7 @@ body,
   display: grid;
   place-items: center;
   padding: var(--ui-pad);
-  background: rgba(26, 26, 29, 0.55);
+  background: rgba(26, 26, 29, 0.78);
 }
 
 .lb-card {
