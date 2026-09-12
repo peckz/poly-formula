@@ -91,6 +91,71 @@ body,
   margin-bottom: 12px;
 }
 
+.generate-atlas {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 260px;
+  padding: 12px 14px;
+  color: #d4d4d4;
+  background: rgba(0, 0, 0, 0.7);
+  font: 12px/1.45 ui-monospace, monospace;
+  pointer-events: auto;
+}
+
+.generate-atlas h2 {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #f3f3f3;
+}
+
+.generate-atlas label {
+  display: block;
+  margin-bottom: 4px;
+  color: #888;
+}
+
+.generate-atlas input {
+  box-sizing: border-box;
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 6px 8px;
+  color: #f3f3f3;
+  background: #1a1a1a;
+  border: 1px solid #444;
+  font: inherit;
+}
+
+.generate-atlas button {
+  width: 100%;
+  padding: 6px 8px;
+  color: #111;
+  background: #d4d4d4;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.generate-atlas button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.generate-atlas-error {
+  margin: 8px 0 0;
+  color: #ff8a8a;
+}
+
+.generate-atlas img {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  background: #101827;
+}
+
 .ok {
   color: #7dff9a;
 }

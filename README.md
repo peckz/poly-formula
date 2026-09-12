@@ -16,11 +16,12 @@ The camera loop does not go through React. It writes numbers into a store once p
 - **MediaPipe Face + Hand Landmarker** — head pose (x/y/z, yaw, pitch, roll) and both wrists
 - **MobX** — tracking updates every frame without re-rendering the whole app
 - **Store only useful numbers** — pose, wrists, wheel angle. Not the full landmark mesh
-- **fal.ai** — later sprite sheets and driver faces. Key stays in `.env`; the browser talks to a local Vite proxy
+- **fal.ai** — generates driver atlases via GPT Image; character name is an input (default Charles Leclerc). Key stays in `.env`; the browser talks to a local Vite proxy
+- **Driver sprite** — 5×5 atlas (yaw × pitch), sampled at 96×96. Mouth still opens from jaw tracking
 
 ## Now
 
-Live camera preview with an overlay, plus a HUD for head, hands, and wheel angle. The 3D scene is still a cube. The car is not wired up yet.
+Live camera preview with the driver overlay, plus a HUD for head, mouth, hands, and wheel angle. The 3D scene is still a cube.
 
 ## Run
 

@@ -1,4 +1,5 @@
 import { CameraView } from './components/CameraView'
+import { GenerateAtlas } from './components/GenerateAtlas'
 import { Scene } from './components/Scene'
 import { TrackingHud } from './components/TrackingHud'
 
@@ -8,6 +9,7 @@ function App() {
       <Scene />
       <CameraView />
       <TrackingHud />
+      <GenerateAtlas />
     </div>
   )
 }
