@@ -10,6 +10,8 @@ webcam  →  MediaPipe (head + hands)  →  MobX store  →  HUD now, car later
 
 The camera loop does not go through React. It writes numbers into a store once per frame. Only the debug HUD observes that store. Three.js can read the same values from its own animation loop.
 
+MediaPipe inference runs in a Web Worker (`src/tracking/tracking.worker.ts`). The main thread wraps each camera frame in a `VideoFrame`, transfers it, and only gets plain landmarks back, so the game loop never waits on model inference or its GPU readback. If the worker cannot start, inference falls back to the main thread.
+
 ## Decisions
 
 - **Vite + React + Three.js** — small web stack, fast to iterate on at a hackathon
