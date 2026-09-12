@@ -156,6 +156,46 @@ body,
   background: #101827;
 }
 
+.race-hud {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  min-width: 150px;
+  padding: 12px 16px;
+  color: #f3f3f3;
+  background: rgba(0, 0, 0, 0.7);
+  font: 12px/1.5 ui-monospace, monospace;
+  text-align: right;
+  pointer-events: none;
+}
+
+.race-hud p {
+  margin: 0;
+}
+
+.race-hud-speed {
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.race-hud-speed span {
+  font-size: 12px;
+  font-weight: 400;
+  color: #999;
+}
+
+.race-hud-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.race-hud .warn {
+  color: #ffb347;
+}
+
 .ok {
   color: #7dff9a;
 }
