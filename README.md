@@ -16,7 +16,7 @@ The camera loop does not go through React. It writes numbers into a store once p
 - **MediaPipe Face + Hand Landmarker** — geometric head pose from a few landmarks, plus both wrists
 - **MobX** — tracking updates every frame without re-rendering the whole app
 - **Store only useful numbers** — pose, wrists, wheel angle. Not the full landmark mesh
-- **Driver picker** — Tekken-style horizontal select of the **22** 2026 F1 drivers, each with a bundled **5×5** head atlas under `public/sprites/drivers/`. Selected sheet drives webcam head tracking. Bake/rebuild with `npm run generate:atlases` (fal **GPT Image 2.5 Flare**; `FAL_KEY` in `.env`). Entry can optionally Reroll one driver live via the Vite fal proxy.
+- **Driver picker** — Tekken-style horizontal select of the **22** 2026 F1 drivers, each with a bundled **5×5** head atlas under `public/sprites/drivers/`. Selected sheet drives webcam head tracking. Bake/rebuild with `npm run generate:atlases` (fal **GPT Image 2.5 Flare**; `FAL_KEY` in `.env`).
 - **Convex (optional)** — anonymous lap times + leaderboard. Nickname only; no login. Without a URL the board stays on this device.
 - **Driver sprite** — 5×5 atlas. Nose vs eyes/mouth picks yaw/pitch, then snaps to a cell. Overlay is counter-mirrored so left/right match
 - **Wheel sprite** — two palm centers set position, tilt, and size so the grips sit in your hands

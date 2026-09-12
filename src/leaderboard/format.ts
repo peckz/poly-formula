@@ -2,6 +2,7 @@ export const DEFAULT_TRACK_ID = 'monza'
 export const LEADERBOARD_LIMIT = 50
 export const MIN_LAP_MS = 15_000
 export const MIN_LAP_FRACTION = 0.75
+export const NICKNAME_MAX = 32
 
 export type LapRecord = {
   id: string
@@ -10,6 +11,16 @@ export type LapRecord = {
   trackId: string
   avatarUrl?: string
   createdAt: number
+}
+
+/** Trim, collapse inner spaces, cap length. Use on submit / match, not every keystroke. */
+export function normalizeNickname(value: string): string {
+  return value.trim().replace(/\s+/g, ' ').slice(0, NICKNAME_MAX)
+}
+
+/** Case-insensitive identity key for leaderboard rows. */
+export function nicknameKey(value: string): string {
+  return normalizeNickname(value).toLowerCase()
 }
 
 /** F1-style `m:ss.mmm`. */
@@ -31,12 +42,15 @@ export function bestLaps(rows: LapRecord[], limit: number): LapRecord[] {
   const seen = new Set<string>()
   const out: LapRecord[] = []
   for (const row of sorted) {
-    const key = row.nickname.trim().toLowerCase()
+    const key = nicknameKey(row.nickname)
     if (!key || seen.has(key)) {
       continue
     }
     seen.add(key)
-    out.push(row)
+    out.push({
+      ...row,
+      nickname: normalizeNickname(row.nickname),
+    })
     if (out.length >= limit) {
       break
     }
@@ -45,7 +59,9 @@ export function bestLaps(rows: LapRecord[], limit: number): LapRecord[] {
 }
 
 export function sameNickname(a: string, b: string): boolean {
-  return a.trim().toLowerCase() === b.trim().toLowerCase()
+  const left = nicknameKey(a)
+  const right = nicknameKey(b)
+  return left.length > 0 && left === right
 }
 
 export function publicAvatarUrl(url: string | null | undefined): string | undefined {

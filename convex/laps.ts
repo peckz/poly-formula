@@ -1,14 +1,19 @@
 import { mutationGeneric, queryGeneric } from 'convex/server'
 import { v } from 'convex/values'
 
-const NICKNAME_MAX = 20
+const NICKNAME_MAX = 32
 const MIN_LAP_MS = 15_000
 const MAX_LAP_MS = 30 * 60 * 1000
 const DEFAULT_TRACK = 'monza'
 const LIST_SCAN = 400
 
-function cleanNickname(value: string): string {
-  return value.trim().slice(0, NICKNAME_MAX)
+/** Keep in sync with src/leaderboard/format.ts normalizeNickname / nicknameKey. */
+function normalizeNickname(value: string): string {
+  return value.trim().replace(/\s+/g, ' ').slice(0, NICKNAME_MAX)
+}
+
+function nicknameKey(value: string): string {
+  return normalizeNickname(value).toLowerCase()
 }
 
 /** Fastest lap per nickname, already sorted by time. */
@@ -18,12 +23,15 @@ function uniqueBest<
   const seen = new Set<string>()
   const best: T[] = []
   for (const row of rows) {
-    const key = row.nickname.trim().toLowerCase()
+    const key = nicknameKey(row.nickname)
     if (!key || seen.has(key)) {
       continue
     }
     seen.add(key)
-    best.push(row)
+    best.push({
+      ...row,
+      nickname: normalizeNickname(row.nickname),
+    })
     if (best.length >= limit) {
       break
     }
@@ -39,7 +47,7 @@ export const submit = mutationGeneric({
     avatarUrl: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const nickname = cleanNickname(args.nickname)
+    const nickname = normalizeNickname(args.nickname)
     const lapMs = Math.round(args.lapMs)
     if (nickname.length === 0) {
       throw new Error('Nickname required')
