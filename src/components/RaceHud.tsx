@@ -1,6 +1,8 @@
 import { observer } from 'mobx-react-lite'
 import { raceStore } from '../game/store'
 import { monzaPath } from '../game/trackPath'
+import { formatLapTime } from '../leaderboard/format'
+import { leaderboardStore } from '../leaderboard/store'
 
 const MAP_PAD = 60
 const CAR_PIP = 56
@@ -34,6 +36,8 @@ export const RaceHud = observer(function RaceHud() {
     speedKmh,
     gear,
     lap,
+    lapMs,
+    lastLapMs,
     steerSource,
     offTrack,
     cornerName,
@@ -47,6 +51,15 @@ export const RaceHud = observer(function RaceHud() {
 
   return (
     <>
+      <button
+        type="button"
+        className="race-lb-btn"
+        onClick={() => {
+          leaderboardStore.toggle()
+        }}
+      >
+        Leaderboard
+      </button>
       <aside className="race-pace">
         {attacking ? (
           <p className="race-hud-attack">Boost</p>
@@ -60,6 +73,10 @@ export const RaceHud = observer(function RaceHud() {
         <p className="race-hud-row">
           <span>gear {gear}</span>
           <span>lap {lap}</span>
+        </p>
+        <p className="race-hud-row">
+          <span>{formatLapTime(lapMs)}</span>
+          <span>{lastLapMs !== null ? `last ${formatLapTime(lastLapMs)}` : 'last —'}</span>
         </p>
         <p className="race-hud-corner">
           {cornerName} <span>{cornerDistM}m</span>

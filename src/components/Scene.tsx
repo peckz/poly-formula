@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
-import { buildCar } from '../game/carModel'
+import { buildCar, type CarModel } from '../game/carModel'
+import { driverById, paintForDriver } from '../game/drivers'
 import {
   allowedSpeed,
   buildSpeedEnvelope,
@@ -10,6 +11,8 @@ import { Keyboard } from '../game/input'
 import { CarSim } from '../game/sim'
 import { entryStore } from '../entry/store'
 import { raceStore } from '../game/store'
+import { MIN_LAP_FRACTION, MIN_LAP_MS } from '../leaderboard/format'
+import { leaderboardStore } from '../leaderboard/store'
 import { buildTrack } from '../game/trackModel'
 import { monzaPath } from '../game/trackPath'
 import { trackingStore } from '../tracking/store'
@@ -65,8 +68,41 @@ export function Scene() {
     const track = buildTrack()
     scene.add(track.group)
 
-    const car = buildCar()
-    scene.add(car.group)
+    /** One car only — paint follows the entry-screen driver pick. */
+    let carDriverId = ''
+    let car: CarModel | null = null
+
+    const disposeCar = (model: CarModel) => {
+      scene.remove(model.group)
+      model.group.traverse((object) => {
+        if (!(object instanceof THREE.Mesh)) {
+          return
+        }
+        object.geometry.dispose()
+        const materials = Array.isArray(object.material)
+          ? object.material
+          : [object.material]
+        for (const material of materials) {
+          material.dispose()
+        }
+      })
+    }
+
+    const syncPlayerCar = () => {
+      const id = entryStore.selectedDriverId
+      if (car && carDriverId === id) {
+        return car
+      }
+      if (car) {
+        disposeCar(car)
+      }
+      carDriverId = id
+      car = buildCar(paintForDriver(driverById(id)))
+      scene.add(car.group)
+      return car
+    }
+
+    syncPlayerCar()
 
     const sim = new CarSim()
     const envelope = buildSpeedEnvelope(monzaPath)
@@ -94,6 +130,18 @@ export function Scene() {
     let handsLostAt = 0
     let stuckSince = 0
     let boost = 0
+    let lapClockMs = 0
+    let lastLapMs: number | null = null
+    let lastLapCount = sim.lap
+    let maxSThisLap = sim.s
+    let flyingLap = false
+
+    const invalidateLap = () => {
+      flyingLap = false
+      lapClockMs = 0
+      maxSThisLap = sim.s
+      lastLapCount = sim.lap
+    }
 
     const animate = (now: number) => {
       frame = requestAnimationFrame(animate)
@@ -171,6 +219,7 @@ export function Scene() {
         sim.resetToTrack()
         cameraReady = false
         boost = 0
+        invalidateLap()
       }
       resetHeld = keyboard.reset
 
@@ -178,6 +227,24 @@ export function Scene() {
         const boostThrust =
           usingWheel && attacking ? Math.min(1, boost * 1.2) : 0
         sim.step(dt, { throttle, brake, steer, boost: boostThrust })
+        lapClockMs += dt * 1000
+        if (sim.s > maxSThisLap) {
+          maxSThisLap = sim.s
+        }
+        if (sim.lap > lastLapCount) {
+          const traveledFar = maxSThisLap > monzaPath.length * MIN_LAP_FRACTION
+          if (flyingLap && traveledFar && lapClockMs >= MIN_LAP_MS) {
+            const ms = Math.round(lapClockMs)
+            lastLapMs = ms
+            void leaderboardStore.submitLap(ms)
+          }
+          flyingLap = true
+          lapClockMs = 0
+          maxSThisLap = sim.s
+          lastLapCount = sim.lap
+        } else if (sim.lap < lastLapCount) {
+          invalidateLap()
+        }
 
         // Never leave the player beached: crawling off track (or fully
         // lost in the scenery) rolls the car back onto the centerline.
@@ -195,34 +262,47 @@ export function Scene() {
         }
       }
 
-      car.group.position.set(sim.x, 0, sim.z)
-      car.group.rotation.y = sim.heading
-      car.group.rotation.z = sim.steer * Math.min(0.06, sim.speed * 0.002)
+      const playerCar = syncPlayerCar()
+      playerCar.group.position.set(sim.x, 0, sim.z)
+      playerCar.group.rotation.y = sim.heading
+      playerCar.group.rotation.z = sim.steer * Math.min(0.06, sim.speed * 0.002)
 
-      for (const pivot of car.frontWheels) {
+      for (const pivot of playerCar.frontWheels) {
         pivot.rotation.y = sim.steer * 0.35
       }
-      for (const tire of car.spinners) {
+      for (const tire of playerCar.spinners) {
         tire.rotation.x -= (sim.speed / 0.34) * dt
       }
 
-      // Chase camera: sit behind the car along its heading.
+      // Parked: 3/4 on the single player car. Driving: chase cam.
       const back = new THREE.Vector3(
         Math.sin(sim.heading),
         0,
         Math.cos(sim.heading),
       )
-      const desired = new THREE.Vector3(sim.x, 0, sim.z)
-        .addScaledVector(back, 9 + sim.speed * 0.03)
-        .add(new THREE.Vector3(0, 3.4, 0))
-      if (cameraReady) {
-        camera.position.lerp(desired, Math.min(1, dt * 5))
+      if (phase === 'waiting') {
+        const right = new THREE.Vector3(back.z, 0, -back.x)
+        camera.position
+          .set(sim.x, 0, sim.z)
+          .addScaledVector(back, 11)
+          .addScaledVector(right, 4.5)
+          .add(new THREE.Vector3(0, 3.2, 0))
+        cameraTarget.set(sim.x, 0.7, sim.z).addScaledVector(back, -2)
+        camera.lookAt(cameraTarget)
+        cameraReady = false
       } else {
-        camera.position.copy(desired)
-        cameraReady = true
+        const desired = new THREE.Vector3(sim.x, 0, sim.z)
+          .addScaledVector(back, 9 + sim.speed * 0.03)
+          .add(new THREE.Vector3(0, 3.4, 0))
+        if (cameraReady) {
+          camera.position.lerp(desired, Math.min(1, dt * 5))
+        } else {
+          camera.position.copy(desired)
+          cameraReady = true
+        }
+        cameraTarget.set(sim.x, 1.1, sim.z).addScaledVector(back, -6)
+        camera.lookAt(cameraTarget)
       }
-      cameraTarget.set(sim.x, 1.1, sim.z).addScaledVector(back, -6)
-      camera.lookAt(cameraTarget)
 
       // Racing line glow + boost charge while riding it.
       const linePoint = track.racingLine.sampleAt(sim.s)
@@ -246,6 +326,8 @@ export function Scene() {
         speedKmh,
         gear: gearFor(speedKmh),
         lap: Math.max(1, sim.lap),
+        lapMs: Math.round(lapClockMs),
+        lastLapMs,
         steerSource: usingWheel ? 'wheel' : 'keys',
         offTrack: sim.offTrack,
         cornerName: corner.name,

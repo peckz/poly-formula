@@ -9,6 +9,8 @@ class RaceStore {
   speedKmh = 0
   gear = 'N'
   lap = 1
+  lapMs = 0
+  lastLapMs: number | null = null
   steerSource: SteerSource = 'keys'
   offTrack = false
   cornerName = ''
@@ -31,6 +33,8 @@ class RaceStore {
     speedKmh: number
     gear: string
     lap: number
+    lapMs: number
+    lastLapMs: number | null
     steerSource: SteerSource
     offTrack: boolean
     cornerName: string
@@ -44,6 +48,8 @@ class RaceStore {
     this.speedKmh = frame.speedKmh
     this.gear = frame.gear
     this.lap = frame.lap
+    this.lapMs = frame.lapMs
+    this.lastLapMs = frame.lastLapMs
     this.steerSource = frame.steerSource
     this.offTrack = frame.offTrack
     this.cornerName = frame.cornerName

@@ -6,14 +6,17 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "start": "node server/prod.mjs",
     "lint": "oxlint",
     "preview": "vite preview",
-    "generate:atlases": "node scripts/generate-driver-atlases.mjs",
-    "postinstall": "mkdir -p public/mediapipe && rm -rf public/mediapipe/wasm && cp -R node_modules/@mediapipe/tasks-vision/wasm public/mediapipe/wasm"
+"generate:atlases": "node scripts/generate-driver-atlases.mjs",
+    "postinstall": "mkdir -p public/mediapipe && rm -rf public/mediapipe/wasm && cp -R node_modules/@mediapipe/tasks-vision/wasm public/mediapipe/wasm",
+    "convex:dev": "convex dev"
   },
   "dependencies": {
     "@fal-ai/client": "^1.10.1",
     "@mediapipe/tasks-vision": "^1.0.1",
+    "convex": "^1.45.0",
     "mobx": "^7.0.3",
     "mobx-react-lite": "^5.0.3",
     "react": "^19.2.8",
@@ -22,7 +25,7 @@
   },
   "devDependencies": {
     "@fal-ai/server-proxy": "^1.2.1",
-    "@types/node": "^24.13.3",
+    "@types/node": "^24.13.4",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@types/three": "^0.186.0",

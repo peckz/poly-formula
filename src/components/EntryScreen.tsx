@@ -1,34 +1,29 @@
 import { observer } from 'mobx-react-lite'
-import type { FormEvent, KeyboardEvent } from 'react'
-import { useEffect } from 'react'
+import type { CSSProperties, FormEvent, KeyboardEvent } from 'react'
+import { useEffect, useRef } from 'react'
+import { entryPreview, EntryPreviewPipeline } from '../entry/preview'
 import { entryStore, NICKNAME_LIMIT } from '../entry/store'
+import { leaderboardStore } from '../leaderboard/store'
 
 function falLine(): string {
-  const { falStatus, selectedSlot, totalDrivers } = entryStore
-  if (selectedSlot.status === 'generating') {
-    return `Generating ${selectedSlot.driver.name}…`
-  }
-  if (selectedSlot.error) {
-    return selectedSlot.error
-  }
-  if (falStatus === 'missing') {
-    return `Bundled roster · ${totalDrivers} drivers (reroll needs fal.ai key)`
-  }
-  if (falStatus === 'ready') {
-    return `Bundled roster · ${totalDrivers} drivers`
-  }
-  return 'Checking fal.ai…'
+  const { totalDrivers } = entryStore
+  return `Bundled roster · ${totalDrivers} drivers`
 }
 
 function statusClass(): string {
-  const { falStatus, selectedSlot } = entryStore
-  if (selectedSlot.error) {
-    return 'entry-status is-warn'
-  }
-  if (falStatus === 'missing') {
-    return 'entry-status is-warn'
-  }
   return 'entry-status is-ok'
+}
+
+/** Live head-tracked cell of the 5×5 atlas, mirror-style: head left → avatar left. */
+function faceStyle(atlasUrl: string): CSSProperties {
+  const { col, row, yaw, pitch } = entryPreview
+  const nudgeX = Math.max(-1, Math.min(1, yaw)) * -2
+  const nudgeY = Math.max(-1, Math.min(1, pitch)) * -1.5
+  return {
+    backgroundImage: `url(${atlasUrl})`,
+    backgroundPosition: `${col * 25}% ${row * 25}%`,
+    transform: `translate(${nudgeX}%, ${nudgeY}%)`,
+  }
 }
 
 export const EntryScreen = observer(function EntryScreen() {
@@ -40,9 +35,16 @@ export const EntryScreen = observer(function EntryScreen() {
     slots,
     previewAtlasUrl,
   } = entryStore
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
-    void entryStore.checkFal()
+    const video = videoRef.current
+    if (!video) {
+      return
+    }
+    const pipeline = new EntryPreviewPipeline()
+    void pipeline.start(video)
+    return () => pipeline.stop()
   }, [])
 
   function onSubmit(event: FormEvent) {
@@ -59,7 +61,6 @@ export const EntryScreen = observer(function EntryScreen() {
 
   const selected = selectedSlot.driver
   const previewReady = selectedSlot.status === 'ready' && previewAtlasUrl
-  const previewBusy = selectedSlot.status === 'generating'
 
   return (
     <div className="entry-screen">
@@ -78,11 +79,14 @@ export const EntryScreen = observer(function EntryScreen() {
           <p className="entry-sub">Monza · 5793 m</p>
         </header>
 
+        {/* Invisible camera feed driving the avatar preview — the wow moment. */}
+        <video ref={videoRef} className="entry-cam" playsInline muted />
+
         <div className="entry-avatar" aria-hidden={!previewReady}>
           {previewReady ? (
             <div
               className="entry-avatar-face"
-              style={{ backgroundImage: `url(${previewAtlasUrl})` }}
+              style={faceStyle(previewAtlasUrl)}
             />
           ) : (
             <div className="entry-avatar-empty" aria-hidden="true">
@@ -92,13 +96,6 @@ export const EntryScreen = observer(function EntryScreen() {
               <span className="entry-brick entry-brick-asphalt" />
             </div>
           )}
-          <p className="entry-avatar-caption">
-            {previewBusy
-              ? `Generating ${selected.name}`
-              : previewReady
-                ? `${selected.name} · #${selected.number}`
-                : 'Select a driver'}
-          </p>
         </div>
 
         <div className="entry-picker" role="listbox" aria-label="Driver select">
@@ -151,7 +148,6 @@ export const EntryScreen = observer(function EntryScreen() {
             maxLength={NICKNAME_LIMIT}
             placeholder="Your name"
             value={nickname}
-            disabled={previewBusy}
             onChange={(event) => {
               entryStore.setNickname(event.target.value)
             }}
@@ -161,19 +157,6 @@ export const EntryScreen = observer(function EntryScreen() {
 
         <div className="entry-actions">
           <button
-            type="button"
-            className="entry-btn entry-btn-ghost"
-            disabled={
-              entryStore.falStatus !== 'ready' ||
-              selectedSlot.status === 'generating'
-            }
-            onClick={() => {
-              void entryStore.regenerateSelected()
-            }}
-          >
-            {selectedSlot.status === 'generating' ? 'Generating' : 'Reroll'}
-          </button>
-          <button
             type="submit"
             className="entry-btn entry-btn-start"
             disabled={!canStart}
@@ -181,6 +164,16 @@ export const EntryScreen = observer(function EntryScreen() {
             Start
           </button>
         </div>
+
+        <button
+          type="button"
+          className="entry-btn entry-btn-ghost"
+          onClick={() => {
+            leaderboardStore.toggle()
+          }}
+        >
+          Leaderboard
+        </button>
 
         <p className={statusClass()} role="status">
           {falLine()}

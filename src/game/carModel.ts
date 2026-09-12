@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import type { CarPaint } from './drivers'
 
 export type CarModel = {
   group: THREE.Group
@@ -6,12 +7,9 @@ export type CarModel = {
   spinners: THREE.Object3D[]
 }
 
-const RED = 0xd0181c
-const DARK_RED = 0xa30f14
 const TIRE = 0x1a1a1d
 const RIM = 0x3a3a40
 const CARBON = 0x232326
-const WHITE = 0xf2f2f0
 
 function lambert(color: number) {
   return new THREE.MeshLambertMaterial({ color, flatShading: true })
@@ -53,47 +51,49 @@ function wheel(radius: number, width: number): THREE.Group {
 }
 
 /**
- * Low-poly 90s-style F1 car in Ferrari red. Forward is -z.
+ * Low-poly 90s-style F1 car. Forward is -z.
+ * Body uses `paint` from the driver/team color map; carbon and rubber stay shared.
  * Roughly to scale: ~4.4m long, ~1.9m wide over the wheels.
  */
-export function buildCar(): CarModel {
+export function buildCar(paint: CarPaint): CarModel {
   const group = new THREE.Group()
+  const { primary, primaryDark, secondary } = paint
 
   const floor = box(1.4, 0.08, 3.6, CARBON)
   floor.position.set(0, 0.22, 0.1)
   group.add(floor)
 
-  const tub = box(0.85, 0.42, 2.0, RED)
+  const tub = box(0.85, 0.42, 2.0, primary)
   tub.position.set(0, 0.5, 0.2)
   group.add(tub)
 
-  const nose = box(0.42, 0.26, 1.5, RED)
+  const nose = box(0.42, 0.26, 1.5, primary)
   nose.position.set(0, 0.47, -1.45)
   group.add(nose)
 
-  const noseTip = box(0.3, 0.16, 0.5, WHITE)
+  const noseTip = box(0.3, 0.16, 0.5, secondary)
   noseTip.position.set(0, 0.43, -2.3)
   group.add(noseTip)
 
-  const frontWing = box(1.7, 0.06, 0.55, WHITE)
+  const frontWing = box(1.7, 0.06, 0.55, secondary)
   frontWing.position.set(0, 0.24, -2.35)
   group.add(frontWing)
 
   for (const side of [-1, 1]) {
-    const endplate = box(0.06, 0.2, 0.6, RED)
+    const endplate = box(0.06, 0.2, 0.6, primary)
     endplate.position.set(side * 0.85, 0.3, -2.35)
     group.add(endplate)
 
-    const sidepod = box(0.42, 0.32, 1.5, RED)
+    const sidepod = box(0.42, 0.32, 1.5, primary)
     sidepod.position.set(side * 0.62, 0.44, 0.45)
     group.add(sidepod)
 
-    const barge = box(0.05, 0.24, 0.5, DARK_RED)
+    const barge = box(0.05, 0.24, 0.5, primaryDark)
     barge.position.set(side * 0.72, 0.4, -0.5)
     group.add(barge)
   }
 
-  const cockpitRim = box(0.7, 0.12, 0.9, DARK_RED)
+  const cockpitRim = box(0.7, 0.12, 0.9, primaryDark)
   cockpitRim.position.set(0, 0.74, -0.15)
   group.add(cockpitRim)
 
@@ -104,28 +104,28 @@ export function buildCar(): CarModel {
   helmet.position.set(0, 0.86, -0.1)
   group.add(helmet)
 
-  const airbox = box(0.36, 0.34, 0.7, RED)
+  const airbox = box(0.36, 0.34, 0.7, primary)
   airbox.position.set(0, 0.92, 0.55)
   group.add(airbox)
 
-  const engineCover = box(0.5, 0.4, 1.3, RED)
+  const engineCover = box(0.5, 0.4, 1.3, primary)
   engineCover.position.set(0, 0.68, 1.05)
   group.add(engineCover)
 
-  const tail = box(0.36, 0.26, 0.6, DARK_RED)
+  const tail = box(0.36, 0.26, 0.6, primaryDark)
   tail.position.set(0, 0.55, 1.85)
   group.add(tail)
 
-  const rearWing = box(1.3, 0.07, 0.42, RED)
+  const rearWing = box(1.3, 0.07, 0.42, primary)
   rearWing.position.set(0, 1.02, 2.0)
   group.add(rearWing)
 
-  const rearWingLower = box(1.3, 0.05, 0.36, WHITE)
+  const rearWingLower = box(1.3, 0.05, 0.36, secondary)
   rearWingLower.position.set(0, 0.82, 2.05)
   group.add(rearWingLower)
 
   for (const side of [-1, 1]) {
-    const plate = box(0.05, 0.4, 0.5, WHITE)
+    const plate = box(0.05, 0.4, 0.5, secondary)
     plate.position.set(side * 0.65, 0.88, 2.0)
     group.add(plate)
   }
