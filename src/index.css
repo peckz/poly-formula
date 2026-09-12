@@ -426,6 +426,28 @@ body,
   border: 2px solid var(--entry-line);
 }
 
+/* Camera stream stays fully invisible; it only feeds head tracking. */
+.entry-cam {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 2px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Head-tracked cell of the 5×5 atlas, driven inline by entryPreview pose. */
+.entry-avatar-face {
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: 500% 500%;
+  background-position: 50% 50%;
+  image-rendering: pixelated;
+  will-change: background-position, transform;
+}
+
 .entry-avatar img {
   display: block;
   width: 100%;
@@ -450,22 +472,6 @@ body,
 .entry-avatar-empty .entry-brick {
   width: 100%;
   height: 100%;
-}
-
-.entry-avatar-caption {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  margin: 0;
-  padding: var(--entry-pad);
-  color: #9aa3ad;
-  font:
-    11px/1.4 ui-monospace,
-    monospace;
-  letter-spacing: 0.14em;
-  text-align: center;
-  text-transform: uppercase;
 }
 
 .entry-avatar.is-generating {
