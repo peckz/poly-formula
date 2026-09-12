@@ -238,10 +238,15 @@ body,
   position: absolute;
   inset: 0;
   display: grid;
-  place-content: center;
-  padding: var(--ui-pad);
+  align-content: start;
+  justify-content: center;
+  /* Sit below the 280×210 camera feed so the required view stays visible. */
+  padding: 248px var(--ui-pad) var(--ui-pad);
   background: rgba(26, 26, 29, 0.28);
-  font: 13px/1.45 ui-monospace, monospace;
+  font:
+    16px/1.35 ui-sans-serif,
+    system-ui,
+    sans-serif;
   text-align: left;
   pointer-events: none;
 }
@@ -250,7 +255,7 @@ body,
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  width: min(780px, calc(100vw - 32px));
+  width: min(720px, calc(100vw - 32px));
   color: var(--ui-paper);
   background: var(--ui-asphalt);
   border: 4px solid var(--ui-paper);
@@ -267,23 +272,26 @@ body,
   border-bottom: 4px solid var(--ui-red);
 }
 
-.game-overlay-banner {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: var(--ui-pad) 32px;
-  align-items: center;
-  padding: var(--ui-pad) 24px 24px;
-}
-
-.game-overlay-copy {
+.game-overlay-head {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-width: 0;
+  padding: 20px 24px 18px;
+  background: var(--ui-ink);
+  border-bottom: 4px solid var(--ui-paper);
 }
 
 .game-overlay p {
   margin: 0;
+}
+
+.game-overlay-kicker {
+  font:
+    700 12px/1 ui-monospace,
+    monospace;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ui-warn);
 }
 
 .game-overlay-title {
@@ -298,31 +306,148 @@ body,
   text-shadow: 4px 4px 0 var(--ui-red);
 }
 
-.game-overlay-line,
-.game-overlay-keys {
-  color: var(--ui-paper);
-  font-size: 15px;
+.game-overlay-steps {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.game-overlay-keys {
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+.game-overlay-step {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 16px;
+  align-items: start;
+  padding: 16px 24px;
+  border-top: 2px solid var(--ui-line);
+}
+
+.game-overlay-step.is-primary {
+  background: var(--ui-asphalt-mid);
+  box-shadow: inset 6px 0 0 var(--ui-red);
+}
+
+.game-overlay-step.is-grip.is-active {
+  background: var(--ui-asphalt-mid);
+  box-shadow: inset 6px 0 0 var(--ui-warn);
+}
+
+.game-overlay-step-num {
+  font:
+    800 40px/0.9 ui-sans-serif,
+    system-ui,
+    sans-serif;
+  letter-spacing: 0.04em;
+  color: var(--ui-paper);
+  text-shadow: 3px 3px 0 var(--ui-red);
+}
+
+.game-overlay-step.is-keys .game-overlay-step-num {
+  text-shadow: 3px 3px 0 var(--ui-ink);
   color: var(--ui-warn);
 }
 
-.game-overlay-hint {
-  color: var(--ui-grass);
-  letter-spacing: 0.06em;
+.game-overlay-step-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding-top: 4px;
+}
+
+.game-overlay-step-label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font:
+    800 18px/1 ui-sans-serif,
+    system-ui,
+    sans-serif;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
+.game-overlay-step-badge {
+  padding: 4px 6px;
+  font:
+    700 10px/1 ui-monospace,
+    monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ui-paper);
+  background: var(--ui-red);
+}
+
+.game-overlay-step-badge.is-backup {
+  color: var(--ui-ink);
+  background: var(--ui-warn);
+}
+
+.game-overlay-step-body {
+  color: var(--ui-paper);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.game-overlay-step.is-keys .game-overlay-step-body {
+  color: var(--ui-muted);
+}
+
+.game-overlay-keycaps {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.game-overlay-keycaps span {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  color: var(--ui-ink);
+  background: var(--ui-warn);
+  border: 2px solid var(--ui-paper);
+  font:
+    800 12px/1 ui-sans-serif,
+    system-ui,
+    sans-serif;
+}
+
+.game-overlay-hint {
+  margin: 0;
+  padding: 12px 24px;
+  color: var(--ui-ink);
+  background: var(--ui-grass);
+  font:
+    700 12px/1.3 ui-monospace,
+    monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-top: 4px solid var(--ui-paper);
+}
+
 @media (max-width: 640px) {
-  .game-overlay-banner {
-    grid-template-columns: 1fr;
+  .game-overlay {
+    padding-top: 232px;
   }
 
   .game-overlay-title {
     font-size: 48px;
+  }
+
+  .game-overlay-step {
+    grid-template-columns: 40px 1fr;
+    padding: 14px 16px;
+  }
+
+  .game-overlay-step-num {
+    font-size: 32px;
+  }
+
+  .game-overlay-head {
+    padding: 16px;
   }
 }
 
