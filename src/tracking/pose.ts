@@ -1,7 +1,5 @@
-import type {
-  HandLandmarkerResult,
-  NormalizedLandmark,
-} from '@mediapipe/tasks-vision'
+import type { NormalizedLandmark } from '@mediapipe/tasks-vision'
+import type { Detection } from './inference'
 import type { Point3 } from './store'
 
 const WRIST = 0
@@ -26,16 +24,16 @@ function fromLandmark(landmark: NormalizedLandmark): Point3 {
   }
 }
 
-export function readHands(result: HandLandmarkerResult): {
+export function readHands(detection: Detection): {
   leftHand: Point3
   rightHand: Point3
 } {
   let leftHand = undetectedPoint()
   let rightHand = undetectedPoint()
 
-  for (let i = 0; i < result.landmarks.length; i += 1) {
-    const landmarks = result.landmarks[i]
-    const label = result.handedness[i]?.[0]?.categoryName
+  for (let i = 0; i < detection.hands.length; i += 1) {
+    const landmarks = detection.hands[i]
+    const label = detection.handedness[i]
     const wrist = landmarks[WRIST]
     if (!wrist || !label) {
       continue
