@@ -486,8 +486,11 @@ body,
   inset: 0;
   z-index: 20;
   display: grid;
-  place-items: center;
+  align-content: start;
+  justify-items: center;
   padding: var(--entry-pad);
+  overflow-x: hidden;
+  overflow-y: auto;
   background:
     linear-gradient(
       180deg,
@@ -511,6 +514,7 @@ body,
   gap: var(--entry-pad);
   box-sizing: border-box;
   width: min(520px, 100%);
+  margin-block: auto;
   padding: var(--entry-pad);
   background: var(--entry-asphalt);
   border: 2px solid var(--entry-line);
@@ -570,7 +574,9 @@ body,
 
 .entry-avatar {
   position: relative;
+  width: min(160px, 42%);
   aspect-ratio: 1;
+  margin-inline: auto;
   overflow: hidden;
   background: var(--entry-asphalt-mid);
   border: 2px solid var(--entry-line);
