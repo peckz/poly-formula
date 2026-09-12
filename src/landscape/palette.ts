@@ -1,32 +1,34 @@
 import * as THREE from 'three'
 
 /**
- * Monza Park low-poly / PS1 visual palette.
+ * Monza Park low-poly / PS1 visual palette: Italy midday heat.
+ * Soft, warm, approachable: clear Italian blue sky, gentle heat haze,
+ * warm olive grass, and muted (not harsh) dark tones. No stark neon or pitch blacks.
  * Uses Lambert / vertex coloring; no PBR roughness/metalness overhead.
  */
 export const LANDSCAPE_COLORS = {
-  sky: 0x8ec4e0, // #8EC4E0 - Pale Mediterranean sky
-  fog: 0xb4c4b8, // #B4C4B8 - Morning parkland mist
-  grass: 0x4f7a3e, // #4F7A3E - Monza Royal Park grass
-  grassDark: 0x426934, // Subtle darker grass variation
-  grassLight: 0x5a8a47, // Subtle lighter grass highlight
-  canopy: 0x2d4a28, // #2D4A28 - Italian cypress & pine canopy
-  canopyOak: 0x34542d, // Broadleaf oak canopy
-  trunk: 0x5c4033, // #5C4033 - Tree wood trunk
-  runoffAsphalt: 0x3d3d42, // #3D3D42 - Runoff asphalt apron
-  gravel: 0xc2b08a, // #C2B08A - Gravel trap bed
-  grandstand: 0xe6e2d8, // #E6E2D8 - Concrete grandstand structure
-  grandstandRedBand: 0xb81c2c, // #B81C2C - Italian racing red accent band
-  grandstandRoof: 0x50555c, // Slate grey corrugated roof
-  tires: 0x1c1c1c, // #1C1C1C - Rubber tire barrier
-  tiresWhite: 0xe0ded8, // Painted white tire barrier stripe
-  tireBelt: 0x2f2f33, // Outer belt strapping
-  billboardField: 0xf2efe8, // #F2EFE8 - Billboard display canvas
-  billboardFrame: 0xd8d4cc, // #D8D4CC - Galvanized perimeter frame
-  billboardPosts: 0x4a4d52, // Steel support pylons
-  trackAsphalt: 0x242830, // Main circuit asphalt ribbon
-  kerbRed: 0xb81c2c, // Monza kerb red
-  kerbWhite: 0xf2efe8, // Monza kerb white
+  sky: 0x82c5eb, // #82C5EB - Clear soft Italian midday blue sky
+  fog: 0xb8d4e2, // #B8D4E2 - Soft summer heat haze
+  grass: 0x5b7e3e, // #5B7E3E - Warm olive Monza park grass
+  grassDark: 0x4e6e34, // Subtle darker olive variation
+  grassLight: 0x6a8f48, // Sunlit golden-olive grass highlight
+  canopy: 0x324f2a, // #324F2A - Italian cypress & Lombardy poplar canopy
+  canopyOak: 0x3a5a32, // #3A5A32 - Broadleaf stone oak canopy
+  trunk: 0x634839, // #634839 - Warm sunbaked tree trunk
+  runoffAsphalt: 0x44454b, // #44454B - Warm grey runoff asphalt apron
+  gravel: 0xc8b892, // #C8B892 - Warm Italian golden gravel trap bed
+  grandstand: 0xede8dc, // #EDE8DC - Sunlit warm cream concrete grandstand
+  grandstandRedBand: 0xba202e, // #BA202E - Italian racing red accent band
+  grandstandRoof: 0x5c626a, // #5C626A - Muted slate grey roof
+  tires: 0x2b2b30, // #2B2B30 - Muted charcoal rubber tires (no harsh black)
+  tiresWhite: 0xe5e2db, // #E5E2DB - Soft warm white tire stripe
+  tireBelt: 0x3e3e44, // #3E3E44 - Muted belt strapping
+  billboardField: 0xf4f1ea, // #F4F1EA - Warm off-white billboard canvas
+  billboardFrame: 0xdcd8d0, // #DCD8D0 - Warm galvanized aluminum frame
+  billboardPosts: 0x545860, // #545860 - Warm muted steel support pylons
+  trackAsphalt: 0x3a3e46, // #3A3E46 - Warm grey ribbon placeholder
+  kerbRed: 0xba202e, // Monza kerb red
+  kerbWhite: 0xf4f1ea, // Monza kerb soft white
 } as const
 
 /**

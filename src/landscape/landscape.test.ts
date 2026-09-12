@@ -19,18 +19,18 @@ import {
 } from './index.ts'
 
 test('Visual palette contains all required PS1 park circuit colors', () => {
-  assert.equal(LANDSCAPE_COLORS.sky, 0x8ec4e0, 'Sky color should be #8EC4E0')
-  assert.equal(LANDSCAPE_COLORS.fog, 0xb4c4b8, 'Fog color should be #B4C4B8')
-  assert.equal(LANDSCAPE_COLORS.grass, 0x4f7a3e, 'Grass color should be #4F7A3E')
-  assert.equal(LANDSCAPE_COLORS.canopy, 0x2d4a28, 'Canopy color should be #2D4A28')
-  assert.equal(LANDSCAPE_COLORS.trunk, 0x5c4033, 'Trunk color should be #5C4033')
-  assert.equal(LANDSCAPE_COLORS.runoffAsphalt, 0x3d3d42, 'Runoff color should be #3D3D42')
-  assert.equal(LANDSCAPE_COLORS.gravel, 0xc2b08a, 'Gravel color should be #C2B08A')
-  assert.equal(LANDSCAPE_COLORS.grandstand, 0xe6e2d8, 'Grandstand body should be #E6E2D8')
-  assert.equal(LANDSCAPE_COLORS.grandstandRedBand, 0xb81c2c, 'Italian red band should be #B81C2C')
-  assert.equal(LANDSCAPE_COLORS.tires, 0x1c1c1c, 'Tires color should be #1C1C1C')
-  assert.equal(LANDSCAPE_COLORS.billboardField, 0xf2efe8, 'Billboard field should be #F2EFE8')
-  assert.equal(LANDSCAPE_COLORS.billboardFrame, 0xd8d4cc, 'Billboard frame should be #D8D4CC')
+  assert.equal(LANDSCAPE_COLORS.sky, 0x82c5eb, 'Sky color should be soft Italian midday blue #82C5EB')
+  assert.equal(LANDSCAPE_COLORS.fog, 0xb8d4e2, 'Fog color should be soft summer heat haze #B8D4E2')
+  assert.equal(LANDSCAPE_COLORS.grass, 0x5b7e3e, 'Grass color should be warm olive #5B7E3E')
+  assert.equal(LANDSCAPE_COLORS.canopy, 0x324f2a, 'Canopy color should be #324F2A')
+  assert.equal(LANDSCAPE_COLORS.trunk, 0x634839, 'Trunk color should be #634839')
+  assert.equal(LANDSCAPE_COLORS.runoffAsphalt, 0x44454b, 'Runoff color should be #44454B')
+  assert.equal(LANDSCAPE_COLORS.gravel, 0xc8b892, 'Gravel color should be #C8B892')
+  assert.equal(LANDSCAPE_COLORS.grandstand, 0xede8dc, 'Grandstand body should be #EDE8DC')
+  assert.equal(LANDSCAPE_COLORS.grandstandRedBand, 0xba202e, 'Italian red band should be #BA202E')
+  assert.equal(LANDSCAPE_COLORS.tires, 0x2b2b30, 'Tires color should be muted charcoal #2B2B30')
+  assert.equal(LANDSCAPE_COLORS.billboardField, 0xf4f1ea, 'Billboard field should be #F4F1EA')
+  assert.equal(LANDSCAPE_COLORS.billboardFrame, 0xdcd8d0, 'Billboard frame should be #DCD8D0')
 })
 
 test('All 10 sponsor brands are supported and generate valid textures', () => {

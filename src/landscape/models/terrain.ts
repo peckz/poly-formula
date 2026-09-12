@@ -35,20 +35,20 @@ export function createTerrain(
     const ctx = canvas.getContext('2d')
 
     if (ctx) {
-      // Base lush park grass (#4F7A3E)
-      ctx.fillStyle = '#4f7a3e'
+      // Base lush warm olive park grass (#5B7E3E)
+      ctx.fillStyle = '#5b7e3e'
       ctx.fillRect(0, 0, 512, 512)
 
-      // Subtle tonal variations for low-poly / PS1 grass feel
-      ctx.fillStyle = '#466e37'
+      // Subtle warm olive tonal variations for low-poly / PS1 grass feel
+      ctx.fillStyle = '#4e6e34'
       ctx.fillRect(0, 0, 256, 256)
       ctx.fillRect(256, 256, 256, 256)
 
-      ctx.fillStyle = '#558243'
+      ctx.fillStyle = '#668b44'
       ctx.fillRect(128, 128, 256, 256)
 
-      // Fine stippling pattern
-      ctx.fillStyle = '#436934'
+      // Fine olive-gold stippling pattern
+      ctx.fillStyle = '#547738'
       for (let i = 0; i < 60; i++) {
         const rx = (i * 37) % 512
         const ry = (i * 73) % 512

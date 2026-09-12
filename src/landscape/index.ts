@@ -57,19 +57,19 @@ export function createLandscape(
 
   const disposables: Array<{ dispose: () => void }> = []
 
-  // 1. Scene Fog & Sky Atmosphere
+  // 1. Scene Fog & Sky Atmosphere (Italy midday: clear soft blue sky, gentle summer heat haze)
   if (enableFog) {
     scene.background = new THREE.Color(LANDSCAPE_COLORS.sky)
-    scene.fog = new THREE.FogExp2(LANDSCAPE_COLORS.fog, 0.0014)
+    scene.fog = new THREE.FogExp2(LANDSCAPE_COLORS.fog, 0.0011)
   }
 
-  // 2. Lighting (Warm Italian afternoon sunlight & ambient fill)
+  // 2. Lighting (Warm Italian midday sunlight & soft sky ambient fill)
   if (enableLighting) {
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.95)
+    const ambientLight = new THREE.AmbientLight(0xfff6ec, 1.05)
     ambientLight.name = 'Landscape_Ambient'
     scene.add(ambientLight)
 
-    const sunLight = new THREE.DirectionalLight(0xfff8e8, 1.65)
+    const sunLight = new THREE.DirectionalLight(0xfffaee, 1.75)
     sunLight.name = 'Landscape_Sun'
     sunLight.position.set(60, 100, 70)
     sunLight.castShadow = true
