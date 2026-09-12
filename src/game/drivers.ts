@@ -24,8 +24,6 @@ export type CarPaint = {
 
 const HEX = /^#?[0-9a-fA-F]{6}$/
 
-export const PLAYER_DRIVER_ID = grid.playerDriverId
-
 export const TEAMS: Record<TeamId, TeamColors> = grid.teams
 
 export const DRIVERS: Driver[] = grid.drivers.map((driver) => ({
@@ -46,9 +44,6 @@ function assertGrid() {
     if (!(driver.team in TEAMS)) {
       throw new Error(`Unknown team ${driver.team} for ${driver.id}`)
     }
-  }
-  if (!ids.has(PLAYER_DRIVER_ID)) {
-    throw new Error(`Player driver ${PLAYER_DRIVER_ID} is not on the grid`)
   }
 }
 

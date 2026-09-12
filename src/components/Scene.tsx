@@ -1,8 +1,7 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { buildCar, type CarModel } from '../game/carModel'
-import { paintForDriver } from '../game/drivers'
-import { buildGridSlots, gridLook, playerSlot, type GridSlot } from '../game/grid'
+import { driverById, paintForDriver } from '../game/drivers'
 import {
   allowedSpeed,
   buildSpeedEnvelope,
@@ -67,28 +66,43 @@ export function Scene() {
     const track = buildTrack()
     scene.add(track.group)
 
-    const slots = buildGridSlots()
-    const player = playerSlot(slots)
-    const field: Array<{ slot: GridSlot; car: CarModel }> = []
-    for (const slot of slots) {
-      const model = buildCar(paintForDriver(slot.driver))
-      model.group.position.set(slot.x, 0, slot.z)
-      model.group.rotation.y = slot.heading
-      scene.add(model.group)
-      field.push({ slot, car: model })
+    /** One car only — paint follows the entry-screen driver pick. */
+    let carDriverId = ''
+    let car: CarModel | null = null
+
+    const disposeCar = (model: CarModel) => {
+      scene.remove(model.group)
+      model.group.traverse((object) => {
+        if (!(object instanceof THREE.Mesh)) {
+          return
+        }
+        object.geometry.dispose()
+        const materials = Array.isArray(object.material)
+          ? object.material
+          : [object.material]
+        for (const material of materials) {
+          material.dispose()
+        }
+      })
     }
-    const car = field.find((entry) => entry.slot.driver.id === player.driver.id)?.car
-    if (!car) {
-      throw new Error('Player car missing from grid')
+
+    const syncPlayerCar = () => {
+      const id = entryStore.selectedDriverId
+      if (car && carDriverId === id) {
+        return car
+      }
+      if (car) {
+        disposeCar(car)
+      }
+      carDriverId = id
+      car = buildCar(paintForDriver(driverById(id)))
+      scene.add(car.group)
+      return car
     }
-    const look = gridLook(slots)
+
+    syncPlayerCar()
 
     const sim = new CarSim()
-    sim.resetToTrack(player.s)
-    sim.x = player.x
-    sim.z = player.z
-    sim.heading = player.heading
-    sim.distFromCenter = Math.abs(player.offsetM)
     const envelope = buildSpeedEnvelope(monzaPath)
     const keyboard = new Keyboard()
     keyboard.attach()
@@ -215,29 +229,35 @@ export function Scene() {
         }
       }
 
-      car.group.position.set(sim.x, 0, sim.z)
-      car.group.rotation.y = sim.heading
-      car.group.rotation.z = sim.steer * Math.min(0.06, sim.speed * 0.002)
+      const playerCar = syncPlayerCar()
+      playerCar.group.position.set(sim.x, 0, sim.z)
+      playerCar.group.rotation.y = sim.heading
+      playerCar.group.rotation.z = sim.steer * Math.min(0.06, sim.speed * 0.002)
 
-      for (const pivot of car.frontWheels) {
+      for (const pivot of playerCar.frontWheels) {
         pivot.rotation.y = sim.steer * 0.35
       }
-      for (const tire of car.spinners) {
+      for (const tire of playerCar.spinners) {
         tire.rotation.x -= (sim.speed / 0.34) * dt
       }
 
-      // Parked: look across the coloured grid. Driving: chase cam.
+      // Parked: 3/4 on the single player car. Driving: chase cam.
+      const back = new THREE.Vector3(
+        Math.sin(sim.heading),
+        0,
+        Math.cos(sim.heading),
+      )
       if (phase === 'waiting') {
-        camera.position.set(look.x, look.y, look.z)
-        cameraTarget.set(look.lookX, look.lookY, look.lookZ)
+        const right = new THREE.Vector3(back.z, 0, -back.x)
+        camera.position
+          .set(sim.x, 0, sim.z)
+          .addScaledVector(back, 11)
+          .addScaledVector(right, 4.5)
+          .add(new THREE.Vector3(0, 3.2, 0))
+        cameraTarget.set(sim.x, 0.7, sim.z).addScaledVector(back, -2)
         camera.lookAt(cameraTarget)
         cameraReady = false
       } else {
-        const back = new THREE.Vector3(
-          Math.sin(sim.heading),
-          0,
-          Math.cos(sim.heading),
-        )
         const desired = new THREE.Vector3(sim.x, 0, sim.z)
           .addScaledVector(back, 9 + sim.speed * 0.03)
           .add(new THREE.Vector3(0, 3.4, 0))

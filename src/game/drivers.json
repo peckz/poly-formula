@@ -1,7 +1,6 @@
 {
   "season": 2026,
   "notes": "FIA 2026 22-driver entry list. Paints are recognizable digital team colors for the poly car, not factory formulas.",
-  "playerDriverId": "leclerc",
   "teams": {
     "mclaren": {
       "name": "McLaren",
