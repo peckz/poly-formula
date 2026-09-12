@@ -3,6 +3,7 @@ import { raceStore } from '../game/store'
 import { monzaPath } from '../game/trackPath'
 
 const MAP_PAD = 60
+const CAR_PIP = 56
 
 const mapBounds = (() => {
   let minX = Infinity
@@ -45,51 +46,61 @@ export const RaceHud = observer(function RaceHud() {
   } = raceStore
 
   return (
-    <aside className="race-hud">
-      <svg
-        className="race-hud-map"
-        viewBox={`${mapBounds.x} ${mapBounds.z} ${mapBounds.w} ${mapBounds.h}`}
-        preserveAspectRatio="xMidYMid meet"
-      >
-        <polygon
-          points={mapOutline}
-          fill="none"
-          stroke="#9a9a9a"
-          strokeWidth="16"
-          strokeLinejoin="round"
-        />
-        <circle cx={carX} cy={carZ} r="34" fill="#ff2a2a" />
-      </svg>
-      {attacking ? (
-        <p className="race-hud-attack">BOOST</p>
-      ) : slowing ? (
-        <p className="race-hud-slowing">SLOWING</p>
-      ) : null}
-      <p className="race-hud-speed">
-        {speedKmh}
-        <span> km/h</span>
-      </p>
-      <p className="race-hud-row">
-        <span>gear {gear}</span>
-        <span>lap {lap}</span>
-      </p>
-      <p className="race-hud-corner">
-        {cornerName} <span>{cornerDistM}m</span>
-      </p>
-      {steerSource === 'wheel' ? (
-        <div className="race-hud-boost" aria-label="boost">
-          <div
-            className="race-hud-boost-fill"
-            style={{ width: `${Math.round(boost * 100)}%` }}
+    <>
+      <aside className="race-pace">
+        {attacking ? (
+          <p className="race-hud-attack">Boost</p>
+        ) : slowing ? (
+          <p className="race-hud-slowing">Slowing</p>
+        ) : null}
+        <p className="race-hud-speed">
+          {speedKmh}
+          <span> km/h</span>
+        </p>
+        <p className="race-hud-row">
+          <span>gear {gear}</span>
+          <span>lap {lap}</span>
+        </p>
+        <p className="race-hud-corner">
+          {cornerName} <span>{cornerDistM}m</span>
+        </p>
+        {steerSource === 'wheel' ? (
+          <div className="race-hud-boost" aria-label="boost">
+            <div
+              className="race-hud-boost-fill"
+              style={{ width: `${Math.round(boost * 100)}%` }}
+            />
+          </div>
+        ) : null}
+        <p className="race-hud-row">
+          <span className={steerSource === 'wheel' ? 'ok' : 'off'}>
+            {steerSource === 'wheel' ? 'hands on wheel' : 'keyboard'}
+          </span>
+          {offTrack ? <span className="warn">off track</span> : null}
+        </p>
+      </aside>
+      <aside className="race-map" aria-label="track map">
+        <svg
+          className="race-hud-map"
+          viewBox={`${mapBounds.x} ${mapBounds.z} ${mapBounds.w} ${mapBounds.h}`}
+          preserveAspectRatio="xMidYMid meet"
+        >
+          <polygon
+            points={mapOutline}
+            fill="none"
+            stroke="#9aa3ad"
+            strokeWidth="16"
+            strokeLinejoin="miter"
           />
-        </div>
-      ) : null}
-      <p className="race-hud-row">
-        <span className={steerSource === 'wheel' ? 'ok' : 'off'}>
-          {steerSource === 'wheel' ? 'hands on wheel' : 'keyboard'}
-        </span>
-        {offTrack ? <span className="warn">off track</span> : null}
-      </p>
-    </aside>
+          <rect
+            x={carX - CAR_PIP / 2}
+            y={carZ - CAR_PIP / 2}
+            width={CAR_PIP}
+            height={CAR_PIP}
+            fill="#d0181c"
+          />
+        </svg>
+      </aside>
+    </>
   )
 })

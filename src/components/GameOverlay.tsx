@@ -20,6 +20,11 @@ export const GameOverlay = observer(function GameOverlay() {
   return (
     <div className="game-overlay">
       <div className="game-overlay-card">
+        <div className="entry-mark" aria-hidden="true">
+          <span className="entry-brick entry-brick-red" />
+          <span className="entry-brick entry-brick-white" />
+          <span className="entry-brick entry-brick-mint" />
+        </div>
         <p className="game-overlay-title">{title}</p>
         <p className="game-overlay-line">{line}</p>
         <p className="game-overlay-hint">
