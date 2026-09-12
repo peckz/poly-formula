@@ -2,7 +2,6 @@ import { observer } from 'mobx-react-lite'
 import { CameraView } from './components/CameraView'
 import { EntryScreen } from './components/EntryScreen'
 import { GameOverlay } from './components/GameOverlay'
-import { GenerateAtlas } from './components/GenerateAtlas'
 import { RaceHud } from './components/RaceHud'
 import { Scene } from './components/Scene'
 import { TrackingHud } from './components/TrackingHud'
@@ -18,7 +17,6 @@ const App = observer(function App() {
         <>
           <CameraView />
           <TrackingHud />
-          <GenerateAtlas />
           <RaceHud />
           <GameOverlay />
         </>

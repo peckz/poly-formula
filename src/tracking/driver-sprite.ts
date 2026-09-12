@@ -13,13 +13,24 @@ const LEFT_CHEEK = 234
 const RIGHT_CHEEK = 454
 const SCALE = 1.25
 
+const DEFAULT_ATLAS = '/sprites/leclerc-atlas.png'
+
 const sprite = new Image()
-sprite.src = '/sprites/leclerc-atlas.png'
+sprite.crossOrigin = 'anonymous'
+sprite.src = DEFAULT_ATLAS
 
 const buffer = document.createElement('canvas')
 buffer.width = SAMPLE_W
 buffer.height = SAMPLE_H
 const pixels = buffer.getContext('2d')
+
+/**
+ * Point head tracking at a generated 5×5 atlas URL, or pass null to
+ * fall back to the baked Leclerc sheet.
+ */
+export function setDriverAtlasUrl(url: string | null) {
+  sprite.src = url && url.length > 0 ? url : DEFAULT_ATLAS
+}
 
 function distance(
   a: NormalizedLandmark,

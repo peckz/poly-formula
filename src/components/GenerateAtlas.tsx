@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { fal } from '../fal/client'
 import { buildDriverAtlasPrompt } from '../fal/prompt'
 
-const MODEL_ID = 'fal-ai/gpt-image-1/text-to-image'
+const MODEL_ID = 'openai/gpt-image-2.5/flare/text-to-image'
 const DEFAULT_CHARACTER = 'charles leclerc'
 
 function errorMessage(error: unknown): string {
@@ -28,7 +28,11 @@ export function GenerateAtlas() {
       const result = await fal.subscribe(MODEL_ID, {
         input: {
           prompt: buildDriverAtlasPrompt(character),
-          image_size: '1024x1024',
+          image_size: 'square_hd',
+          background: 'transparent',
+          quality: 'high',
+          output_format: 'png',
+          num_images: 1,
         },
       })
       const url = result.data.images[0]?.url

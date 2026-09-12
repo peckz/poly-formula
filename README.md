@@ -16,7 +16,7 @@ The camera loop does not go through React. It writes numbers into a store once p
 - **MediaPipe Face + Hand Landmarker** — geometric head pose from a few landmarks, plus both wrists
 - **MobX** — tracking updates every frame without re-rendering the whole app
 - **Store only useful numbers** — pose, wrists, wheel angle. Not the full landmark mesh
-- **fal.ai** — generates the entry-screen avatar (Flux) and HUD driver atlases (GPT Image). Key stays in `.env`; the browser talks to a local Vite proxy. Missing credentials keep the entry flow usable with a brick placeholder.
+- **fal.ai** — generates the entry-screen 5×5 head atlas via **GPT Image 2.5 Flare** (`openai/gpt-image-2.5/flare/text-to-image`). Key stays in `.env`; the browser talks to a local Vite proxy. Missing credentials keep the entry flow usable with a brick placeholder.
 - **Driver sprite** — 5×5 atlas. Nose vs eyes/mouth picks yaw/pitch, then snaps to a cell. Overlay is counter-mirrored so left/right match
 - **Wheel sprite** — two palm centers set position, tilt, and size so the grips sit in your hands
 

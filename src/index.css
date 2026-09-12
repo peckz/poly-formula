@@ -411,6 +411,11 @@ body,
   image-rendering: pixelated;
 }
 
+.entry-avatar.is-atlas img {
+  object-fit: contain;
+  background: #0c0c0e;
+}
+
 .entry-avatar-empty {
   display: grid;
   grid-template-columns: 1fr 1fr;

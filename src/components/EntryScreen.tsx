@@ -1,12 +1,16 @@
 import { observer } from 'mobx-react-lite'
 import type { FormEvent, KeyboardEvent } from 'react'
 import { useEffect } from 'react'
-import { entryStore, NICKNAME_LIMIT } from '../entry/store'
+import {
+  AVATAR_SUBJECT_LIMIT,
+  entryStore,
+  NICKNAME_LIMIT,
+} from '../entry/store'
 
 function falLine(): string {
   const { falStatus, avatarStatus, avatarError } = entryStore
   if (avatarStatus === 'generating') {
-    return 'Generating avatar…'
+    return 'Generating 5×5 head atlas…'
   }
   if (avatarError) {
     return avatarError
@@ -22,7 +26,11 @@ function falLine(): string {
 
 function statusClass(): string {
   const { falStatus, avatarStatus, avatarError } = entryStore
-  if (avatarStatus === 'error' || avatarStatus === 'placeholder' || falStatus === 'missing') {
+  if (
+    avatarStatus === 'error' ||
+    avatarStatus === 'placeholder' ||
+    falStatus === 'missing'
+  ) {
     return 'entry-status is-warn'
   }
   if (falStatus === 'ready' && !avatarError) {
@@ -32,7 +40,15 @@ function statusClass(): string {
 }
 
 export const EntryScreen = observer(function EntryScreen() {
-  const { nickname, avatarUrl, avatarStatus, canStart, generating } = entryStore
+  const {
+    nickname,
+    avatarSubject,
+    avatarUrl,
+    avatarStatus,
+    canStart,
+    canGenerate,
+    generating,
+  } = entryStore
 
   useEffect(() => {
     void entryStore.checkFal()
@@ -50,12 +66,20 @@ export const EntryScreen = observer(function EntryScreen() {
     }
   }
 
+  function onAvatarKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      void entryStore.generateAvatar()
+    }
+  }
+
+  const subjectLabel = avatarSubject.trim() || 'driver'
   const avatarLabel =
     avatarStatus === 'ready'
-      ? `Generated avatar for ${nickname || 'driver'}`
+      ? `Head sprite atlas of ${subjectLabel}`
       : avatarStatus === 'placeholder' || avatarStatus === 'error'
-        ? `Placeholder avatar for ${nickname || 'driver'}`
-        : 'Avatar placeholder'
+        ? `Placeholder for ${subjectLabel}`
+        : 'Sprite atlas placeholder'
 
   return (
     <div className="entry-screen">
@@ -75,7 +99,7 @@ export const EntryScreen = observer(function EntryScreen() {
         </header>
 
         <div
-          className={`entry-avatar${generating ? ' is-generating' : ''}`}
+          className={`entry-avatar${generating ? ' is-generating' : ''}${avatarStatus === 'ready' ? ' is-atlas' : ''}`}
           data-state={avatarStatus}
         >
           {avatarUrl ? (
@@ -88,7 +112,11 @@ export const EntryScreen = observer(function EntryScreen() {
               <span className="entry-brick entry-brick-asphalt" />
             </div>
           )}
-          {!avatarUrl ? <p className="entry-avatar-caption">No avatar</p> : null}
+          {!avatarUrl ? (
+            <p className="entry-avatar-caption">No sprite atlas</p>
+          ) : avatarStatus === 'ready' ? (
+            <p className="entry-avatar-caption">5×5 head atlas</p>
+          ) : null}
         </div>
 
         <label className="entry-field" htmlFor="entry-nickname">
@@ -100,7 +128,7 @@ export const EntryScreen = observer(function EntryScreen() {
             autoComplete="nickname"
             autoFocus
             maxLength={NICKNAME_LIMIT}
-            placeholder="Enter a name"
+            placeholder="Your name"
             value={nickname}
             disabled={generating}
             onChange={(event) => {
@@ -110,11 +138,29 @@ export const EntryScreen = observer(function EntryScreen() {
           />
         </label>
 
+        <label className="entry-field" htmlFor="entry-avatar-subject">
+          <span>Avatar</span>
+          <input
+            id="entry-avatar-subject"
+            name="avatar"
+            type="text"
+            autoComplete="off"
+            maxLength={AVATAR_SUBJECT_LIMIT}
+            placeholder="Who to draw, e.g. Carlos Sainz"
+            value={avatarSubject}
+            disabled={generating}
+            onChange={(event) => {
+              entryStore.setAvatarSubject(event.target.value)
+            }}
+            onKeyDown={onAvatarKeyDown}
+          />
+        </label>
+
         <div className="entry-actions">
           <button
             type="button"
             className="entry-btn entry-btn-ghost"
-            disabled={generating}
+            disabled={!canGenerate}
             onClick={() => {
               void entryStore.generateAvatar()
             }}

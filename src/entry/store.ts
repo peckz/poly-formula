@@ -1,11 +1,14 @@
 import { makeAutoObservable, runInAction } from 'mobx'
 import { fal } from '../fal/client'
 import { fetchFalHealth, type FalHealth } from '../fal/health'
-import { buildDriverAvatarPrompt } from '../fal/prompt'
+import { buildDriverAtlasPrompt } from '../fal/prompt'
+import { setDriverAtlasUrl } from '../tracking/driver-sprite'
 import { buildPlaceholderAvatar } from './placeholder'
 
-const AVATAR_MODEL = 'fal-ai/flux/schnell'
+/** Latest OpenAI image model on fal — Flare is the default 2.5 variant. */
+const ATLAS_MODEL = 'openai/gpt-image-2.5/flare/text-to-image'
 const NICKNAME_MAX = 20
+const AVATAR_SUBJECT_MAX = 40
 
 export type AvatarStatus = 'empty' | 'generating' | 'ready' | 'placeholder' | 'error'
 
@@ -31,10 +34,14 @@ function firstImageUrl(data: unknown): string | null {
 }
 
 class EntryStore {
+  /** Player display name — required to start. */
   nickname = ''
+  /** Who fal should draw into the 5×5 head atlas. */
+  avatarSubject = ''
   entered = false
   falStatus: FalStatus = 'unknown'
   avatarStatus: AvatarStatus = 'empty'
+  /** URL of the generated 5×5 sprite atlas (or placeholder portrait). */
   avatarUrl: string | null = null
   avatarError: string | null = null
 
@@ -46,8 +53,16 @@ class EntryStore {
     return this.nickname.trim()
   }
 
+  get trimmedAvatarSubject(): string {
+    return this.avatarSubject.trim()
+  }
+
   get canStart(): boolean {
     return this.trimmedNickname.length > 0
+  }
+
+  get canGenerate(): boolean {
+    return this.trimmedAvatarSubject.length > 0 && !this.generating
   }
 
   get generating(): boolean {
@@ -58,18 +73,26 @@ class EntryStore {
     this.nickname = value.slice(0, NICKNAME_MAX)
   }
 
+  setAvatarSubject(value: string) {
+    this.avatarSubject = value.slice(0, AVATAR_SUBJECT_MAX)
+  }
+
   start() {
     if (!this.canStart) {
       return
     }
     this.nickname = this.trimmedNickname
+    this.avatarSubject = this.trimmedAvatarSubject
     this.entered = true
   }
 
   applyPlaceholder(message: string, status: 'placeholder' | 'error') {
-    this.avatarUrl = buildPlaceholderAvatar(this.trimmedNickname)
+    const seed = this.trimmedAvatarSubject || this.trimmedNickname || 'driver'
+    this.avatarUrl = buildPlaceholderAvatar(seed)
     this.avatarStatus = status
     this.avatarError = message
+    // Keep the baked Leclerc atlas for head tracking when fal fails.
+    setDriverAtlasUrl(null)
   }
 
   async checkFal() {
@@ -80,10 +103,11 @@ class EntryStore {
   }
 
   async generateAvatar() {
-    if (this.generating) {
+    if (!this.canGenerate) {
       return
     }
 
+    this.avatarSubject = this.trimmedAvatarSubject
     this.avatarStatus = 'generating'
     this.avatarError = null
 
@@ -103,17 +127,21 @@ class EntryStore {
     }
 
     try {
-      const result = await fal.subscribe(AVATAR_MODEL, {
+      const result = await fal.subscribe(ATLAS_MODEL, {
         input: {
-          prompt: buildDriverAvatarPrompt(this.trimmedNickname),
-          image_size: 'square',
+          prompt: buildDriverAtlasPrompt(this.trimmedAvatarSubject),
+          image_size: 'square_hd',
+          background: 'transparent',
+          quality: 'high',
+          output_format: 'png',
           num_images: 1,
         },
       })
       const url = firstImageUrl(result.data)
       if (!url) {
-        throw new Error('No image returned')
+        throw new Error('No atlas returned')
       }
+      setDriverAtlasUrl(url)
       runInAction(() => {
         this.avatarUrl = url
         this.avatarStatus = 'ready'
@@ -129,3 +157,4 @@ class EntryStore {
 
 export const entryStore = new EntryStore()
 export const NICKNAME_LIMIT = NICKNAME_MAX
+export const AVATAR_SUBJECT_LIMIT = AVATAR_SUBJECT_MAX
