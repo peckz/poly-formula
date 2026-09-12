@@ -29,6 +29,7 @@ Real circuits come in as data files, researched separately (possibly by other ag
 - [`docs/research/monza-scenery-prompt.md`](docs/research/monza-scenery-prompt.md) — ready-to-share prompt for researching Monza's real surroundings (OSM footprints, aerial verification).
 - [`docs/research/monza-barriers-prompt.md`](docs/research/monza-barriers-prompt.md) — ready-to-share prompt for researching the barriers and fencing (guardrails, tyre walls, debris fences, gravel traps) that line the track.
 - [`docs/research/monza-speeds-prompt.md`](docs/research/monza-speeds-prompt.md) — ready-to-share prompt for researching real F1 Monza speed targets (entry/apex/exit, brake points, dense speed-vs-distance profile for lap-time realism).
+- [`docs/research/monza-racingline-prompt.md`](docs/research/monza-racingline-prompt.md) — ready-to-share prompt for researching the real F1 Monza racing line (lateral offsets + world points to replace the geometric elastic-band line).
 - Track files live in `src/tracks/<slug>.json`, scenery in `src/tracks/<slug>.scenery.json`, research notes in `docs/research/`.
 - `src/game/trackPath.ts` loads a track file and answers geometry questions (sample at arc length, nearest point, next corner); `src/game/trackModel.ts` builds the meshes from it.
 
