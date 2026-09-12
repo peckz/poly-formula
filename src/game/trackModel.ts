@@ -407,13 +407,59 @@ export type RacingLineHandle = {
 }
 
 const LINE_GREEN: [number, number, number] = [0.15, 0.85, 0.4]
-const LINE_ORANGE: [number, number, number] = [1.0, 0.55, 0.08]
-const LINE_RED: [number, number, number] = [1.0, 0.06, 0.04]
+const LINE_BRAKE: [number, number, number] = [1.0, 0.25, 0.05]
+
+// Braking-zone segmentation: decel above the threshold marks a point,
+// then small gaps are bridged and tiny blips dropped so zones read as
+// one solid stretch instead of flickering red/green.
+const BRAKE_DECEL_THRESHOLD = 6
+const BRAKE_GAP_POINTS = 22 // ~70 m at current point spacing
+const BRAKE_MIN_POINTS = 12 // ~40 m
+
+/** Solid true-runs after closing short gaps and removing short runs. */
+function brakingZoneMask(decel: number[]): boolean[] {
+  const n = decel.length
+  const mask = decel.map((d) => d > BRAKE_DECEL_THRESHOLD)
+
+  // Close gaps shorter than BRAKE_GAP_POINTS (circular).
+  for (let i = 0; i < n; i++) {
+    if (mask[i]) {
+      continue
+    }
+    let gap = 0
+    while (gap < BRAKE_GAP_POINTS && !mask[(i + gap) % n]) {
+      gap++
+    }
+    if (gap < BRAKE_GAP_POINTS && mask[(i - 1 + n) % n]) {
+      for (let k = 0; k < gap; k++) {
+        mask[(i + k) % n] = true
+      }
+    }
+  }
+
+  // Drop isolated runs shorter than BRAKE_MIN_POINTS.
+  for (let i = 0; i < n; i++) {
+    if (!mask[i] || mask[(i - 1 + n) % n]) {
+      continue
+    }
+    let run = 0
+    while (run < n && mask[(i + run) % n]) {
+      run++
+    }
+    if (run < BRAKE_MIN_POINTS) {
+      for (let k = 0; k < run; k++) {
+        mask[(i + k) % n] = false
+      }
+    }
+  }
+
+  return mask
+}
 
 /**
  * Ghost racing line: dashed translucent trail hugging the apexes.
- * Green where you can stay on power; orange to red where the speed
- * profile demands braking (red = hardest braking).
+ * Green where you can stay on power; solid orange-red across each
+ * braking zone.
  */
 function racingLineTrail(path: TrackPath): RacingLineHandle {
   const line = computeRacingLine(path, ROAD_HALF_WIDTH - 1.6)
@@ -425,17 +471,10 @@ function racingLineTrail(path: TrackPath): RacingLineHandle {
     MAX_SPEED,
   )
 
-  const colors: Array<[number, number, number]> = profile.decel.map((d) => {
-    if (d < 3) {
-      return LINE_GREEN
-    }
-    const t = Math.min(1, (d - 3) / (BRAKE_DECEL * 0.8 - 3))
-    return [
-      LINE_ORANGE[0] + (LINE_RED[0] - LINE_ORANGE[0]) * t,
-      LINE_ORANGE[1] + (LINE_RED[1] - LINE_ORANGE[1]) * t,
-      LINE_ORANGE[2] + (LINE_RED[2] - LINE_ORANGE[2]) * t,
-    ]
-  })
+  const zones = brakingZoneMask(profile.decel)
+  const colors: Array<[number, number, number]> = zones.map((braking) =>
+    braking ? LINE_BRAKE : LINE_GREEN,
+  )
 
   // Dashes come from the geometry itself (skipped quads) — no texture,
   // no winding sensitivity, drawn after everything else.
@@ -449,94 +488,6 @@ function racingLineTrail(path: TrackPath): RacingLineHandle {
   const mesh = polylineStrip(line, 0.55, 0.06, material, colors, 4)
   mesh.renderOrder = 2
   return { mesh, material, points: line }
-}
-
-/** White board with red band and a big distance number, like F1 markers. */
-function boardTexture(label: string): THREE.CanvasTexture {
-  const canvas = document.createElement('canvas')
-  canvas.width = 128
-  canvas.height = 96
-  const ctx = canvas.getContext('2d')
-  if (ctx) {
-    ctx.fillStyle = '#f2f2ee'
-    ctx.fillRect(0, 0, 128, 96)
-    ctx.fillStyle = '#d23a2e'
-    ctx.fillRect(0, 0, 128, 20)
-    ctx.fillStyle = '#111'
-    ctx.font = 'bold 52px ui-monospace, monospace'
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
-    ctx.fillText(label, 64, 58)
-  }
-  const texture = new THREE.CanvasTexture(canvas)
-  texture.colorSpace = THREE.SRGBColorSpace
-  return texture
-}
-
-const BOARD_DISTANCES = [50, 100, 150]
-// Boards count down to roughly the braking/turn-in point, not the apex.
-const BOARD_ENTRY_OFFSET = 70
-
-function markerBoards(path: TrackPath): THREE.Group {
-  const group = new THREE.Group()
-  const textures = new Map(
-    BOARD_DISTANCES.map((d) => [d, boardTexture(String(d))]),
-  )
-
-  for (const corner of path.corners) {
-    // Boards go on the outside of the turn.
-    const lateral = corner.turn === 'right' ? -9.5 : 9.5
-
-    for (const distance of BOARD_DISTANCES) {
-      const sBoard =
-        ((corner.s - BOARD_ENTRY_OFFSET - distance) % path.length +
-          path.length) %
-        path.length
-
-      // Skip boards that would stand in another corner.
-      const inCurve = path.maxCurvatureNear(sBoard, 15) > 0.004
-      const nearOtherApex = path.corners.some(
-        (other) =>
-          other !== corner && Math.abs(other.s - sBoard) < 60,
-      )
-      if (inCurve || nearOtherApex) {
-        continue
-      }
-
-      const sample = path.sampleAt(sBoard)
-      const rx = -sample.tz
-      const rz = sample.tx
-
-      const board = new THREE.Group()
-      const pole = new THREE.Mesh(
-        new THREE.BoxGeometry(0.12, 1.7, 0.12),
-        lambert(0x2a2a2e),
-      )
-      pole.position.y = 0.85
-      board.add(pole)
-
-      const sign = new THREE.Mesh(
-        new THREE.PlaneGeometry(1.7, 1.25),
-        new THREE.MeshLambertMaterial({
-          map: textures.get(distance),
-          side: THREE.DoubleSide,
-        }),
-      )
-      sign.position.y = 2.3
-      board.add(sign)
-
-      board.position.set(
-        sample.x + rx * lateral,
-        0,
-        sample.z + rz * lateral,
-      )
-      // Face oncoming traffic (local +z toward -tangent).
-      board.rotation.y = Math.atan2(-sample.tx, -sample.tz)
-      group.add(board)
-    }
-  }
-
-  return group
 }
 
 /** Places a group at arc length s, offset laterally, facing the track. */
@@ -647,7 +598,6 @@ export function buildTrack(): BuiltTrack {
 
   const racingLine = racingLineTrail(path)
   group.add(racingLine.mesh)
-  group.add(markerBoards(path))
   group.add(forest(path))
 
   return { group, racingLine }
