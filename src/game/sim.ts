@@ -16,8 +16,6 @@ const DRAG = ENGINE / (MAX_SPEED * MAX_SPEED) // balances engine at top speed
 const ROLLING = 1.4
 const OFF_TRACK_DRAG = 14
 const BRAKE_DECEL = 46
-const REVERSE_ACCEL = 12
-const REVERSE_MAX = 10
 const SPAWN_S = monzaPath.length - 60 // on the grid, just before the line
 
 function clamp(value: number, min: number, max: number) {
@@ -70,35 +68,23 @@ export class CarSim {
     const target = clamp(controls.steer, -1, 1)
     this.steer += (target - this.steer) * Math.min(1, dt * 9)
 
+    // Forward-only: brakes bring the car to a stop, never into reverse.
     let force = controls.throttle * ENGINE * (this.offTrack ? 0.35 : 1)
-    if (controls.brake > 0) {
-      if (this.speed > 0.3) {
-        force -= BRAKE_DECEL * controls.brake
-      } else {
-        force -= REVERSE_ACCEL * controls.brake
-      }
+    if (controls.brake > 0 && this.speed > 0) {
+      force -= BRAKE_DECEL * controls.brake
     }
-    force -= DRAG * this.speed * Math.abs(this.speed)
-    if (Math.abs(this.speed) > 0.05) {
-      force -= Math.sign(this.speed) * (this.offTrack ? OFF_TRACK_DRAG : ROLLING)
+    force -= DRAG * this.speed * this.speed
+    if (this.speed > 0.05) {
+      force -= this.offTrack ? OFF_TRACK_DRAG : ROLLING
     }
 
-    this.speed = clamp(this.speed + force * dt, -REVERSE_MAX, MAX_SPEED)
-    if (
-      controls.throttle === 0 &&
-      controls.brake === 0 &&
-      Math.abs(this.speed) < 0.15
-    ) {
-      this.speed = 0
-    }
+    this.speed = clamp(this.speed + force * dt, 0, MAX_SPEED)
 
     // Grip-limited yaw: quick at parking speed, gentle at 300 km/h.
-    const absSpeed = Math.abs(this.speed)
     const yawRate =
       this.steer *
-      Math.min(1.6, 30 / Math.max(absSpeed, 2)) *
-      Math.min(1, absSpeed / 4) *
-      Math.sign(this.speed || 1)
+      Math.min(1.6, 30 / Math.max(this.speed, 2)) *
+      Math.min(1, this.speed / 4)
     this.heading += yawRate * dt
 
     this.x -= Math.sin(this.heading) * this.speed * dt

@@ -24,6 +24,8 @@ export type WheelPose = {
   held: boolean
   grabbing: boolean
   steering: number
+  /** 0..1, pull-back brake gesture. */
+  brake: number
 }
 
 const emptyPoint = (): Point3 => ({
@@ -48,6 +50,7 @@ const emptyWheel = (): WheelPose => ({
   held: false,
   grabbing: false,
   steering: 0,
+  brake: 0,
 })
 
 function writePoint(target: Point3, source: Point3) {
@@ -72,6 +75,7 @@ function writeWheel(target: WheelPose, source: WheelPose) {
   target.held = source.held
   target.grabbing = source.grabbing
   target.steering = source.steering
+  target.brake = source.brake
 }
 
 class TrackingStore {

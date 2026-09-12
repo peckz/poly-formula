@@ -223,6 +223,16 @@ body,
   animation: race-hud-brake-pulse 0.4s steps(2, jump-none) infinite;
 }
 
+.race-hud-assist {
+  padding: 4px 0;
+  color: #111;
+  background: #ffb347;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-align: center;
+}
+
 @keyframes race-hud-brake-pulse {
   from {
     opacity: 1;
@@ -230,6 +240,68 @@ body,
   to {
     opacity: 0.55;
   }
+}
+
+.race-hud-pedal {
+  height: 6px;
+  margin-top: 8px;
+  background: #2a2a2a;
+  overflow: hidden;
+}
+
+.race-hud-pedal-fill {
+  height: 100%;
+  background: #d0181c;
+  transition: width 60ms linear;
+}
+
+.game-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  background: rgba(10, 12, 16, 0.35);
+  font: 13px/1.5 ui-monospace, monospace;
+  text-align: center;
+  pointer-events: none;
+  backdrop-filter: blur(3px);
+}
+
+.game-overlay-card {
+  display: grid;
+  gap: 8px;
+  min-width: 380px;
+  padding: 34px 48px;
+  color: #14181f;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 14px;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+}
+
+.game-overlay p {
+  margin: 0;
+}
+
+.game-overlay-title {
+  font-size: 44px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
+  color: #0c0f14;
+}
+
+.game-overlay-line {
+  font-size: 16px;
+  color: #2c333d;
+}
+
+.game-overlay-hint {
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  color: #5b636e;
+  letter-spacing: 0.04em;
 }
 
 .ok {

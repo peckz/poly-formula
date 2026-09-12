@@ -98,7 +98,8 @@ export const TrackingHud = observer(function TrackingHud() {
             {wheel.grabbing ? 'grip' : wheel.held ? 'on' : 'off'}
           </span>
         </h2>
-        <p>{fmt(wheel.steering)}</p>
+        <p>steer {fmt(wheel.steering)}</p>
+        <p>brake {fmt(wheel.brake)}</p>
       </section>
     </aside>
   )

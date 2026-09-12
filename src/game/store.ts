@@ -2,7 +2,10 @@ import { makeAutoObservable } from 'mobx'
 
 export type SteerSource = 'keys' | 'wheel'
 
+export type GamePhase = 'waiting' | 'running' | 'paused'
+
 class RaceStore {
+  phase: GamePhase = 'waiting'
   speedKmh = 0
   gear = 'N'
   lap = 1
@@ -12,11 +15,16 @@ class RaceStore {
   cornerDistM = 0
   cornerTargetKmh = 0
   brakeNow = false
+  assistOn = false
   carX = 0
   carZ = 0
 
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
+  }
+
+  setPhase(phase: GamePhase) {
+    this.phase = phase
   }
 
   update(frame: {
@@ -29,6 +37,7 @@ class RaceStore {
     cornerDistM: number
     cornerTargetKmh: number
     brakeNow: boolean
+    assistOn: boolean
     carX: number
     carZ: number
   }) {
@@ -41,6 +50,7 @@ class RaceStore {
     this.cornerDistM = frame.cornerDistM
     this.cornerTargetKmh = frame.cornerTargetKmh
     this.brakeNow = frame.brakeNow
+    this.assistOn = frame.assistOn
     this.carX = frame.carX
     this.carZ = frame.carZ
   }

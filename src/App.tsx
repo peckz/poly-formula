@@ -1,4 +1,5 @@
 import { CameraView } from './components/CameraView'
+import { GameOverlay } from './components/GameOverlay'
 import { GenerateAtlas } from './components/GenerateAtlas'
 import { RaceHud } from './components/RaceHud'
 import { Scene } from './components/Scene'
@@ -12,6 +13,7 @@ function App() {
       <TrackingHud />
       <GenerateAtlas />
       <RaceHud />
+      <GameOverlay />
     </div>
   )
 }
