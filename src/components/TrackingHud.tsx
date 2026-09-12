@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react-lite'
 import { useEffect, useState } from 'react'
+import { fetchFalHealth } from '../fal/health'
 import type { Point3 } from '../tracking/store'
 import { trackingStore } from '../tracking/store'
 
@@ -38,25 +39,12 @@ export const TrackingHud = observer(function TrackingHud() {
   useEffect(() => {
     let cancelled = false
 
-    void fetch('/api/fal/health')
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('health failed')
-        }
-        return response.json() as Promise<{ configured?: boolean }>
-      })
-      .then((data) => {
-        if (cancelled) {
-          return
-        }
-        setFalStatus(data.configured ? 'ready' : 'missing')
-      })
-      .catch(() => {
-        if (cancelled) {
-          return
-        }
-        setFalStatus('missing')
-      })
+    void fetchFalHealth().then((health) => {
+      if (cancelled) {
+        return
+      }
+      setFalStatus(health)
+    })
 
     return () => {
       cancelled = true
