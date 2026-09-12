@@ -391,8 +391,13 @@ function hedgeBoxes(feature: Feature): THREE.Group {
 
 type TreeSpot = { x: number; z: number; scale: number }
 
+// The OSM forest polygons are clipped only 8 m off the centerline, but
+// the real circuit has runoff and barriers before the treeline. Keep
+// sampled trees well clear of the racing surface.
+const TREE_TRACK_CLEARANCE_M = 26
+
 /** Sample tree positions inside every forest polygon. */
-function forestSpots(rand: () => number): TreeSpot[] {
+function forestSpots(rand: () => number, path: TrackPath): TreeSpot[] {
   const spots: TreeSpot[] = []
   for (const feature of features) {
     if (feature.kind !== 'forest' || !feature.polygon) {
@@ -419,6 +424,9 @@ function forestSpots(rand: () => number): TreeSpot[] {
       if (!pointInPolygon(x, z, ring)) {
         continue
       }
+      if (path.nearest(x, z).distance < TREE_TRACK_CLEARANCE_M) {
+        continue
+      }
       spots.push({ x, z, scale: 2.2 + rand() * 2.6 })
       placed++
     }
@@ -427,13 +435,17 @@ function forestSpots(rand: () => number): TreeSpot[] {
 }
 
 /** Trees in a row along treeline polylines. */
-function treelineSpots(rand: () => number): TreeSpot[] {
+function treelineSpots(rand: () => number, path: TrackPath): TreeSpot[] {
   const spots: TreeSpot[] = []
   for (const feature of features) {
     if (feature.kind !== 'treeline' || !feature.polyline) {
       continue
     }
     for (const p of densify(feature.polyline, 9)) {
+      // Sourced rows stay, but never on the runoff itself.
+      if (path.nearest(p.x, p.z).distance < 15) {
+        continue
+      }
       spots.push({
         x: p.x + (rand() - 0.5) * 2,
         z: p.z + (rand() - 0.5) * 2,
@@ -572,7 +584,9 @@ export function buildScenery(path: TrackPath): THREE.Group {
     }
   }
 
-  group.add(instancedTrees([...forestSpots(rand), ...treelineSpots(rand)]))
+  group.add(
+    instancedTrees([...forestSpots(rand, path), ...treelineSpots(rand, path)]),
+  )
 
   return group
 }

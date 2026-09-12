@@ -27,6 +27,7 @@ Real circuits come in as data files, researched separately (possibly by other ag
 - [`docs/track-format.md`](docs/track-format.md) — the shared standard: coordinate system, arc-length convention, JSON schema, acceptance checklist. Any track research must deliver this format.
 - [`docs/scenery-format.md`](docs/scenery-format.md) — companion standard for the surroundings: grandstands, pits, forest, the old banking, as footprints in the same frame.
 - [`docs/research/monza-scenery-prompt.md`](docs/research/monza-scenery-prompt.md) — ready-to-share prompt for researching Monza's real surroundings (OSM footprints, aerial verification).
+- [`docs/research/monza-barriers-prompt.md`](docs/research/monza-barriers-prompt.md) — ready-to-share prompt for researching the barriers and fencing (guardrails, tyre walls, debris fences, gravel traps) that line the track.
 - Track files live in `src/tracks/<slug>.json`, scenery in `src/tracks/<slug>.scenery.json`, research notes in `docs/research/`.
 - `src/game/trackPath.ts` loads a track file and answers geometry questions (sample at arc length, nearest point, next corner); `src/game/trackModel.ts` builds the meshes from it.
 
