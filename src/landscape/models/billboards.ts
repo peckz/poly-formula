@@ -80,7 +80,7 @@ export function createBillboardMesh(
   frameMesh.castShadow = true
   billboardGroup.add(frameMesh)
 
-  // 4. Sponsor Front Texture Quad
+  // 4. Sponsor Front Texture Quad (Facing +Z towards oncoming traffic)
   const texture = textureManager.getTexture(brand)
   const frontMaterial = new THREE.MeshBasicMaterial({
     map: texture,
@@ -89,18 +89,19 @@ export function createBillboardMesh(
 
   const faceGeom = new THREE.PlaneGeometry(width, height)
   const frontFace = new THREE.Mesh(faceGeom, frontMaterial)
-  frontFace.position.set(0, boardCenterY, -0.16)
-  frontFace.rotation.y = Math.PI // Face toward -Z (trackside oncoming view)
+  frontFace.position.set(0, boardCenterY, 0.16)
+  frontFace.rotation.y = 0 // Faces +Z towards oncoming cars
   billboardGroup.add(frontFace)
 
-  // 5. Back Texture Quad (or sponsor repeat)
+  // 5. Back Texture Quad (Facing -Z)
   if (doubleSided) {
     const backMaterial = new THREE.MeshBasicMaterial({
       map: texture,
       side: THREE.FrontSide,
     })
     const backFace = new THREE.Mesh(faceGeom, backMaterial)
-    backFace.position.set(0, boardCenterY, 0.16)
+    backFace.position.set(0, boardCenterY, -0.16)
+    backFace.rotation.y = Math.PI // Faces -Z
     billboardGroup.add(backFace)
   }
 
