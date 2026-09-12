@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "start": "node server/prod.mjs",
     "lint": "oxlint",
     "preview": "vite preview",
     "generate:atlases": "node scripts/generate-driver-atlases.mjs",
