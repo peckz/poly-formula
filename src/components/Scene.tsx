@@ -4,6 +4,7 @@ import { buildCar } from '../game/carModel'
 import { Keyboard } from '../game/input'
 import { CarSim } from '../game/sim'
 import { raceStore } from '../game/store'
+import { brakingAdvice } from '../game/brakingAid'
 import { buildTrack } from '../game/trackModel'
 import { monzaPath } from '../game/trackPath'
 import { trackingStore } from '../tracking/store'
@@ -47,7 +48,8 @@ export function Scene() {
     sun.position.set(60, 90, 40)
     scene.add(sun)
 
-    scene.add(buildTrack())
+    const track = buildTrack()
+    scene.add(track.group)
 
     const car = buildCar()
     scene.add(car.group)
@@ -128,16 +130,25 @@ export function Scene() {
       cameraTarget.set(sim.x, 1.1, sim.z).addScaledVector(back, -6)
       camera.lookAt(cameraTarget)
 
+      // Racing line glows brighter while you are actually riding it.
+      const linePoint = track.racingLine.points[monzaPath.indexAt(sim.s)]
+      const distToLine = Math.hypot(sim.x - linePoint.x, sim.z - linePoint.z)
+      const lineOpacity = distToLine < 1.3 ? 0.95 : 0.5
+      track.racingLine.material.opacity +=
+        (lineOpacity - track.racingLine.material.opacity) * Math.min(1, dt * 8)
+
       const speedKmh = Math.round(Math.abs(sim.speed) * 3.6)
-      const upcoming = monzaPath.nextCorner(sim.s)
+      const advice = brakingAdvice(sim.s, sim.speed)
       raceStore.update({
         speedKmh,
         gear: gearFor(speedKmh, sim.speed),
         lap: Math.max(1, sim.lap),
         steerSource: usingWheel ? 'wheel' : 'keys',
         offTrack: sim.offTrack,
-        cornerName: upcoming.corner.name,
-        cornerDistM: Math.round(upcoming.distance / 10) * 10,
+        cornerName: advice.corner.name,
+        cornerDistM: Math.round(advice.distance / 10) * 10,
+        cornerTargetKmh: Math.round((advice.targetSpeed * 3.6) / 5) * 5,
+        brakeNow: advice.brakeNow,
         carX: Math.round(sim.x / 4) * 4,
         carZ: Math.round(sim.z / 4) * 4,
       })

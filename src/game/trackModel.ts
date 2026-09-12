@@ -1,4 +1,12 @@
 import * as THREE from 'three'
+import {
+  BRAKE_DECEL,
+  ENGINE_ACCEL,
+  LAT_ACCEL,
+  MAX_SPEED,
+} from './brakingAid'
+import type { LinePoint } from './racingLine'
+import { computeRacingLine, computeSpeedProfile } from './racingLine'
 import type { TrackPath } from './trackPath'
 import { monzaLandmarks, monzaPath } from './trackPath'
 
@@ -315,6 +323,222 @@ function forest(path: TrackPath): THREE.Group {
   return group
 }
 
+/**
+ * Flat strip along an arbitrary closed polyline; u = arc length.
+ * `colors` is one RGB triple per point, baked as vertex colors.
+ */
+function polylineStrip(
+  points: LinePoint[],
+  width: number,
+  y: number,
+  material: THREE.Material,
+  colors?: Array<[number, number, number]>,
+  /** If set, only draw quads in alternating dashM-long chunks. */
+  dashM?: number,
+): THREE.Mesh {
+  const n = points.length
+  const positions: number[] = []
+  const uvs: number[] = []
+  const vertexColors: number[] = []
+  const indices: number[] = []
+  const half = width / 2
+
+  let arc = 0
+  for (let k = 0; k <= n; k++) {
+    const i = k % n
+    const prev = points[(i - 1 + n) % n]
+    const next = points[(i + 1) % n]
+    let dx = next.x - prev.x
+    let dz = next.z - prev.z
+    const len = Math.hypot(dx, dz)
+    if (len > 0.001) {
+      dx /= len
+      dz /= len
+    }
+
+    if (k > 0) {
+      const before = points[(k - 1) % n]
+      arc += Math.hypot(points[i].x - before.x, points[i].z - before.z)
+    }
+
+    // Left vertex first, matching ribbon() winding so faces point up.
+    positions.push(
+      points[i].x + dz * half,
+      y,
+      points[i].z - dx * half,
+      points[i].x - dz * half,
+      y,
+      points[i].z + dx * half,
+    )
+    uvs.push(arc, 0, arc, 1)
+    if (colors) {
+      const [r, g, b] = colors[i]
+      vertexColors.push(r, g, b, r, g, b)
+    }
+    const inGap = dashM !== undefined && Math.floor(arc / dashM) % 2 === 1
+    if (k > 0 && !inGap) {
+      const a = (k - 1) * 2
+      indices.push(a, a + 1, a + 2, a + 1, a + 3, a + 2)
+    }
+  }
+
+  const geometry = new THREE.BufferGeometry()
+  geometry.setAttribute(
+    'position',
+    new THREE.Float32BufferAttribute(positions, 3),
+  )
+  geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2))
+  if (colors) {
+    geometry.setAttribute(
+      'color',
+      new THREE.Float32BufferAttribute(vertexColors, 3),
+    )
+  }
+  geometry.setIndex(indices)
+  geometry.computeVertexNormals()
+  return new THREE.Mesh(geometry, material)
+}
+
+export type RacingLineHandle = {
+  mesh: THREE.Mesh
+  material: THREE.MeshBasicMaterial
+  /** Line point per centerline point index (parallel to path.points). */
+  points: LinePoint[]
+}
+
+const LINE_GREEN: [number, number, number] = [0.15, 0.85, 0.4]
+const LINE_ORANGE: [number, number, number] = [1.0, 0.55, 0.08]
+const LINE_RED: [number, number, number] = [1.0, 0.06, 0.04]
+
+/**
+ * Ghost racing line: dashed translucent trail hugging the apexes.
+ * Green where you can stay on power; orange to red where the speed
+ * profile demands braking (red = hardest braking).
+ */
+function racingLineTrail(path: TrackPath): RacingLineHandle {
+  const line = computeRacingLine(path, ROAD_HALF_WIDTH - 1.6)
+  const profile = computeSpeedProfile(
+    line,
+    LAT_ACCEL,
+    BRAKE_DECEL,
+    ENGINE_ACCEL,
+    MAX_SPEED,
+  )
+
+  const colors: Array<[number, number, number]> = profile.decel.map((d) => {
+    if (d < 3) {
+      return LINE_GREEN
+    }
+    const t = Math.min(1, (d - 3) / (BRAKE_DECEL * 0.8 - 3))
+    return [
+      LINE_ORANGE[0] + (LINE_RED[0] - LINE_ORANGE[0]) * t,
+      LINE_ORANGE[1] + (LINE_RED[1] - LINE_ORANGE[1]) * t,
+      LINE_ORANGE[2] + (LINE_RED[2] - LINE_ORANGE[2]) * t,
+    ]
+  })
+
+  // Dashes come from the geometry itself (skipped quads) — no texture,
+  // no winding sensitivity, drawn after everything else.
+  const material = new THREE.MeshBasicMaterial({
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.5,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  })
+  const mesh = polylineStrip(line, 0.55, 0.06, material, colors, 4)
+  mesh.renderOrder = 2
+  return { mesh, material, points: line }
+}
+
+/** White board with red band and a big distance number, like F1 markers. */
+function boardTexture(label: string): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas')
+  canvas.width = 128
+  canvas.height = 96
+  const ctx = canvas.getContext('2d')
+  if (ctx) {
+    ctx.fillStyle = '#f2f2ee'
+    ctx.fillRect(0, 0, 128, 96)
+    ctx.fillStyle = '#d23a2e'
+    ctx.fillRect(0, 0, 128, 20)
+    ctx.fillStyle = '#111'
+    ctx.font = 'bold 52px ui-monospace, monospace'
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillText(label, 64, 58)
+  }
+  const texture = new THREE.CanvasTexture(canvas)
+  texture.colorSpace = THREE.SRGBColorSpace
+  return texture
+}
+
+const BOARD_DISTANCES = [50, 100, 150]
+// Boards count down to roughly the braking/turn-in point, not the apex.
+const BOARD_ENTRY_OFFSET = 70
+
+function markerBoards(path: TrackPath): THREE.Group {
+  const group = new THREE.Group()
+  const textures = new Map(
+    BOARD_DISTANCES.map((d) => [d, boardTexture(String(d))]),
+  )
+
+  for (const corner of path.corners) {
+    // Boards go on the outside of the turn.
+    const lateral = corner.turn === 'right' ? -9.5 : 9.5
+
+    for (const distance of BOARD_DISTANCES) {
+      const sBoard =
+        ((corner.s - BOARD_ENTRY_OFFSET - distance) % path.length +
+          path.length) %
+        path.length
+
+      // Skip boards that would stand in another corner.
+      const inCurve = path.maxCurvatureNear(sBoard, 15) > 0.004
+      const nearOtherApex = path.corners.some(
+        (other) =>
+          other !== corner && Math.abs(other.s - sBoard) < 60,
+      )
+      if (inCurve || nearOtherApex) {
+        continue
+      }
+
+      const sample = path.sampleAt(sBoard)
+      const rx = -sample.tz
+      const rz = sample.tx
+
+      const board = new THREE.Group()
+      const pole = new THREE.Mesh(
+        new THREE.BoxGeometry(0.12, 1.7, 0.12),
+        lambert(0x2a2a2e),
+      )
+      pole.position.y = 0.85
+      board.add(pole)
+
+      const sign = new THREE.Mesh(
+        new THREE.PlaneGeometry(1.7, 1.25),
+        new THREE.MeshLambertMaterial({
+          map: textures.get(distance),
+          side: THREE.DoubleSide,
+        }),
+      )
+      sign.position.y = 2.3
+      board.add(sign)
+
+      board.position.set(
+        sample.x + rx * lateral,
+        0,
+        sample.z + rz * lateral,
+      )
+      // Face oncoming traffic (local +z toward -tangent).
+      board.rotation.y = Math.atan2(-sample.tx, -sample.tz)
+      group.add(board)
+    }
+  }
+
+  return group
+}
+
 /** Places a group at arc length s, offset laterally, facing the track. */
 function placeTrackside(
   path: TrackPath,
@@ -331,7 +555,12 @@ function placeTrackside(
   object.rotation.y = Math.atan2(rx * toTrack, rz * toTrack)
 }
 
-export function buildTrack(): THREE.Group {
+export type BuiltTrack = {
+  group: THREE.Group
+  racingLine: RacingLineHandle
+}
+
+export function buildTrack(): BuiltTrack {
   const path = monzaPath
   const group = new THREE.Group()
 
@@ -416,7 +645,10 @@ export function buildTrack(): THREE.Group {
     group.add(bridge)
   }
 
+  const racingLine = racingLineTrail(path)
+  group.add(racingLine.mesh)
+  group.add(markerBoards(path))
   group.add(forest(path))
 
-  return group
+  return { group, racingLine }
 }

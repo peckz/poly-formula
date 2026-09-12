@@ -10,6 +10,8 @@ class RaceStore {
   offTrack = false
   cornerName = ''
   cornerDistM = 0
+  cornerTargetKmh = 0
+  brakeNow = false
   carX = 0
   carZ = 0
 
@@ -25,6 +27,8 @@ class RaceStore {
     offTrack: boolean
     cornerName: string
     cornerDistM: number
+    cornerTargetKmh: number
+    brakeNow: boolean
     carX: number
     carZ: number
   }) {
@@ -35,6 +39,8 @@ class RaceStore {
     this.offTrack = frame.offTrack
     this.cornerName = frame.cornerName
     this.cornerDistM = frame.cornerDistM
+    this.cornerTargetKmh = frame.cornerTargetKmh
+    this.brakeNow = frame.brakeNow
     this.carX = frame.carX
     this.carZ = frame.carZ
   }

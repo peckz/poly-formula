@@ -212,6 +212,26 @@ body,
   color: #999;
 }
 
+.race-hud-brake {
+  padding: 4px 0;
+  color: #fff;
+  background: #d0181c;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-align: center;
+  animation: race-hud-brake-pulse 0.4s steps(2, jump-none) infinite;
+}
+
+@keyframes race-hud-brake-pulse {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.55;
+  }
+}
+
 .ok {
   color: #7dff9a;
 }

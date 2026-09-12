@@ -37,6 +37,8 @@ export const RaceHud = observer(function RaceHud() {
     offTrack,
     cornerName,
     cornerDistM,
+    cornerTargetKmh,
+    brakeNow,
     carX,
     carZ,
   } = raceStore
@@ -57,6 +59,7 @@ export const RaceHud = observer(function RaceHud() {
         />
         <circle cx={carX} cy={carZ} r="34" fill="#ff2a2a" />
       </svg>
+      {brakeNow ? <p className="race-hud-brake">BRAKE</p> : null}
       <p className="race-hud-speed">
         {speedKmh}
         <span> km/h</span>
@@ -67,6 +70,9 @@ export const RaceHud = observer(function RaceHud() {
       </p>
       <p className="race-hud-corner">
         {cornerName} <span>{cornerDistM}m</span>
+      </p>
+      <p className="race-hud-corner">
+        take at <span>~{cornerTargetKmh} km/h</span>
       </p>
       <p className="race-hud-row">
         <span className={steerSource === 'wheel' ? 'ok' : 'off'}>

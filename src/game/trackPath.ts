@@ -103,12 +103,10 @@ export class TrackPath {
     return smoothed
   }
 
-  /** Position and tangent at arc length s (wrapped). */
-  sampleAt(s: number): PathSample {
+  /** Index of the last point with point.s <= s (wrapped). */
+  indexAt(s: number): number {
     const n = this.points.length
     const target = wrapS(s, this.length)
-
-    // Binary search: last point with point.s <= target.
     let lo = 0
     let hi = n - 1
     while (lo < hi) {
@@ -119,8 +117,31 @@ export class TrackPath {
         hi = mid - 1
       }
     }
+    return lo
+  }
 
-    const { a, dx, dz } = this.segment(lo)
+  /** Peak |curvature| within ±windowM meters of arc length s. */
+  maxCurvatureNear(s: number, windowM: number): number {
+    const n = this.points.length
+    const center = this.indexAt(s)
+    let max = 0
+    for (const dir of [-1, 1]) {
+      for (let step = 0; step < n; step++) {
+        const i = (center + dir * step + n) % n
+        const ds = Math.abs(wrapS(this.points[i].s - s + this.length / 2, this.length) - this.length / 2)
+        if (ds > windowM) {
+          break
+        }
+        max = Math.max(max, Math.abs(this.curvature[i]))
+      }
+    }
+    return max
+  }
+
+  /** Position and tangent at arc length s (wrapped). */
+  sampleAt(s: number): PathSample {
+    const target = wrapS(s, this.length)
+    const { a, dx, dz } = this.segment(this.indexAt(s))
     const segLen = Math.hypot(dx, dz)
     const t = segLen > 0.001 ? (target - a.s) / segLen : 0
     return {
