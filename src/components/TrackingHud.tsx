@@ -1,4 +1,5 @@
 import { observer } from 'mobx-react-lite'
+import { useEffect, useState } from 'react'
 import type { Point3 } from '../tracking/store'
 import { trackingStore } from '../tracking/store'
 
@@ -30,10 +31,49 @@ const PointBlock = observer(function PointBlock({
 
 export const TrackingHud = observer(function TrackingHud() {
   const { fps, head, leftHand, rightHand, wheelAngle } = trackingStore
+  const [falStatus, setFalStatus] = useState<'loading' | 'ready' | 'missing'>(
+    'loading',
+  )
+
+  useEffect(() => {
+    let cancelled = false
+
+    void fetch('/api/fal/health')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('health failed')
+        }
+        return response.json() as Promise<{ configured?: boolean }>
+      })
+      .then((data) => {
+        if (cancelled) {
+          return
+        }
+        setFalStatus(data.configured ? 'ready' : 'missing')
+      })
+      .catch(() => {
+        if (cancelled) {
+          return
+        }
+        setFalStatus('missing')
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  let falLabel = 'fal …'
+  if (falStatus === 'ready') {
+    falLabel = 'fal ready'
+  } else if (falStatus === 'missing') {
+    falLabel = 'fal missing key'
+  }
 
   return (
     <aside className="tracking-hud">
       <p className="fps">{fps} fps</p>
+      <p className={falStatus === 'ready' ? 'ok' : 'off'}>{falLabel}</p>
       <section>
         <h2>
           Head{' '}

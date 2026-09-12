@@ -83,8 +83,12 @@ body,
 }
 
 .tracking-hud .fps {
-  margin-bottom: 12px;
+  margin-bottom: 4px;
   color: #888;
+}
+
+.tracking-hud .fps + p {
+  margin-bottom: 12px;
 }
 
 .ok {

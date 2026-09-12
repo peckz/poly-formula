@@ -11,6 +11,7 @@
     "postinstall": "mkdir -p public/mediapipe && rm -rf public/mediapipe/wasm && cp -R node_modules/@mediapipe/tasks-vision/wasm public/mediapipe/wasm"
   },
   "dependencies": {
+    "@fal-ai/client": "^1.10.1",
     "@mediapipe/tasks-vision": "^1.0.1",
     "mobx": "^7.0.3",
     "mobx-react-lite": "^5.0.3",
@@ -19,6 +20,7 @@
     "three": "^0.186.0"
   },
   "devDependencies": {
+    "@fal-ai/server-proxy": "^1.2.1",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
