@@ -1,13 +1,96 @@
 html,
 body,
-#root {
+#root,
+.app {
   margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #111;
+}
+
+.scene-canvas {
+  display: block;
   width: 100%;
   height: 100%;
 }
 
-canvas {
-  display: block;
+.camera-feed {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  width: 280px;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid #333;
+  transform: scaleX(-1);
+}
+
+.camera-feed video,
+.camera-feed canvas {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
+}
+
+.camera-feed canvas {
+  pointer-events: none;
+}
+
+.camera-status {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 12px;
+  color: #ddd;
+  background: rgba(0, 0, 0, 0.55);
+  font: 12px/1.4 ui-monospace, monospace;
+  text-align: center;
+  transform: scaleX(-1);
+}
+
+.tracking-hud {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  min-width: 180px;
+  padding: 12px 14px;
+  color: #d4d4d4;
+  background: rgba(0, 0, 0, 0.7);
+  font: 12px/1.45 ui-monospace, monospace;
+  pointer-events: none;
+}
+
+.tracking-hud h2,
+.tracking-hud p {
+  margin: 0;
+}
+
+.tracking-hud section + section {
+  margin-top: 12px;
+}
+
+.tracking-hud h2 {
+  margin-bottom: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #f3f3f3;
+}
+
+.tracking-hud .fps {
+  margin-bottom: 12px;
+  color: #888;
+}
+
+.ok {
+  color: #7dff9a;
+}
+
+.off {
+  color: #666;
 }

@@ -1,0 +1,19 @@
+---
+description: Require braces on all if/else/for/while statements
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Curly braces
+
+Always use braces for `if`, `else`, `for`, `while`, and `do`. Never write a single-statement body on the same line.
+
+```ts
+// BAD
+if (status === 'running') return null
+
+// GOOD
+if (status === 'running') {
+  return null
+}
+```
