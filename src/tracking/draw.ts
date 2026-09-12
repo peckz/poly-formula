@@ -5,6 +5,8 @@ import {
   type HandLandmarkerResult,
   type NormalizedLandmark,
 } from '@mediapipe/tasks-vision'
+import { drawDriverHead } from './driver-sprite'
+import type { HeadFrame } from './face'
 
 function drawConnections(
   ctx: CanvasRenderingContext2D,
@@ -54,6 +56,7 @@ export function drawTracking(
   video: HTMLVideoElement,
   face: FaceLandmarkerResult,
   hands: HandLandmarkerResult,
+  head: HeadFrame,
 ) {
   const width = video.videoWidth
   const height = video.videoHeight
@@ -76,9 +79,12 @@ export function drawTracking(
   ctx.clearRect(0, 0, width, height)
 
   const faceLandmarks = face.faceLandmarks[0]
-  if (faceLandmarks) {
-    drawConnections(ctx, faceLandmarks, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, '#7dff9a')
-    drawDots(ctx, [faceLandmarks[4]], '#7dff9a', 4)
+  if (faceLandmarks && head.detected && !head.calibrating) {
+    const drewSprite = drawDriverHead(ctx, faceLandmarks, head)
+    if (!drewSprite) {
+      drawConnections(ctx, faceLandmarks, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, '#7dff9a')
+      drawDots(ctx, [faceLandmarks[1]], '#7dff9a', 4)
+    }
   }
 
   for (const landmarks of hands.landmarks) {

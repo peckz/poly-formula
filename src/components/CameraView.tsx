@@ -4,7 +4,15 @@ import { CameraPipeline } from '../tracking/pipeline'
 import { trackingStore } from '../tracking/store'
 
 const CameraStatus = observer(function CameraStatus() {
-  const { status, error } = trackingStore
+  const { status, error, head } = trackingStore
+
+  if (status === 'running' && head.calibrating) {
+    return (
+      <div className="camera-status">
+        <span>Hold still…</span>
+      </div>
+    )
+  }
 
   if (status === 'running') {
     return null

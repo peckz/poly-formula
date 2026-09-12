@@ -78,15 +78,16 @@ export const TrackingHud = observer(function TrackingHud() {
         <h2>
           Head{' '}
           <span className={head.detected ? 'ok' : 'off'}>
-            {head.detected ? 'on' : 'off'}
+            {head.calibrating ? 'cal' : head.detected ? 'on' : 'off'}
           </span>
         </h2>
-        <p>x {fmt(head.x)}</p>
-        <p>y {fmt(head.y)}</p>
-        <p>z {fmt(head.z)}</p>
         <p>yaw {fmt(head.yaw)}</p>
         <p>pitch {fmt(head.pitch)}</p>
-        <p>roll {fmt(head.roll)}</p>
+        <p>
+          cell {head.col},{head.row}
+        </p>
+        <p>fwd {fmt(head.forward)}</p>
+        <p>side {fmt(head.sideways)}</p>
       </section>
       <PointBlock label="Left hand" point={leftHand} />
       <PointBlock label="Right hand" point={rightHand} />

@@ -1,11 +1,9 @@
 import type {
-  FaceLandmarkerResult,
   HandLandmarkerResult,
   NormalizedLandmark,
 } from '@mediapipe/tasks-vision'
-import type { HeadPose, Point3 } from './store'
+import type { Point3 } from './store'
 
-const NOSE_TIP = 4
 const WRIST = 0
 
 const undetectedPoint = (): Point3 => ({
@@ -13,13 +11,6 @@ const undetectedPoint = (): Point3 => ({
   x: 0,
   y: 0,
   z: 0,
-})
-
-const undetectedHead = (): HeadPose => ({
-  ...undetectedPoint(),
-  yaw: 0,
-  pitch: 0,
-  roll: 0,
 })
 
 function toDeg(rad: number) {
@@ -30,59 +21,12 @@ function mirrorX(x: number) {
   return 1 - x
 }
 
-function eulerFromMatrix(data: number[]) {
-  const r00 = data[0]
-  const r01 = data[1]
-  const r10 = data[4]
-  const r11 = data[5]
-  const r20 = data[8]
-  const r21 = data[9]
-  const r22 = data[10]
-  const sy = Math.hypot(r00, r10)
-
-  let yaw: number
-  let pitch: number
-  let roll: number
-
-  if (sy > 1e-6) {
-    yaw = Math.atan2(r10, r00)
-    pitch = Math.atan2(-r20, sy)
-    roll = Math.atan2(r21, r22)
-  } else {
-    yaw = Math.atan2(-r01, r11)
-    pitch = Math.atan2(-r20, sy)
-    roll = 0
-  }
-
-  return {
-    yaw: -toDeg(yaw),
-    pitch: toDeg(pitch),
-    roll: -toDeg(roll),
-  }
-}
-
 function fromLandmark(landmark: NormalizedLandmark): Point3 {
   return {
     detected: true,
     x: mirrorX(landmark.x),
     y: landmark.y,
     z: landmark.z,
-  }
-}
-
-export function readHead(result: FaceLandmarkerResult): HeadPose {
-  const landmarks = result.faceLandmarks[0]
-  if (!landmarks) {
-    return undetectedHead()
-  }
-
-  const nose = landmarks[NOSE_TIP]
-  const matrix = result.facialTransformationMatrixes[0]
-  const pose = matrix ? eulerFromMatrix(matrix.data) : { yaw: 0, pitch: 0, roll: 0 }
-
-  return {
-    ...fromLandmark(nose),
-    ...pose,
   }
 }
 

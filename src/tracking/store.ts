@@ -9,10 +9,15 @@ export type Point3 = {
   z: number
 }
 
-export type HeadPose = Point3 & {
+export type HeadPose = {
+  detected: boolean
+  calibrating: boolean
   yaw: number
   pitch: number
-  roll: number
+  col: number
+  row: number
+  forward: number
+  sideways: number
 }
 
 const emptyPoint = (): Point3 => ({
@@ -23,10 +28,14 @@ const emptyPoint = (): Point3 => ({
 })
 
 const emptyHead = (): HeadPose => ({
-  ...emptyPoint(),
+  detected: false,
+  calibrating: false,
   yaw: 0,
   pitch: 0,
-  roll: 0,
+  col: 2,
+  row: 2,
+  forward: 0,
+  sideways: 0,
 })
 
 function writePoint(target: Point3, source: Point3) {
@@ -37,10 +46,14 @@ function writePoint(target: Point3, source: Point3) {
 }
 
 function writeHead(target: HeadPose, source: HeadPose) {
-  writePoint(target, source)
+  target.detected = source.detected
+  target.calibrating = source.calibrating
   target.yaw = source.yaw
   target.pitch = source.pitch
-  target.roll = source.roll
+  target.col = source.col
+  target.row = source.row
+  target.forward = source.forward
+  target.sideways = source.sideways
 }
 
 class TrackingStore {

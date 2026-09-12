@@ -13,15 +13,15 @@ The camera loop does not go through React. It writes numbers into a store once p
 ## Decisions
 
 - **Vite + React + Three.js** — small web stack, fast to iterate on at a hackathon
-- **MediaPipe Face + Hand Landmarker** — head pose (x/y/z, yaw, pitch, roll) and both wrists
+- **MediaPipe Face + Hand Landmarker** — geometric head pose from a few landmarks, plus both wrists
 - **MobX** — tracking updates every frame without re-rendering the whole app
 - **Store only useful numbers** — pose, wrists, wheel angle. Not the full landmark mesh
 - **fal.ai** — generates driver atlases via GPT Image; character name is an input (default Charles Leclerc). Key stays in `.env`; the browser talks to a local Vite proxy
-- **Driver sprite** — 5×5 atlas (yaw × pitch), sampled at 96×96. Mouth still opens from jaw tracking
+- **Driver sprite** — 5×5 atlas. Nose vs eyes/mouth picks yaw/pitch, then snaps to a cell. Overlay is counter-mirrored so left/right match
 
 ## Now
 
-Live camera preview with the driver overlay, plus a HUD for head, mouth, hands, and wheel angle. The 3D scene is still a cube.
+Live camera preview with the driver overlay, plus a HUD for head, hands, and wheel angle. The 3D scene is still a cube.
 
 ## Run
 

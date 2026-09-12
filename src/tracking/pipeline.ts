@@ -4,7 +4,8 @@ import {
   HandLandmarker,
 } from '@mediapipe/tasks-vision'
 import { drawTracking } from './draw'
-import { readHands, readHead, readWheelAngle } from './pose'
+import { HeadTracker } from './face'
+import { readHands, readWheelAngle } from './pose'
 import { trackingStore } from './store'
 
 const WASM_PATH = '/mediapipe/wasm'
@@ -20,7 +21,9 @@ async function createLandmarkers(delegate: 'GPU' | 'CPU') {
     baseOptions: { modelAssetPath: FACE_MODEL, delegate },
     runningMode: 'VIDEO',
     numFaces: 1,
-    outputFacialTransformationMatrixes: true,
+    minFaceDetectionConfidence: 0.6,
+    minFacePresenceConfidence: 0.6,
+    minTrackingConfidence: 0.6,
   })
 
   const hands = await HandLandmarker.createFromOptions(vision, {
@@ -42,6 +45,7 @@ export class CameraPipeline {
   private lastTimestamp = 0
   private frames = 0
   private lastFpsAt = 0
+  private heads = new HeadTracker()
 
   async start(video: HTMLVideoElement, overlay: HTMLCanvasElement) {
     trackingStore.setStatus('loading')
@@ -115,6 +119,7 @@ export class CameraPipeline {
     this.hands?.close()
     this.face = null
     this.hands = null
+    this.heads.reset()
   }
 
   private loop = (video: HTMLVideoElement, overlay: HTMLCanvasElement) => {
@@ -130,10 +135,11 @@ export class CameraPipeline {
 
         const face = this.face.detectForVideo(video, timestamp)
         const hands = this.hands.detectForVideo(video, timestamp)
-        const head = readHead(face)
+        const aspect = video.videoWidth / video.videoHeight || 4 / 3
+        const head = this.heads.update(face.faceLandmarks[0], aspect)
         const { leftHand, rightHand } = readHands(hands)
 
-        drawTracking(overlay, video, face, hands)
+        drawTracking(overlay, video, face, hands, head)
         trackingStore.applyFrame({
           head,
           leftHand,
