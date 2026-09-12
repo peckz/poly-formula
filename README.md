@@ -16,7 +16,7 @@ The camera loop does not go through React. It writes numbers into a store once p
 - **MediaPipe Face + Hand Landmarker** — geometric head pose from a few landmarks, plus both wrists
 - **MobX** — tracking updates every frame without re-rendering the whole app
 - **Store only useful numbers** — pose, wrists, wheel angle. Not the full landmark mesh
-- **fal.ai** — generates driver atlases via GPT Image; character name is an input (default Charles Leclerc). Key stays in `.env`; the browser talks to a local Vite proxy
+- **fal.ai** — generates the entry-screen avatar (Flux) and HUD driver atlases (GPT Image). Key stays in `.env`; the browser talks to a local Vite proxy. Missing credentials keep the entry flow usable with a brick placeholder.
 - **Driver sprite** — 5×5 atlas. Nose vs eyes/mouth picks yaw/pitch, then snaps to a cell. Overlay is counter-mirrored so left/right match
 - **Wheel sprite** — two palm centers set position, tilt, and size so the grips sit in your hands
 
@@ -34,6 +34,8 @@ Real circuits come in as data files, researched separately (possibly by other ag
 - `src/game/trackPath.ts` loads a track file and answers geometry questions (sample at arc length, nearest point, next corner); `src/game/trackModel.ts` builds the meshes from it.
 
 ## Now
+
+Landing is a sharp pre-race entry screen: nickname required to start, optional fal.ai avatar (placeholder if `FAL_KEY` is missing). After start, the existing hand-wheel / READY overlay and HUD take over.
 
 Drivable low-poly F1 car on the real 1:1 Monza layout, built at runtime from [`src/tracks/monza.json`](src/tracks/monza.json) (OSM-sourced, 5793 m): arcade physics, chase camera, HUD with minimap and corner callouts. Keyboard (WASD/arrows) drives, `R` resets you onto the track; holding the hand wheel takes over steering with a gentle auto-throttle.
 

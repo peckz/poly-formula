@@ -3,3 +3,10 @@ const DRIVER_ATLAS_PROMPT = `Use case: stylized-concept. Asset type: a single pr
 export function buildDriverAtlasPrompt(character: string): string {
   return DRIVER_ATLAS_PROMPT.replaceAll('{{charles lecler}}', character)
 }
+
+const DRIVER_AVATAR_PROMPT = `Use case: stylized-concept. Square portrait of {{name}} as a recognizable low-poly retro PlayStation 1 racing-game driver. Head and upper shoulders only. Flat faceted polygon geometry, crunchy limited palette, NOT photorealistic. Simple red racing suit with no text or logos. Plain pale sky background #a9c3e0. Bust centered with even padding. Crisp deliberately low-resolution video game sprite art. Output only the portrait.`
+
+export function buildDriverAvatarPrompt(name: string): string {
+  const character = name.trim() || 'a formula racer'
+  return DRIVER_AVATAR_PROMPT.replaceAll('{{name}}', character)
+}
