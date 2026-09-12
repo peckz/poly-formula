@@ -40,7 +40,6 @@ body,
 
 .camera-feed,
 .tracking-hud,
-.generate-atlas,
 .race-pace,
 .race-map,
 .game-overlay-card,
@@ -123,80 +122,6 @@ body,
 
 .tracking-hud .fps + p {
   margin-bottom: var(--ui-pad);
-}
-
-.generate-atlas {
-  position: absolute;
-  top: var(--ui-pad);
-  left: var(--ui-pad);
-  width: 260px;
-  padding: var(--ui-pad);
-  color: var(--ui-paper);
-  background: var(--ui-asphalt);
-  border: 2px solid var(--ui-line);
-  font: 12px/1.45 ui-monospace, monospace;
-  pointer-events: auto;
-}
-
-.generate-atlas h2 {
-  margin: 0 0 var(--ui-pad);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ui-paper);
-}
-
-.generate-atlas label {
-  display: block;
-  margin-bottom: 8px;
-  color: var(--ui-muted);
-}
-
-.generate-atlas input {
-  box-sizing: border-box;
-  width: 100%;
-  margin-bottom: var(--ui-pad);
-  padding: var(--ui-pad);
-  color: var(--ui-paper);
-  background: var(--ui-ink);
-  border: 2px solid var(--ui-line);
-  font: inherit;
-  appearance: none;
-}
-
-.generate-atlas button {
-  width: 100%;
-  padding: var(--ui-pad);
-  color: var(--ui-paper);
-  background: transparent;
-  border: 2px solid var(--ui-grass);
-  font: inherit;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  cursor: pointer;
-  appearance: none;
-}
-
-.generate-atlas button:disabled {
-  cursor: wait;
-  color: #6d737c;
-  background: var(--ui-asphalt-mid);
-  border-color: var(--ui-line);
-}
-
-.generate-atlas-error {
-  margin: var(--ui-pad) 0 0;
-  padding: var(--ui-pad);
-  color: var(--ui-warn);
-  background: var(--ui-asphalt-mid);
-}
-
-.generate-atlas img {
-  display: block;
-  width: 100%;
-  margin-top: var(--ui-pad);
-  background: var(--ui-ink);
 }
 
 .race-pace,
@@ -316,7 +241,7 @@ body,
   place-content: center;
   padding: var(--ui-pad);
   background: rgba(26, 26, 29, 0.28);
-  font: 13px/1.5 ui-monospace, monospace;
+  font: 13px/1.45 ui-monospace, monospace;
   text-align: left;
   pointer-events: none;
 }
@@ -324,13 +249,37 @@ body,
 .game-overlay-card {
   display: flex;
   flex-direction: column;
-  gap: var(--ui-pad);
   box-sizing: border-box;
-  width: min(420px, 100%);
-  padding: var(--ui-pad);
+  width: min(780px, calc(100vw - 32px));
   color: var(--ui-paper);
   background: var(--ui-asphalt);
-  border: 2px solid var(--ui-line);
+  border: 4px solid var(--ui-paper);
+  box-shadow:
+    0 0 0 4px var(--ui-red),
+    10px 10px 0 var(--ui-ink);
+}
+
+.game-overlay-stripe {
+  display: flex;
+  gap: 8px;
+  padding: var(--ui-pad);
+  background: var(--ui-ink);
+  border-bottom: 4px solid var(--ui-red);
+}
+
+.game-overlay-banner {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--ui-pad) 32px;
+  align-items: center;
+  padding: var(--ui-pad) 24px 24px;
+}
+
+.game-overlay-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
 }
 
 .game-overlay p {
@@ -338,24 +287,43 @@ body,
 }
 
 .game-overlay-title {
+  margin: 0;
   font:
-    700 40px/0.92 ui-sans-serif,
+    800 64px/0.86 ui-sans-serif,
     system-ui,
     sans-serif;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ui-paper);
+  text-shadow: 4px 4px 0 var(--ui-red);
 }
 
-.game-overlay-line {
+.game-overlay-line,
+.game-overlay-keys {
   color: var(--ui-paper);
+  font-size: 15px;
+}
+
+.game-overlay-keys {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ui-warn);
 }
 
 .game-overlay-hint {
-  padding: var(--ui-pad);
-  color: var(--ui-muted);
-  background: var(--ui-asphalt-mid);
-  letter-spacing: 0.04em;
+  color: var(--ui-grass);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 640px) {
+  .game-overlay-banner {
+    grid-template-columns: 1fr;
+  }
+
+  .game-overlay-title {
+    font-size: 48px;
+  }
 }
 
 .entry-screen,
