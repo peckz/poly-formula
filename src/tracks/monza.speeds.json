@@ -8,32 +8,32 @@
   },
   "reference": {
     "class": "f1",
-    "season": 2026,
+    "season": 2024,
     "session": "qualifying",
-    "driver": "Pierre Gasly",
-    "team": "BWT Alpine F1 Team",
-    "car": "A526",
-    "lapTimeS": 81.786,
+    "driver": "Lando Norris",
+    "team": "McLaren Formula 1 Team",
+    "car": "MCL38",
+    "lapTimeS": 79.327,
     "sectorTimesS": [
-      26.817,
-      27.706,
-      27.263
+      26.492,
+      26.579,
+      26.256
     ],
-    "source": "FIA 2026 Italian GP Final Qualifying Classification (Doc 50, 2026-09-05): pole 1:21.786 / 254.992 km/h. Sector splits and SpeedI1/I2/FL/ST from F1 live timing via FastF1 3.8.3 on that lap (no raw trace redistributed).",
-    "notes": "Dry Q3 pole, current GP layout, 2026 active-aero cars (no DRS). Soft tyre, tyre life 2. Layout matches monza.json (Rettifilo / Roggia / Ascari chicanes, no oval)."
+    "source": "FIA 2024 Italian GP qualifying: pole 1:19.327 / 262.896 km/h (Autosport / FIA). Sector splits 26.492 / 26.579 / 26.256 and SpeedI1/I2/FL/ST 324 / 338 / 315 / 346 from F1 live timing via FastF1 3.8.3 and FIA sector-analysis PDF (no raw trace redistributed).",
+    "notes": "Dry Q3 pole, current GP layout (2024 flattened Ascari kerbs). Soft tyre, tyre life 2, DRS-era car. Same reference lap as racing-line PR #7. This speeds PR first committed Pierre Gasly 2026 Q3 pole 1:21.786 (new-reg, no DRS); retargeted here so line and speeds describe one lap."
   },
   "lap": {
     "lengthM": 5793.4,
-    "topSpeedKmh": 342.0,
-    "topSpeedS": 400.0,
-    "speedTrapKmh": 334.0,
+    "topSpeedKmh": 347.0,
+    "topSpeedS": 410.0,
+    "speedTrapKmh": 346.0,
     "speedTrapS": 432.279,
-    "finishLineKmh": 287.0,
-    "impliedLapTimeS": 82.47,
+    "finishLineKmh": 315.0,
+    "impliedLapTimeS": 81.645,
     "impliedSectorTimesS": [
-      23.037,
-      27.791,
-      31.642
+      23.238,
+      27.038,
+      31.37
     ],
     "sectorBeams": {
       "kind": "fiaLoopsOnThisCenterline",
@@ -42,2037 +42,2157 @@
         3440.29,
         5793.4
       ],
-      "note": "Splits at I1 (230 m before T4) and I2 (210 m before T8), not the FIA surveyed 2.061 / 3.884 km marks. I1\u2192I2 length is 1832 m vs published S2 1823 m."
+      "note": "Splits at I1 (230 m before T4) and I2 (210 m before T8). I1\u2192I2 length is 1832 m vs published S2 1823 m."
     },
-    "method": "Trapezoidal \u222b ds/v over samples (v in m/s), closed 0\u21925793.4. Waypoints are official timing loops + FastF1 pole-lap event speeds + Brembo 2026 brake distances. Straight samples are v\u00b2-interpolated between those waypoints; apex and brake-point speeds are locked to the sourced values."
+    "method": "Trapezoidal \u222b ds/v over samples (v in m/s), closed 0\u21925793.4. Waypoints are official timing loops + FastF1 pole-lap event speeds + Brembo same-gen brake distances. Straight samples are v\u00b2-interpolated; apex and brake-point speeds are locked."
   },
   "corners": [
     {
       "id": "rettifilo",
       "name": "Variante del Rettifilo",
       "s": 622.279,
-      "entrySpeedKmh": 334,
-      "apexSpeedKmh": 71,
-      "exitSpeedKmh": 165,
-      "brakePointS": 469.279,
+      "entrySpeedKmh": 346,
+      "apexSpeedKmh": 73,
+      "exitSpeedKmh": 160,
+      "brakePointS": 493.279,
       "brakePointConfidence": "high",
       "apexS": 622.279,
       "apexConfidence": "high",
-      "turnInS": 590.0,
-      "exitS": 720.0,
-      "gear": 1,
-      "notes": "Slower of the two chicane apexes (T1 right). FastF1 car_data min 71 km/h in 1st on Gasly pole lap; T2 is already accelerating. Brake \u0394 153 m from Brembo 2026 T1 simulation; official SpeedST on this lap 334 km/h."
+      "turnInS": 555.0,
+      "exitS": 745.0,
+      "gear": 2,
+      "notes": "Slower of T1/T2. FastF1 min 73 km/h in 2nd on Norris pole lap (T2 second brush 81). Official SpeedST 346; FastF1 peak 347. Brake \u0394 129 m from Brembo same-gen T1 (337\u219289 in 2.75 s / 4.7 g)."
     },
     {
       "id": "biassono",
       "name": "Curva Biassono",
       "s": 1106.426,
-      "entrySpeedKmh": 305,
-      "apexSpeedKmh": 305,
-      "exitSpeedKmh": 307,
+      "entrySpeedKmh": 318,
+      "apexSpeedKmh": 318,
+      "exitSpeedKmh": 322,
       "brakePointS": 1106.426,
       "brakePointConfidence": "high",
       "apexS": 1106.426,
       "apexConfidence": "high",
       "gear": 8,
-      "notes": "No brake or lift on the pole lap (full throttle through Curva Grande). Speed is still climbing out of Rettifilo; 305 km/h at the geometric apex, 307\u2013308 km/h by the I1 loop."
+      "notes": "No brake or lift on the pole lap. Still climbing out of Rettifilo; 318 km/h at the geometric apex, 324 km/h by I1."
     },
     {
       "id": "roggia",
       "name": "Variante della Roggia",
       "s": 1838.272,
-      "entrySpeedKmh": 308,
-      "apexSpeedKmh": 118,
-      "exitSpeedKmh": 168,
-      "brakePointS": 1717.272,
-      "brakePointConfidence": "medium",
+      "entrySpeedKmh": 317,
+      "apexSpeedKmh": 113,
+      "exitSpeedKmh": 160,
+      "brakePointS": 1731.272,
+      "brakePointConfidence": "high",
       "apexS": 1838.272,
-      "apexConfidence": "medium",
+      "apexConfidence": "high",
       "turnInS": 1810.0,
-      "exitS": 1920.0,
-      "gear": 2,
-      "notes": "Official SpeedI1 on this lap 308 km/h (230 m before T4). Apex 118 km/h is the first valid FastF1 sample after a timing dropout through the stop, matching FormulaDream's published Gasly Q3 chicane min. Brake \u0394 121 m from Brembo 2026 T4 note."
+      "exitS": 1930.0,
+      "gear": 3,
+      "notes": "Official SpeedI1 324 km/h; FastF1 brake-on 317, min 113 in 3rd (clean trace \u2014 no dropout). Brake \u0394 107 m from Brembo 2025 T4 same-generation figure."
     },
     {
       "id": "lesmo1",
       "name": "Lesmo 1",
       "s": 2210.232,
-      "entrySpeedKmh": 232,
-      "apexSpeedKmh": 205,
-      "exitSpeedKmh": 218,
-      "brakePointS": 2127.232,
+      "entrySpeedKmh": 263,
+      "apexSpeedKmh": 207,
+      "exitSpeedKmh": 226,
+      "brakePointS": 2108.232,
       "brakePointConfidence": "high",
-      "apexS": 2210.232,
+      "apexS": 2255.0,
       "apexConfidence": "high",
       "gear": 5,
-      "notes": "Short brake, not a lift-only. FastF1 pole lap: brake-on 232 km/h, min 205 km/h in 5th. FP2 top-7 mean was 239\u2192203."
+      "notes": "FastF1 brake-on 263, min 207 in 5th. apexS is the racing apex at 2255 m (PR #7), 45 m after the centreline heading peak."
     },
     {
       "id": "lesmo2",
       "name": "Lesmo 2",
       "s": 2582.962,
-      "entrySpeedKmh": 239,
-      "apexSpeedKmh": 184,
-      "exitSpeedKmh": 218,
-      "brakePointS": 2493.962,
+      "entrySpeedKmh": 248,
+      "apexSpeedKmh": 190,
+      "exitSpeedKmh": 219,
+      "brakePointS": 2509.962,
       "brakePointConfidence": "high",
       "apexS": 2582.962,
       "apexConfidence": "high",
-      "gear": 4,
-      "notes": "Harder stop than Lesmo 1. FastF1 pole lap: brake-on 239 km/h, min 184 km/h in 4th. FP2 top-7 mean was 236\u2192182."
+      "gear": 5,
+      "notes": "FastF1 brake-on 248, min 190 in 5th. Harder stop than Lesmo 1."
     },
     {
       "id": "serraglio",
       "name": "Curva del Serraglio",
       "s": 2995.137,
-      "entrySpeedKmh": 308,
-      "apexSpeedKmh": 308,
-      "exitSpeedKmh": 320,
+      "entrySpeedKmh": 322,
+      "apexSpeedKmh": 322,
+      "exitSpeedKmh": 332,
       "brakePointS": 2995.137,
       "brakePointConfidence": "high",
       "apexS": 2995.137,
       "apexConfidence": "high",
       "gear": 8,
-      "notes": "No brake or lift on the pole lap. Wide left kink taken as part of the drive from Lesmo 2 to the I2 loop (327 km/h)."
+      "notes": "No brake or lift. DRS-era drive from Lesmo 2 toward I2 338 km/h."
     },
     {
       "id": "ascari",
       "name": "Variante Ascari",
       "s": 3650.29,
-      "entrySpeedKmh": 316,
-      "apexSpeedKmh": 186,
-      "exitSpeedKmh": 235,
-      "brakePointS": 3527.29,
+      "entrySpeedKmh": 296,
+      "apexSpeedKmh": 194,
+      "exitSpeedKmh": 242,
+      "brakePointS": 3546.29,
       "brakePointConfidence": "high",
       "apexS": 3650.29,
       "apexConfidence": "high",
-      "turnInS": 3580.0,
-      "exitS": 3765.0,
-      "gear": 4,
-      "notes": "Slower of the L\u2013R\u2013L (first left / Vialone). FastF1 pole lap: I2 327 km/h, brake-on 316 km/h, min 186 km/h in 4th. FP2 top-7 mean was 314\u2192189."
+      "turnInS": 3570.0,
+      "exitS": 4020.0,
+      "gear": 5,
+      "notes": "Slower of the L\u2013R\u2013L (first left). Official I2 338; FastF1 brake-on 296 after a lift, min 194 in 5th. PlanetF1: Norris 9 km/h faster than Verstappen here on this weekend."
     },
     {
       "id": "parabolica",
       "name": "Curva Alboreto",
       "s": 4864.548,
-      "entrySpeedKmh": 293,
-      "apexSpeedKmh": 211,
-      "exitSpeedKmh": 248,
-      "brakePointS": 4735.548,
+      "entrySpeedKmh": 307,
+      "apexSpeedKmh": 215,
+      "exitSpeedKmh": 256,
+      "brakePointS": 4725.0,
       "brakePointConfidence": "high",
-      "apexS": 4864.548,
+      "apexS": 5065.0,
       "apexConfidence": "high",
-      "turnInS": 4780.0,
-      "exitS": 5080.0,
+      "turnInS": 4765.0,
+      "exitS": 5260.0,
       "gear": 5,
-      "notes": "FastF1 min 211 km/h in 5th \u2014 same figure FormulaDream published for Gasly Q3 (highest of the top seven). Peak on the opposite straight 319 km/h then a lift/harvest before brake-on at 293. Official SpeedFL on this lap 287 km/h."
+      "notes": "FastF1 min 215 in 5th at the late racing apex (s=5065, PR #7), not the centreline heading peak at 4864. Opposite-straight peak 329 then brake-on 307. Official SpeedFL 315. PlanetF1: Norris ~10 km/h faster than Verstappen through Parabolica."
     }
   ],
   "samples": [
     {
       "s": 0.0,
-      "speedKmh": 288.0,
+      "speedKmh": 316.0,
       "phase": "accel"
     },
     {
-      "s": 24.96,
-      "speedKmh": 294.4,
+      "s": 24.909,
+      "speedKmh": 319.1,
       "phase": "accel"
     },
     {
-      "s": 49.92,
-      "speedKmh": 300.6,
+      "s": 49.819,
+      "speedKmh": 322.3,
       "phase": "accel"
     },
     {
-      "s": 74.88,
-      "speedKmh": 306.8,
+      "s": 74.728,
+      "speedKmh": 325.4,
       "phase": "accel"
     },
     {
-      "s": 99.84,
-      "speedKmh": 310.8,
+      "s": 99.638,
+      "speedKmh": 327.6,
       "phase": "accel"
     },
     {
-      "s": 124.8,
-      "speedKmh": 314.3,
+      "s": 124.547,
+      "speedKmh": 329.6,
       "phase": "accel"
     },
     {
-      "s": 149.76,
-      "speedKmh": 317.8,
+      "s": 149.457,
+      "speedKmh": 331.6,
       "phase": "accel"
     },
     {
-      "s": 174.72,
-      "speedKmh": 321.3,
+      "s": 174.366,
+      "speedKmh": 333.6,
       "phase": "accel"
     },
     {
-      "s": 199.68,
-      "speedKmh": 324.0,
+      "s": 199.275,
+      "speedKmh": 335.2,
       "phase": "accel"
     },
     {
-      "s": 224.639,
-      "speedKmh": 326.5,
+      "s": 224.185,
+      "speedKmh": 336.7,
       "phase": "accel"
     },
     {
-      "s": 249.599,
-      "speedKmh": 329.0,
+      "s": 249.094,
+      "speedKmh": 338.2,
       "phase": "accel"
     },
     {
-      "s": 274.559,
-      "speedKmh": 331.5,
+      "s": 274.004,
+      "speedKmh": 339.6,
       "phase": "accel"
     },
     {
-      "s": 299.519,
-      "speedKmh": 334.0,
+      "s": 298.913,
+      "speedKmh": 340.9,
       "phase": "accel"
     },
     {
-      "s": 324.479,
-      "speedKmh": 336.5,
+      "s": 323.822,
+      "speedKmh": 342.2,
       "phase": "accel"
     },
     {
-      "s": 349.439,
-      "speedKmh": 339.0,
+      "s": 348.732,
+      "speedKmh": 343.4,
       "phase": "accel"
     },
     {
-      "s": 374.399,
-      "speedKmh": 340.7,
+      "s": 373.641,
+      "speedKmh": 344.8,
       "phase": "accel"
     },
     {
-      "s": 399.359,
-      "speedKmh": 342.0,
+      "s": 398.551,
+      "speedKmh": 346.3,
       "phase": "hold"
     },
     {
-      "s": 424.319,
-      "speedKmh": 336.0,
+      "s": 423.46,
+      "speedKmh": 346.4,
       "phase": "hold"
     },
     {
       "s": 432.279,
-      "speedKmh": 334.0,
+      "speedKmh": 346.0,
       "phase": "hold"
     },
     {
-      "s": 449.279,
-      "speedKmh": 334.0,
+      "s": 448.37,
+      "speedKmh": 346.0,
       "phase": "hold"
     },
     {
-      "s": 457.246,
-      "speedKmh": 334.0,
+      "s": 473.279,
+      "speedKmh": 346.0,
       "phase": "brake"
     },
     {
-      "s": 465.213,
-      "speedKmh": 334.0,
+      "s": 481.243,
+      "speedKmh": 346.0,
       "phase": "brake"
     },
     {
-      "s": 469.279,
-      "speedKmh": 334.0,
+      "s": 489.208,
+      "speedKmh": 346.0,
       "phase": "brake"
     },
     {
-      "s": 473.181,
-      "speedKmh": 329.2,
+      "s": 493.279,
+      "speedKmh": 346.0,
       "phase": "brake"
     },
     {
-      "s": 481.148,
-      "speedKmh": 319.3,
+      "s": 497.172,
+      "speedKmh": 339.0,
       "phase": "brake"
     },
     {
-      "s": 489.115,
-      "speedKmh": 309.1,
+      "s": 505.137,
+      "speedKmh": 324.3,
       "phase": "brake"
     },
     {
-      "s": 497.082,
-      "speedKmh": 298.5,
+      "s": 513.101,
+      "speedKmh": 308.9,
       "phase": "brake"
     },
     {
-      "s": 505.049,
-      "speedKmh": 287.5,
+      "s": 521.066,
+      "speedKmh": 292.7,
       "phase": "brake"
     },
     {
-      "s": 513.017,
-      "speedKmh": 276.1,
+      "s": 529.03,
+      "speedKmh": 275.6,
       "phase": "brake"
     },
     {
-      "s": 520.984,
-      "speedKmh": 264.2,
+      "s": 536.995,
+      "speedKmh": 257.3,
       "phase": "brake"
     },
     {
-      "s": 528.951,
-      "speedKmh": 251.7,
+      "s": 544.959,
+      "speedKmh": 238.4,
       "phase": "brake"
     },
     {
-      "s": 536.918,
-      "speedKmh": 236.9,
+      "s": 552.924,
+      "speedKmh": 218.5,
       "phase": "brake"
     },
     {
-      "s": 544.885,
-      "speedKmh": 220.8,
+      "s": 560.888,
+      "speedKmh": 196.5,
       "phase": "brake"
     },
     {
-      "s": 552.853,
-      "speedKmh": 203.5,
+      "s": 568.853,
+      "speedKmh": 171.8,
       "phase": "brake"
     },
     {
-      "s": 560.82,
-      "speedKmh": 184.6,
+      "s": 576.817,
+      "speedKmh": 147.3,
       "phase": "brake"
     },
     {
-      "s": 568.787,
-      "speedKmh": 163.5,
+      "s": 584.782,
+      "speedKmh": 134.6,
       "phase": "brake"
     },
     {
-      "s": 576.754,
-      "speedKmh": 148.6,
+      "s": 592.746,
+      "speedKmh": 120.5,
       "phase": "brake"
     },
     {
-      "s": 584.721,
-      "speedKmh": 134.0,
+      "s": 600.711,
+      "speedKmh": 104.6,
       "phase": "brake"
     },
     {
-      "s": 592.689,
-      "speedKmh": 117.5,
+      "s": 608.675,
+      "speedKmh": 90.8,
       "phase": "brake"
     },
     {
-      "s": 600.656,
-      "speedKmh": 99.3,
-      "phase": "brake"
-    },
-    {
-      "s": 608.623,
-      "speedKmh": 89.9,
-      "phase": "brake"
-    },
-    {
-      "s": 616.59,
-      "speedKmh": 79.4,
+      "s": 616.639,
+      "speedKmh": 80.8,
       "phase": "apex"
     },
     {
       "s": 622.279,
-      "speedKmh": 71.0,
+      "speedKmh": 73.0,
       "phase": "apex"
     },
     {
-      "s": 624.558,
-      "speedKmh": 72.9,
+      "s": 624.604,
+      "speedKmh": 73.6,
       "phase": "apex"
     },
     {
-      "s": 632.525,
-      "speedKmh": 79.6,
+      "s": 632.568,
+      "speedKmh": 75.5,
       "phase": "apex"
     },
     {
-      "s": 640.492,
-      "speedKmh": 86.2,
+      "s": 640.533,
+      "speedKmh": 77.5,
       "phase": "apex"
     },
     {
-      "s": 648.459,
-      "speedKmh": 94.0,
+      "s": 648.497,
+      "speedKmh": 79.4,
       "phase": "apex"
     },
     {
-      "s": 656.426,
-      "speedKmh": 103.1,
+      "s": 656.462,
+      "speedKmh": 82.6,
       "phase": "apex"
     },
     {
-      "s": 664.394,
-      "speedKmh": 112.2,
+      "s": 664.426,
+      "speedKmh": 91.5,
+      "phase": "apex"
+    },
+    {
+      "s": 672.391,
+      "speedKmh": 100.4,
+      "phase": "apex"
+    },
+    {
+      "s": 680.355,
+      "speedKmh": 109.3,
       "phase": "exit"
     },
     {
-      "s": 672.361,
-      "speedKmh": 121.3,
+      "s": 688.32,
+      "speedKmh": 118.1,
       "phase": "exit"
     },
     {
-      "s": 680.328,
-      "speedKmh": 130.3,
+      "s": 696.284,
+      "speedKmh": 125.2,
       "phase": "exit"
     },
     {
-      "s": 688.295,
-      "speedKmh": 138.0,
+      "s": 704.249,
+      "speedKmh": 131.5,
       "phase": "exit"
     },
     {
-      "s": 696.262,
-      "speedKmh": 145.3,
+      "s": 712.213,
+      "speedKmh": 137.6,
       "phase": "exit"
     },
     {
-      "s": 704.23,
-      "speedKmh": 152.2,
+      "s": 720.178,
+      "speedKmh": 143.3,
       "phase": "exit"
     },
     {
-      "s": 712.197,
-      "speedKmh": 158.8,
+      "s": 728.142,
+      "speedKmh": 148.9,
       "phase": "exit"
     },
     {
-      "s": 720.164,
-      "speedKmh": 165.1,
+      "s": 736.107,
+      "speedKmh": 154.2,
       "phase": "exit"
     },
     {
-      "s": 728.131,
-      "speedKmh": 171.4,
+      "s": 744.071,
+      "speedKmh": 159.4,
       "phase": "exit"
     },
     {
-      "s": 736.098,
-      "speedKmh": 177.4,
-      "phase": "exit"
-    },
-    {
-      "s": 744.066,
-      "speedKmh": 183.3,
-      "phase": "exit"
-    },
-    {
-      "s": 752.033,
-      "speedKmh": 189.0,
+      "s": 752.036,
+      "speedKmh": 165.3,
       "phase": "exit"
     },
     {
       "s": 760.0,
-      "speedKmh": 194.5,
+      "speedKmh": 171.2,
+      "phase": "exit"
+    },
+    {
+      "s": 784.392,
+      "speedKmh": 187.9,
       "phase": "accel"
     },
     {
-      "s": 784.665,
-      "speedKmh": 210.6,
+      "s": 808.783,
+      "speedKmh": 203.3,
       "phase": "accel"
     },
     {
-      "s": 809.33,
-      "speedKmh": 224.9,
+      "s": 833.175,
+      "speedKmh": 217.2,
       "phase": "accel"
     },
     {
-      "s": 833.995,
-      "speedKmh": 237.4,
+      "s": 857.566,
+      "speedKmh": 230.1,
       "phase": "accel"
     },
     {
-      "s": 858.66,
-      "speedKmh": 249.3,
+      "s": 881.958,
+      "speedKmh": 242.2,
       "phase": "accel"
     },
     {
-      "s": 883.325,
-      "speedKmh": 260.6,
+      "s": 906.35,
+      "speedKmh": 253.8,
       "phase": "accel"
     },
     {
-      "s": 907.99,
-      "speedKmh": 269.9,
+      "s": 930.741,
+      "speedKmh": 264.0,
       "phase": "accel"
     },
     {
-      "s": 932.655,
-      "speedKmh": 275.6,
+      "s": 955.133,
+      "speedKmh": 272.8,
       "phase": "accel"
     },
     {
-      "s": 957.32,
-      "speedKmh": 281.2,
+      "s": 979.524,
+      "speedKmh": 281.4,
       "phase": "accel"
     },
     {
-      "s": 981.985,
-      "speedKmh": 286.7,
+      "s": 1003.916,
+      "speedKmh": 289.7,
       "phase": "accel"
     },
     {
-      "s": 1006.651,
-      "speedKmh": 292.1,
+      "s": 1028.307,
+      "speedKmh": 297.3,
       "phase": "accel"
     },
     {
-      "s": 1031.316,
-      "speedKmh": 296.3,
+      "s": 1052.699,
+      "speedKmh": 303.9,
       "phase": "accel"
     },
     {
-      "s": 1055.981,
-      "speedKmh": 299.2,
-      "phase": "accel"
-    },
-    {
-      "s": 1080.646,
-      "speedKmh": 302.1,
+      "s": 1077.091,
+      "speedKmh": 310.4,
       "phase": "hold"
     },
     {
-      "s": 1105.311,
-      "speedKmh": 304.9,
+      "s": 1101.482,
+      "speedKmh": 316.7,
       "phase": "hold"
     },
     {
       "s": 1106.426,
-      "speedKmh": 305.0,
+      "speedKmh": 318.0,
       "phase": "hold"
     },
     {
-      "s": 1129.976,
-      "speedKmh": 305.2,
+      "s": 1125.874,
+      "speedKmh": 318.3,
       "phase": "hold"
     },
     {
-      "s": 1154.641,
-      "speedKmh": 305.4,
+      "s": 1150.265,
+      "speedKmh": 318.6,
       "phase": "hold"
     },
     {
-      "s": 1179.306,
-      "speedKmh": 305.6,
+      "s": 1174.657,
+      "speedKmh": 318.9,
       "phase": "hold"
     },
     {
-      "s": 1203.971,
-      "speedKmh": 305.8,
+      "s": 1199.049,
+      "speedKmh": 319.3,
       "phase": "hold"
     },
     {
-      "s": 1228.636,
-      "speedKmh": 306.0,
+      "s": 1223.44,
+      "speedKmh": 319.6,
       "phase": "hold"
     },
     {
-      "s": 1253.301,
-      "speedKmh": 306.2,
+      "s": 1247.832,
+      "speedKmh": 319.9,
       "phase": "hold"
     },
     {
-      "s": 1277.966,
-      "speedKmh": 306.4,
+      "s": 1272.223,
+      "speedKmh": 320.3,
       "phase": "hold"
     },
     {
-      "s": 1302.631,
-      "speedKmh": 306.6,
+      "s": 1296.615,
+      "speedKmh": 320.6,
       "phase": "hold"
     },
     {
-      "s": 1327.296,
-      "speedKmh": 306.8,
+      "s": 1321.007,
+      "speedKmh": 320.9,
       "phase": "hold"
     },
     {
-      "s": 1351.961,
-      "speedKmh": 307.0,
+      "s": 1345.398,
+      "speedKmh": 321.3,
       "phase": "hold"
     },
     {
-      "s": 1376.626,
-      "speedKmh": 307.1,
+      "s": 1369.79,
+      "speedKmh": 321.6,
       "phase": "hold"
     },
     {
-      "s": 1401.291,
-      "speedKmh": 307.2,
+      "s": 1394.181,
+      "speedKmh": 321.9,
       "phase": "hold"
     },
     {
-      "s": 1425.956,
-      "speedKmh": 307.3,
+      "s": 1418.573,
+      "speedKmh": 322.2,
       "phase": "hold"
     },
     {
-      "s": 1450.621,
-      "speedKmh": 307.4,
+      "s": 1442.965,
+      "speedKmh": 322.4,
       "phase": "hold"
     },
     {
-      "s": 1475.287,
-      "speedKmh": 307.5,
+      "s": 1467.356,
+      "speedKmh": 322.6,
       "phase": "hold"
     },
     {
-      "s": 1499.952,
-      "speedKmh": 307.6,
+      "s": 1491.748,
+      "speedKmh": 322.9,
       "phase": "hold"
     },
     {
-      "s": 1524.617,
-      "speedKmh": 307.7,
+      "s": 1516.139,
+      "speedKmh": 323.1,
       "phase": "hold"
     },
     {
-      "s": 1549.282,
-      "speedKmh": 307.8,
+      "s": 1540.531,
+      "speedKmh": 323.3,
       "phase": "hold"
     },
     {
-      "s": 1573.947,
-      "speedKmh": 307.9,
+      "s": 1564.922,
+      "speedKmh": 323.6,
       "phase": "hold"
     },
     {
-      "s": 1598.612,
-      "speedKmh": 308.0,
+      "s": 1589.314,
+      "speedKmh": 323.8,
       "phase": "hold"
     },
     {
       "s": 1608.272,
-      "speedKmh": 308.0,
+      "speedKmh": 324.0,
       "phase": "hold"
     },
     {
-      "s": 1623.277,
-      "speedKmh": 308.0,
-      "phase": "hold"
-    },
-    {
-      "s": 1647.942,
-      "speedKmh": 308.0,
-      "phase": "hold"
-    },
-    {
-      "s": 1672.607,
-      "speedKmh": 308.0,
-      "phase": "brake"
-    },
-    {
-      "s": 1697.272,
-      "speedKmh": 308.0,
-      "phase": "brake"
-    },
-    {
-      "s": 1705.233,
-      "speedKmh": 308.0,
-      "phase": "brake"
-    },
-    {
-      "s": 1713.195,
-      "speedKmh": 308.0,
-      "phase": "brake"
-    },
-    {
-      "s": 1717.272,
-      "speedKmh": 308.0,
-      "phase": "brake"
-    },
-    {
-      "s": 1721.156,
-      "speedKmh": 300.7,
-      "phase": "brake"
-    },
-    {
-      "s": 1729.118,
-      "speedKmh": 285.0,
-      "phase": "brake"
-    },
-    {
-      "s": 1737.079,
-      "speedKmh": 268.5,
-      "phase": "brake"
-    },
-    {
-      "s": 1745.041,
-      "speedKmh": 250.9,
-      "phase": "brake"
-    },
-    {
-      "s": 1753.002,
-      "speedKmh": 231.9,
-      "phase": "brake"
-    },
-    {
-      "s": 1760.964,
-      "speedKmh": 211.3,
-      "phase": "brake"
-    },
-    {
-      "s": 1768.925,
-      "speedKmh": 195.3,
-      "phase": "brake"
-    },
-    {
-      "s": 1776.887,
-      "speedKmh": 185.4,
-      "phase": "brake"
-    },
-    {
-      "s": 1784.848,
-      "speedKmh": 174.9,
-      "phase": "brake"
-    },
-    {
-      "s": 1792.809,
-      "speedKmh": 163.7,
-      "phase": "brake"
-    },
-    {
-      "s": 1800.771,
-      "speedKmh": 151.8,
-      "phase": "brake"
-    },
-    {
-      "s": 1808.732,
-      "speedKmh": 142.2,
-      "phase": "brake"
-    },
-    {
-      "s": 1816.694,
-      "speedKmh": 136.1,
-      "phase": "brake"
-    },
-    {
-      "s": 1824.655,
-      "speedKmh": 129.7,
-      "phase": "apex"
-    },
-    {
-      "s": 1832.617,
-      "speedKmh": 123.0,
-      "phase": "apex"
-    },
-    {
-      "s": 1838.272,
-      "speedKmh": 118.0,
-      "phase": "apex"
-    },
-    {
-      "s": 1840.578,
-      "speedKmh": 119.6,
-      "phase": "apex"
-    },
-    {
-      "s": 1848.54,
-      "speedKmh": 125.1,
-      "phase": "apex"
-    },
-    {
-      "s": 1856.501,
-      "speedKmh": 130.6,
-      "phase": "exit"
-    },
-    {
-      "s": 1864.463,
-      "speedKmh": 136.2,
-      "phase": "exit"
-    },
-    {
-      "s": 1872.424,
-      "speedKmh": 141.5,
-      "phase": "exit"
-    },
-    {
-      "s": 1880.385,
-      "speedKmh": 146.3,
-      "phase": "exit"
-    },
-    {
-      "s": 1888.347,
-      "speedKmh": 150.9,
-      "phase": "exit"
-    },
-    {
-      "s": 1896.308,
-      "speedKmh": 155.4,
-      "phase": "exit"
-    },
-    {
-      "s": 1904.27,
-      "speedKmh": 159.7,
-      "phase": "exit"
-    },
-    {
-      "s": 1912.231,
-      "speedKmh": 164.0,
-      "phase": "exit"
-    },
-    {
-      "s": 1920.193,
-      "speedKmh": 168.1,
-      "phase": "exit"
-    },
-    {
-      "s": 1928.154,
-      "speedKmh": 172.1,
-      "phase": "exit"
-    },
-    {
-      "s": 1936.116,
-      "speedKmh": 176.1,
-      "phase": "exit"
-    },
-    {
-      "s": 1944.077,
-      "speedKmh": 179.9,
-      "phase": "exit"
-    },
-    {
-      "s": 1952.039,
-      "speedKmh": 183.7,
-      "phase": "exit"
-    },
-    {
-      "s": 1960.0,
-      "speedKmh": 187.4,
-      "phase": "accel"
-    },
-    {
-      "s": 1979.029,
-      "speedKmh": 196.0,
-      "phase": "accel"
-    },
-    {
-      "s": 1998.058,
-      "speedKmh": 204.2,
-      "phase": "accel"
-    },
-    {
-      "s": 2017.087,
-      "speedKmh": 208.8,
-      "phase": "accel"
-    },
-    {
-      "s": 2036.116,
-      "speedKmh": 213.0,
-      "phase": "accel"
-    },
-    {
-      "s": 2055.145,
-      "speedKmh": 217.1,
-      "phase": "accel"
-    },
-    {
-      "s": 2061.142,
-      "speedKmh": 218.4,
-      "phase": "accel"
-    },
-    {
-      "s": 2074.174,
-      "speedKmh": 221.1,
-      "phase": "brake"
-    },
-    {
-      "s": 2093.203,
-      "speedKmh": 225.1,
-      "phase": "brake"
-    },
-    {
-      "s": 2112.232,
-      "speedKmh": 229.0,
-      "phase": "brake"
-    },
-    {
-      "s": 2122.121,
-      "speedKmh": 231.0,
-      "phase": "brake"
-    },
-    {
-      "s": 2127.232,
-      "speedKmh": 232.0,
-      "phase": "brake"
-    },
-    {
-      "s": 2132.01,
-      "speedKmh": 230.5,
-      "phase": "brake"
-    },
-    {
-      "s": 2141.899,
-      "speedKmh": 227.5,
-      "phase": "brake"
-    },
-    {
-      "s": 2151.788,
-      "speedKmh": 224.4,
-      "phase": "brake"
-    },
-    {
-      "s": 2161.676,
-      "speedKmh": 221.2,
-      "phase": "brake"
-    },
-    {
-      "s": 2171.565,
-      "speedKmh": 218.0,
-      "phase": "apex"
-    },
-    {
-      "s": 2181.454,
-      "speedKmh": 214.7,
-      "phase": "apex"
-    },
-    {
-      "s": 2191.343,
-      "speedKmh": 211.4,
-      "phase": "apex"
-    },
-    {
-      "s": 2201.232,
-      "speedKmh": 208.1,
-      "phase": "apex"
-    },
-    {
-      "s": 2210.232,
-      "speedKmh": 205.0,
-      "phase": "apex"
-    },
-    {
-      "s": 2211.121,
-      "speedKmh": 205.2,
-      "phase": "apex"
-    },
-    {
-      "s": 2221.01,
-      "speedKmh": 207.8,
-      "phase": "apex"
-    },
-    {
-      "s": 2230.899,
-      "speedKmh": 210.4,
-      "phase": "apex"
-    },
-    {
-      "s": 2240.788,
-      "speedKmh": 213.0,
-      "phase": "exit"
-    },
-    {
-      "s": 2250.676,
-      "speedKmh": 215.6,
-      "phase": "exit"
-    },
-    {
-      "s": 2260.565,
-      "speedKmh": 218.1,
-      "phase": "exit"
-    },
-    {
-      "s": 2270.454,
-      "speedKmh": 219.1,
-      "phase": "exit"
-    },
-    {
-      "s": 2280.343,
-      "speedKmh": 220.1,
-      "phase": "exit"
-    },
-    {
-      "s": 2290.232,
-      "speedKmh": 221.1,
-      "phase": "exit"
-    },
-    {
-      "s": 2309.105,
-      "speedKmh": 223.0,
-      "phase": "exit"
-    },
-    {
-      "s": 2327.978,
-      "speedKmh": 224.9,
-      "phase": "accel"
-    },
-    {
-      "s": 2346.851,
-      "speedKmh": 226.7,
-      "phase": "accel"
-    },
-    {
-      "s": 2365.724,
-      "speedKmh": 228.6,
-      "phase": "accel"
-    },
-    {
-      "s": 2384.597,
-      "speedKmh": 230.4,
-      "phase": "accel"
-    },
-    {
-      "s": 2403.47,
-      "speedKmh": 231.9,
-      "phase": "accel"
-    },
-    {
-      "s": 2422.343,
-      "speedKmh": 233.4,
-      "phase": "accel"
-    },
-    {
-      "s": 2441.216,
-      "speedKmh": 234.9,
-      "phase": "brake"
-    },
-    {
-      "s": 2460.089,
-      "speedKmh": 236.4,
-      "phase": "brake"
-    },
-    {
-      "s": 2478.962,
-      "speedKmh": 237.8,
-      "phase": "brake"
-    },
-    {
-      "s": 2488.662,
-      "speedKmh": 238.6,
-      "phase": "brake"
-    },
-    {
-      "s": 2493.962,
-      "speedKmh": 239.0,
-      "phase": "brake"
-    },
-    {
-      "s": 2498.362,
-      "speedKmh": 236.6,
-      "phase": "brake"
-    },
-    {
-      "s": 2508.062,
-      "speedKmh": 231.2,
-      "phase": "brake"
-    },
-    {
-      "s": 2517.762,
-      "speedKmh": 225.6,
-      "phase": "brake"
-    },
-    {
-      "s": 2527.462,
-      "speedKmh": 219.9,
-      "phase": "brake"
-    },
-    {
-      "s": 2537.162,
-      "speedKmh": 214.1,
-      "phase": "brake"
-    },
-    {
-      "s": 2546.862,
-      "speedKmh": 208.1,
-      "phase": "apex"
-    },
-    {
-      "s": 2556.562,
-      "speedKmh": 201.9,
-      "phase": "apex"
-    },
-    {
-      "s": 2566.262,
-      "speedKmh": 195.5,
-      "phase": "apex"
-    },
-    {
-      "s": 2575.962,
-      "speedKmh": 188.9,
-      "phase": "apex"
-    },
-    {
-      "s": 2582.962,
-      "speedKmh": 184.0,
-      "phase": "apex"
-    },
-    {
-      "s": 2585.662,
-      "speedKmh": 185.0,
-      "phase": "apex"
-    },
-    {
-      "s": 2595.362,
-      "speedKmh": 188.6,
-      "phase": "apex"
-    },
-    {
-      "s": 2605.062,
-      "speedKmh": 192.1,
-      "phase": "apex"
-    },
-    {
-      "s": 2614.762,
-      "speedKmh": 195.7,
-      "phase": "exit"
-    },
-    {
-      "s": 2624.462,
-      "speedKmh": 199.3,
-      "phase": "exit"
-    },
-    {
-      "s": 2634.162,
-      "speedKmh": 202.9,
-      "phase": "exit"
-    },
-    {
-      "s": 2643.862,
-      "speedKmh": 206.5,
-      "phase": "exit"
-    },
-    {
-      "s": 2653.562,
-      "speedKmh": 210.4,
-      "phase": "exit"
-    },
-    {
-      "s": 2663.262,
-      "speedKmh": 214.2,
-      "phase": "exit"
-    },
-    {
-      "s": 2672.962,
-      "speedKmh": 217.9,
-      "phase": "exit"
-    },
-    {
-      "s": 2697.501,
-      "speedKmh": 227.0,
-      "phase": "accel"
-    },
-    {
-      "s": 2722.04,
-      "speedKmh": 235.8,
-      "phase": "accel"
-    },
-    {
-      "s": 2746.579,
-      "speedKmh": 244.8,
-      "phase": "accel"
-    },
-    {
-      "s": 2771.118,
-      "speedKmh": 253.5,
-      "phase": "accel"
-    },
-    {
-      "s": 2795.657,
-      "speedKmh": 261.9,
-      "phase": "accel"
-    },
-    {
-      "s": 2820.196,
-      "speedKmh": 270.1,
-      "phase": "accel"
-    },
-    {
-      "s": 2844.735,
-      "speedKmh": 276.4,
-      "phase": "accel"
-    },
-    {
-      "s": 2869.274,
-      "speedKmh": 282.6,
-      "phase": "accel"
-    },
-    {
-      "s": 2893.814,
-      "speedKmh": 288.7,
-      "phase": "accel"
-    },
-    {
-      "s": 2918.353,
-      "speedKmh": 294.6,
-      "phase": "accel"
-    },
-    {
-      "s": 2942.892,
-      "speedKmh": 299.0,
-      "phase": "accel"
-    },
-    {
-      "s": 2967.431,
-      "speedKmh": 303.3,
-      "phase": "hold"
-    },
-    {
-      "s": 2991.97,
-      "speedKmh": 307.5,
-      "phase": "hold"
-    },
-    {
-      "s": 2995.137,
-      "speedKmh": 308.0,
-      "phase": "hold"
-    },
-    {
-      "s": 3016.509,
-      "speedKmh": 309.2,
-      "phase": "hold"
-    },
-    {
-      "s": 3041.048,
-      "speedKmh": 310.5,
-      "phase": "hold"
-    },
-    {
-      "s": 3065.587,
-      "speedKmh": 311.8,
-      "phase": "hold"
-    },
-    {
-      "s": 3090.126,
-      "speedKmh": 313.1,
-      "phase": "hold"
-    },
-    {
-      "s": 3114.665,
-      "speedKmh": 314.4,
-      "phase": "accel"
-    },
-    {
-      "s": 3139.204,
-      "speedKmh": 315.7,
-      "phase": "accel"
-    },
-    {
-      "s": 3163.743,
-      "speedKmh": 317.0,
-      "phase": "accel"
-    },
-    {
-      "s": 3188.282,
-      "speedKmh": 318.3,
-      "phase": "accel"
-    },
-    {
-      "s": 3212.821,
-      "speedKmh": 319.6,
-      "phase": "accel"
-    },
-    {
-      "s": 3237.36,
-      "speedKmh": 320.6,
-      "phase": "accel"
-    },
-    {
-      "s": 3261.899,
-      "speedKmh": 321.3,
-      "phase": "accel"
-    },
-    {
-      "s": 3286.438,
-      "speedKmh": 322.1,
-      "phase": "accel"
-    },
-    {
-      "s": 3310.978,
-      "speedKmh": 322.9,
-      "phase": "accel"
-    },
-    {
-      "s": 3335.517,
+      "s": 1613.706,
       "speedKmh": 323.7,
       "phase": "hold"
     },
     {
-      "s": 3360.056,
-      "speedKmh": 324.5,
+      "s": 1638.097,
+      "speedKmh": 322.3,
       "phase": "hold"
     },
     {
-      "s": 3384.595,
-      "speedKmh": 325.2,
+      "s": 1662.489,
+      "speedKmh": 320.9,
       "phase": "hold"
     },
     {
-      "s": 3409.134,
-      "speedKmh": 326.0,
-      "phase": "hold"
-    },
-    {
-      "s": 3433.673,
-      "speedKmh": 326.8,
-      "phase": "hold"
-    },
-    {
-      "s": 3440.29,
-      "speedKmh": 327.0,
-      "phase": "hold"
-    },
-    {
-      "s": 3458.212,
-      "speedKmh": 324.8,
-      "phase": "hold"
-    },
-    {
-      "s": 3482.751,
-      "speedKmh": 321.7,
-      "phase": "hold"
-    },
-    {
-      "s": 3507.29,
-      "speedKmh": 318.6,
+      "s": 1686.88,
+      "speedKmh": 319.5,
       "phase": "brake"
     },
     {
-      "s": 3515.108,
-      "speedKmh": 317.6,
+      "s": 1711.272,
+      "speedKmh": 318.1,
       "phase": "brake"
     },
     {
-      "s": 3522.925,
-      "speedKmh": 316.6,
+      "s": 1719.045,
+      "speedKmh": 317.7,
       "phase": "brake"
     },
     {
-      "s": 3527.29,
-      "speedKmh": 316.0,
+      "s": 1726.817,
+      "speedKmh": 317.3,
       "phase": "brake"
     },
     {
-      "s": 3530.743,
-      "speedKmh": 311.8,
+      "s": 1731.272,
+      "speedKmh": 317.0,
       "phase": "brake"
     },
     {
-      "s": 3538.561,
-      "speedKmh": 302.2,
+      "s": 1734.59,
+      "speedKmh": 309.7,
       "phase": "brake"
     },
     {
-      "s": 3546.379,
-      "speedKmh": 292.3,
+      "s": 1742.363,
+      "speedKmh": 291.8,
       "phase": "brake"
     },
     {
-      "s": 3554.197,
-      "speedKmh": 282.0,
+      "s": 1750.136,
+      "speedKmh": 272.8,
       "phase": "brake"
     },
     {
-      "s": 3562.014,
-      "speedKmh": 271.3,
+      "s": 1757.909,
+      "speedKmh": 252.3,
       "phase": "brake"
     },
     {
-      "s": 3569.832,
-      "speedKmh": 260.2,
+      "s": 1765.681,
+      "speedKmh": 230.0,
       "phase": "brake"
     },
     {
-      "s": 3577.65,
-      "speedKmh": 248.6,
+      "s": 1773.454,
+      "speedKmh": 205.3,
       "phase": "brake"
     },
     {
-      "s": 3585.467,
-      "speedKmh": 239.9,
+      "s": 1781.227,
+      "speedKmh": 191.4,
       "phase": "brake"
     },
     {
-      "s": 3593.285,
-      "speedKmh": 232.5,
+      "s": 1788.999,
+      "speedKmh": 180.0,
       "phase": "brake"
     },
     {
-      "s": 3601.103,
-      "speedKmh": 224.8,
+      "s": 1796.772,
+      "speedKmh": 167.9,
       "phase": "brake"
     },
     {
-      "s": 3608.921,
-      "speedKmh": 216.8,
+      "s": 1804.545,
+      "speedKmh": 154.9,
       "phase": "brake"
     },
     {
-      "s": 3616.738,
-      "speedKmh": 208.5,
+      "s": 1812.318,
+      "speedKmh": 142.6,
       "phase": "brake"
     },
     {
-      "s": 3624.556,
-      "speedKmh": 202.3,
+      "s": 1820.091,
+      "speedKmh": 134.5,
       "phase": "brake"
     },
     {
-      "s": 3632.374,
-      "speedKmh": 197.5,
-      "phase": "brake"
-    },
-    {
-      "s": 3640.192,
-      "speedKmh": 192.5,
+      "s": 1827.863,
+      "speedKmh": 125.7,
       "phase": "apex"
     },
     {
-      "s": 3648.01,
-      "speedKmh": 187.5,
+      "s": 1835.636,
+      "speedKmh": 116.4,
       "phase": "apex"
     },
     {
-      "s": 3650.29,
-      "speedKmh": 186.0,
+      "s": 1838.272,
+      "speedKmh": 113.0,
       "phase": "apex"
     },
     {
-      "s": 3655.827,
-      "speedKmh": 188.4,
+      "s": 1843.409,
+      "speedKmh": 114.6,
       "phase": "apex"
     },
     {
-      "s": 3663.645,
-      "speedKmh": 191.7,
+      "s": 1851.181,
+      "speedKmh": 117.0,
       "phase": "apex"
     },
     {
-      "s": 3671.463,
-      "speedKmh": 195.0,
+      "s": 1858.954,
+      "speedKmh": 119.3,
       "phase": "apex"
     },
     {
-      "s": 3679.28,
-      "speedKmh": 198.3,
+      "s": 1866.727,
+      "speedKmh": 121.7,
       "phase": "exit"
     },
     {
-      "s": 3687.098,
-      "speedKmh": 201.6,
+      "s": 1874.5,
+      "speedKmh": 124.1,
       "phase": "exit"
     },
     {
-      "s": 3694.916,
-      "speedKmh": 205.0,
+      "s": 1882.273,
+      "speedKmh": 126.5,
       "phase": "exit"
     },
     {
-      "s": 3702.734,
-      "speedKmh": 208.8,
+      "s": 1890.045,
+      "speedKmh": 131.8,
       "phase": "exit"
     },
     {
-      "s": 3710.552,
-      "speedKmh": 212.6,
+      "s": 1897.818,
+      "speedKmh": 137.7,
       "phase": "exit"
     },
     {
-      "s": 3718.369,
-      "speedKmh": 216.3,
+      "s": 1905.591,
+      "speedKmh": 143.4,
       "phase": "exit"
     },
     {
-      "s": 3726.187,
-      "speedKmh": 219.9,
+      "s": 1913.363,
+      "speedKmh": 148.9,
       "phase": "exit"
     },
     {
-      "s": 3734.005,
-      "speedKmh": 223.5,
+      "s": 1921.136,
+      "speedKmh": 154.2,
       "phase": "exit"
     },
     {
-      "s": 3741.823,
-      "speedKmh": 227.0,
+      "s": 1928.909,
+      "speedKmh": 159.3,
       "phase": "exit"
     },
     {
-      "s": 3749.64,
-      "speedKmh": 230.5,
+      "s": 1936.682,
+      "speedKmh": 164.2,
       "phase": "exit"
     },
     {
-      "s": 3757.458,
-      "speedKmh": 233.9,
+      "s": 1944.455,
+      "speedKmh": 169.0,
       "phase": "exit"
     },
     {
-      "s": 3765.276,
-      "speedKmh": 236.3,
+      "s": 1952.227,
+      "speedKmh": 173.7,
       "phase": "exit"
     },
     {
-      "s": 3773.093,
-      "speedKmh": 238.3,
+      "s": 1960.0,
+      "speedKmh": 178.2,
       "phase": "exit"
     },
     {
-      "s": 3780.911,
+      "s": 1979.033,
+      "speedKmh": 188.9,
+      "phase": "accel"
+    },
+    {
+      "s": 1998.066,
+      "speedKmh": 199.0,
+      "phase": "accel"
+    },
+    {
+      "s": 2017.099,
+      "speedKmh": 208.6,
+      "phase": "accel"
+    },
+    {
+      "s": 2036.133,
+      "speedKmh": 220.6,
+      "phase": "accel"
+    },
+    {
+      "s": 2055.166,
+      "speedKmh": 232.6,
+      "phase": "accel"
+    },
+    {
+      "s": 2061.142,
+      "speedKmh": 236.2,
+      "phase": "accel"
+    },
+    {
+      "s": 2074.199,
+      "speedKmh": 243.9,
+      "phase": "brake"
+    },
+    {
+      "s": 2093.232,
+      "speedKmh": 254.8,
+      "phase": "brake"
+    },
+    {
+      "s": 2102.903,
+      "speedKmh": 260.1,
+      "phase": "brake"
+    },
+    {
+      "s": 2108.232,
+      "speedKmh": 263.0,
+      "phase": "brake"
+    },
+    {
+      "s": 2112.573,
+      "speedKmh": 261.7,
+      "phase": "brake"
+    },
+    {
+      "s": 2122.244,
+      "speedKmh": 258.7,
+      "phase": "brake"
+    },
+    {
+      "s": 2131.915,
+      "speedKmh": 255.7,
+      "phase": "brake"
+    },
+    {
+      "s": 2141.586,
+      "speedKmh": 252.7,
+      "phase": "brake"
+    },
+    {
+      "s": 2151.256,
+      "speedKmh": 249.6,
+      "phase": "brake"
+    },
+    {
+      "s": 2160.927,
+      "speedKmh": 246.5,
+      "phase": "brake"
+    },
+    {
+      "s": 2170.598,
+      "speedKmh": 243.4,
+      "phase": "brake"
+    },
+    {
+      "s": 2180.268,
       "speedKmh": 240.2,
-      "phase": "exit"
-    },
-    {
-      "s": 3788.729,
-      "speedKmh": 242.1,
-      "phase": "exit"
-    },
-    {
-      "s": 3796.547,
-      "speedKmh": 244.0,
-      "phase": "exit"
-    },
-    {
-      "s": 3804.365,
-      "speedKmh": 245.9,
-      "phase": "exit"
-    },
-    {
-      "s": 3812.182,
-      "speedKmh": 247.8,
-      "phase": "exit"
-    },
-    {
-      "s": 3820.0,
-      "speedKmh": 249.7,
-      "phase": "exit"
-    },
-    {
-      "s": 3844.876,
-      "speedKmh": 255.5,
-      "phase": "accel"
-    },
-    {
-      "s": 3869.753,
-      "speedKmh": 261.2,
-      "phase": "accel"
-    },
-    {
-      "s": 3884.268,
-      "speedKmh": 264.5,
-      "phase": "accel"
-    },
-    {
-      "s": 3894.629,
-      "speedKmh": 266.8,
-      "phase": "accel"
-    },
-    {
-      "s": 3919.505,
-      "speedKmh": 270.4,
-      "phase": "accel"
-    },
-    {
-      "s": 3944.382,
-      "speedKmh": 273.5,
-      "phase": "accel"
-    },
-    {
-      "s": 3969.258,
-      "speedKmh": 276.5,
-      "phase": "accel"
-    },
-    {
-      "s": 3994.134,
-      "speedKmh": 279.6,
-      "phase": "accel"
-    },
-    {
-      "s": 4019.011,
-      "speedKmh": 282.5,
-      "phase": "accel"
-    },
-    {
-      "s": 4043.887,
-      "speedKmh": 285.5,
-      "phase": "accel"
-    },
-    {
-      "s": 4068.763,
-      "speedKmh": 288.4,
-      "phase": "accel"
-    },
-    {
-      "s": 4093.64,
-      "speedKmh": 291.3,
-      "phase": "accel"
-    },
-    {
-      "s": 4118.516,
-      "speedKmh": 293.2,
-      "phase": "accel"
-    },
-    {
-      "s": 4143.392,
-      "speedKmh": 294.9,
-      "phase": "accel"
-    },
-    {
-      "s": 4168.269,
-      "speedKmh": 296.5,
-      "phase": "accel"
-    },
-    {
-      "s": 4193.145,
-      "speedKmh": 298.1,
-      "phase": "accel"
-    },
-    {
-      "s": 4218.021,
-      "speedKmh": 299.7,
-      "phase": "accel"
-    },
-    {
-      "s": 4242.898,
-      "speedKmh": 301.3,
-      "phase": "accel"
-    },
-    {
-      "s": 4267.774,
-      "speedKmh": 302.9,
-      "phase": "accel"
-    },
-    {
-      "s": 4292.65,
-      "speedKmh": 304.5,
-      "phase": "accel"
-    },
-    {
-      "s": 4317.527,
-      "speedKmh": 305.8,
-      "phase": "accel"
-    },
-    {
-      "s": 4342.403,
-      "speedKmh": 306.9,
-      "phase": "accel"
-    },
-    {
-      "s": 4367.279,
-      "speedKmh": 308.1,
-      "phase": "accel"
-    },
-    {
-      "s": 4392.156,
-      "speedKmh": 309.2,
-      "phase": "accel"
-    },
-    {
-      "s": 4417.032,
-      "speedKmh": 310.3,
-      "phase": "accel"
-    },
-    {
-      "s": 4441.908,
-      "speedKmh": 311.4,
-      "phase": "accel"
-    },
-    {
-      "s": 4466.785,
-      "speedKmh": 312.5,
-      "phase": "accel"
-    },
-    {
-      "s": 4491.661,
-      "speedKmh": 313.6,
-      "phase": "accel"
-    },
-    {
-      "s": 4516.537,
-      "speedKmh": 314.7,
-      "phase": "accel"
-    },
-    {
-      "s": 4541.414,
-      "speedKmh": 315.7,
-      "phase": "accel"
-    },
-    {
-      "s": 4566.29,
-      "speedKmh": 316.8,
-      "phase": "hold"
-    },
-    {
-      "s": 4591.166,
-      "speedKmh": 317.8,
-      "phase": "hold"
-    },
-    {
-      "s": 4616.043,
-      "speedKmh": 318.8,
-      "phase": "hold"
-    },
-    {
-      "s": 4640.919,
-      "speedKmh": 314.5,
-      "phase": "hold"
-    },
-    {
-      "s": 4665.795,
-      "speedKmh": 309.0,
-      "phase": "hold"
-    },
-    {
-      "s": 4690.672,
-      "speedKmh": 303.4,
       "phase": "brake"
     },
     {
-      "s": 4715.548,
-      "speedKmh": 297.7,
+      "s": 2189.939,
+      "speedKmh": 236.9,
       "phase": "brake"
     },
     {
-      "s": 4725.385,
-      "speedKmh": 295.4,
+      "s": 2199.61,
+      "speedKmh": 233.7,
       "phase": "brake"
     },
     {
-      "s": 4735.222,
-      "speedKmh": 293.1,
+      "s": 2209.281,
+      "speedKmh": 230.3,
       "phase": "brake"
     },
     {
-      "s": 4735.548,
-      "speedKmh": 293.0,
+      "s": 2210.232,
+      "speedKmh": 230.0,
       "phase": "brake"
     },
     {
-      "s": 4745.058,
-      "speedKmh": 285.9,
+      "s": 2218.951,
+      "speedKmh": 225.7,
       "phase": "brake"
     },
     {
-      "s": 4754.895,
-      "speedKmh": 278.3,
+      "s": 2228.622,
+      "speedKmh": 220.8,
       "phase": "brake"
     },
     {
-      "s": 4764.732,
-      "speedKmh": 270.5,
-      "phase": "brake"
-    },
-    {
-      "s": 4774.569,
-      "speedKmh": 262.5,
-      "phase": "brake"
-    },
-    {
-      "s": 4784.406,
-      "speedKmh": 254.2,
-      "phase": "brake"
-    },
-    {
-      "s": 4794.243,
-      "speedKmh": 245.7,
-      "phase": "brake"
-    },
-    {
-      "s": 4804.079,
-      "speedKmh": 240.0,
-      "phase": "brake"
-    },
-    {
-      "s": 4813.916,
-      "speedKmh": 234.4,
-      "phase": "brake"
-    },
-    {
-      "s": 4823.753,
-      "speedKmh": 228.7,
-      "phase": "brake"
-    },
-    {
-      "s": 4833.59,
-      "speedKmh": 222.9,
-      "phase": "brake"
-    },
-    {
-      "s": 4843.427,
-      "speedKmh": 218.9,
-      "phase": "brake"
-    },
-    {
-      "s": 4853.264,
-      "speedKmh": 215.3,
+      "s": 2238.293,
+      "speedKmh": 215.9,
       "phase": "apex"
     },
     {
-      "s": 4863.1,
-      "speedKmh": 211.6,
+      "s": 2247.964,
+      "speedKmh": 210.8,
       "phase": "apex"
     },
     {
-      "s": 4864.548,
-      "speedKmh": 211.0,
+      "s": 2255.0,
+      "speedKmh": 207.0,
       "phase": "apex"
     },
     {
-      "s": 4872.937,
-      "speedKmh": 212.3,
+      "s": 2257.634,
+      "speedKmh": 208.0,
       "phase": "apex"
     },
     {
-      "s": 4882.774,
-      "speedKmh": 213.9,
+      "s": 2267.305,
+      "speedKmh": 211.7,
       "phase": "apex"
     },
     {
-      "s": 4892.611,
+      "s": 2276.976,
       "speedKmh": 215.4,
       "phase": "apex"
     },
     {
-      "s": 4902.448,
-      "speedKmh": 217.0,
-      "phase": "apex"
-    },
-    {
-      "s": 4912.284,
-      "speedKmh": 218.5,
+      "s": 2286.646,
+      "speedKmh": 219.0,
       "phase": "exit"
     },
     {
-      "s": 4922.121,
-      "speedKmh": 220.0,
+      "s": 2296.317,
+      "speedKmh": 222.7,
       "phase": "exit"
     },
     {
-      "s": 4931.958,
-      "speedKmh": 221.6,
-      "phase": "exit"
-    },
-    {
-      "s": 4941.795,
-      "speedKmh": 223.1,
-      "phase": "exit"
-    },
-    {
-      "s": 4951.632,
-      "speedKmh": 224.7,
-      "phase": "exit"
-    },
-    {
-      "s": 4961.469,
+      "s": 2305.988,
       "speedKmh": 226.2,
       "phase": "exit"
     },
     {
-      "s": 4971.305,
-      "speedKmh": 227.6,
+      "s": 2315.659,
+      "speedKmh": 228.6,
       "phase": "exit"
     },
     {
-      "s": 4981.142,
-      "speedKmh": 229.0,
+      "s": 2325.329,
+      "speedKmh": 230.9,
       "phase": "exit"
     },
     {
-      "s": 4990.979,
-      "speedKmh": 230.4,
-      "phase": "exit"
-    },
-    {
-      "s": 5000.816,
-      "speedKmh": 231.8,
-      "phase": "exit"
-    },
-    {
-      "s": 5010.653,
+      "s": 2335.0,
       "speedKmh": 233.2,
       "phase": "exit"
     },
     {
-      "s": 5020.49,
-      "speedKmh": 234.6,
+      "s": 2354.995,
+      "speedKmh": 237.8,
+      "phase": "accel"
+    },
+    {
+      "s": 2374.99,
+      "speedKmh": 242.4,
+      "phase": "accel"
+    },
+    {
+      "s": 2394.986,
+      "speedKmh": 246.9,
+      "phase": "accel"
+    },
+    {
+      "s": 2414.981,
+      "speedKmh": 248.0,
+      "phase": "accel"
+    },
+    {
+      "s": 2434.976,
+      "speedKmh": 248.0,
+      "phase": "accel"
+    },
+    {
+      "s": 2454.972,
+      "speedKmh": 248.0,
+      "phase": "accel"
+    },
+    {
+      "s": 2474.967,
+      "speedKmh": 248.0,
+      "phase": "brake"
+    },
+    {
+      "s": 2494.962,
+      "speedKmh": 248.0,
+      "phase": "brake"
+    },
+    {
+      "s": 2504.851,
+      "speedKmh": 248.0,
+      "phase": "brake"
+    },
+    {
+      "s": 2509.962,
+      "speedKmh": 248.0,
+      "phase": "brake"
+    },
+    {
+      "s": 2514.74,
+      "speedKmh": 244.6,
+      "phase": "brake"
+    },
+    {
+      "s": 2524.629,
+      "speedKmh": 237.5,
+      "phase": "brake"
+    },
+    {
+      "s": 2534.518,
+      "speedKmh": 230.1,
+      "phase": "brake"
+    },
+    {
+      "s": 2544.406,
+      "speedKmh": 222.5,
+      "phase": "brake"
+    },
+    {
+      "s": 2554.295,
+      "speedKmh": 214.7,
+      "phase": "apex"
+    },
+    {
+      "s": 2564.184,
+      "speedKmh": 206.5,
+      "phase": "apex"
+    },
+    {
+      "s": 2574.073,
+      "speedKmh": 198.0,
+      "phase": "apex"
+    },
+    {
+      "s": 2582.962,
+      "speedKmh": 190.0,
+      "phase": "apex"
+    },
+    {
+      "s": 2583.962,
+      "speedKmh": 190.5,
+      "phase": "apex"
+    },
+    {
+      "s": 2593.851,
+      "speedKmh": 195.5,
+      "phase": "apex"
+    },
+    {
+      "s": 2603.74,
+      "speedKmh": 200.6,
+      "phase": "apex"
+    },
+    {
+      "s": 2613.629,
+      "speedKmh": 205.6,
       "phase": "exit"
     },
     {
-      "s": 5030.326,
-      "speedKmh": 235.9,
+      "s": 2623.518,
+      "speedKmh": 210.6,
       "phase": "exit"
     },
     {
-      "s": 5040.163,
+      "s": 2633.406,
+      "speedKmh": 215.6,
+      "phase": "exit"
+    },
+    {
+      "s": 2643.295,
+      "speedKmh": 220.1,
+      "phase": "exit"
+    },
+    {
+      "s": 2653.184,
+      "speedKmh": 223.3,
+      "phase": "exit"
+    },
+    {
+      "s": 2663.073,
+      "speedKmh": 226.5,
+      "phase": "exit"
+    },
+    {
+      "s": 2672.962,
+      "speedKmh": 229.7,
+      "phase": "exit"
+    },
+    {
+      "s": 2697.343,
       "speedKmh": 237.3,
       "phase": "accel"
     },
     {
-      "s": 5050.0,
-      "speedKmh": 238.6,
+      "s": 2721.724,
+      "speedKmh": 244.6,
       "phase": "accel"
     },
     {
-      "s": 5074.78,
+      "s": 2746.104,
+      "speedKmh": 251.9,
+      "phase": "accel"
+    },
+    {
+      "s": 2770.485,
+      "speedKmh": 259.3,
+      "phase": "accel"
+    },
+    {
+      "s": 2794.866,
+      "speedKmh": 266.6,
+      "phase": "accel"
+    },
+    {
+      "s": 2819.247,
+      "speedKmh": 273.6,
+      "phase": "accel"
+    },
+    {
+      "s": 2843.628,
+      "speedKmh": 280.5,
+      "phase": "accel"
+    },
+    {
+      "s": 2868.008,
+      "speedKmh": 287.3,
+      "phase": "accel"
+    },
+    {
+      "s": 2892.389,
+      "speedKmh": 294.3,
+      "phase": "accel"
+    },
+    {
+      "s": 2916.77,
+      "speedKmh": 301.1,
+      "phase": "accel"
+    },
+    {
+      "s": 2941.151,
+      "speedKmh": 307.8,
+      "phase": "hold"
+    },
+    {
+      "s": 2965.532,
+      "speedKmh": 314.3,
+      "phase": "hold"
+    },
+    {
+      "s": 2989.912,
+      "speedKmh": 320.6,
+      "phase": "hold"
+    },
+    {
+      "s": 2995.137,
+      "speedKmh": 322.0,
+      "phase": "hold"
+    },
+    {
+      "s": 3014.293,
+      "speedKmh": 322.8,
+      "phase": "hold"
+    },
+    {
+      "s": 3038.674,
+      "speedKmh": 323.7,
+      "phase": "hold"
+    },
+    {
+      "s": 3063.055,
+      "speedKmh": 324.7,
+      "phase": "hold"
+    },
+    {
+      "s": 3087.436,
+      "speedKmh": 325.7,
+      "phase": "hold"
+    },
+    {
+      "s": 3111.816,
+      "speedKmh": 326.6,
+      "phase": "hold"
+    },
+    {
+      "s": 3136.197,
+      "speedKmh": 327.6,
+      "phase": "accel"
+    },
+    {
+      "s": 3160.578,
+      "speedKmh": 328.5,
+      "phase": "accel"
+    },
+    {
+      "s": 3184.959,
+      "speedKmh": 329.5,
+      "phase": "accel"
+    },
+    {
+      "s": 3209.34,
+      "speedKmh": 330.4,
+      "phase": "accel"
+    },
+    {
+      "s": 3233.72,
+      "speedKmh": 331.4,
+      "phase": "accel"
+    },
+    {
+      "s": 3258.101,
+      "speedKmh": 332.3,
+      "phase": "accel"
+    },
+    {
+      "s": 3282.482,
+      "speedKmh": 333.0,
+      "phase": "accel"
+    },
+    {
+      "s": 3306.863,
+      "speedKmh": 333.8,
+      "phase": "accel"
+    },
+    {
+      "s": 3331.244,
+      "speedKmh": 334.6,
+      "phase": "accel"
+    },
+    {
+      "s": 3355.624,
+      "speedKmh": 335.3,
+      "phase": "hold"
+    },
+    {
+      "s": 3380.005,
+      "speedKmh": 336.1,
+      "phase": "hold"
+    },
+    {
+      "s": 3404.386,
+      "speedKmh": 336.9,
+      "phase": "hold"
+    },
+    {
+      "s": 3428.767,
+      "speedKmh": 337.6,
+      "phase": "hold"
+    },
+    {
+      "s": 3440.29,
+      "speedKmh": 338.0,
+      "phase": "hold"
+    },
+    {
+      "s": 3453.148,
+      "speedKmh": 333.2,
+      "phase": "hold"
+    },
+    {
+      "s": 3477.528,
+      "speedKmh": 323.9,
+      "phase": "hold"
+    },
+    {
+      "s": 3501.909,
+      "speedKmh": 314.3,
+      "phase": "brake"
+    },
+    {
+      "s": 3526.29,
+      "speedKmh": 304.4,
+      "phase": "brake"
+    },
+    {
+      "s": 3534.241,
+      "speedKmh": 301.1,
+      "phase": "brake"
+    },
+    {
+      "s": 3542.193,
+      "speedKmh": 297.7,
+      "phase": "brake"
+    },
+    {
+      "s": 3546.29,
+      "speedKmh": 296.0,
+      "phase": "brake"
+    },
+    {
+      "s": 3550.144,
+      "speedKmh": 291.3,
+      "phase": "brake"
+    },
+    {
+      "s": 3558.095,
+      "speedKmh": 281.4,
+      "phase": "brake"
+    },
+    {
+      "s": 3566.046,
+      "speedKmh": 271.2,
+      "phase": "brake"
+    },
+    {
+      "s": 3573.998,
+      "speedKmh": 260.5,
+      "phase": "brake"
+    },
+    {
+      "s": 3581.949,
+      "speedKmh": 249.4,
+      "phase": "brake"
+    },
+    {
+      "s": 3589.9,
+      "speedKmh": 237.8,
+      "phase": "brake"
+    },
+    {
+      "s": 3597.851,
+      "speedKmh": 228.3,
+      "phase": "brake"
+    },
+    {
+      "s": 3605.803,
+      "speedKmh": 223.4,
+      "phase": "brake"
+    },
+    {
+      "s": 3613.754,
+      "speedKmh": 218.5,
+      "phase": "brake"
+    },
+    {
+      "s": 3621.705,
+      "speedKmh": 213.4,
+      "phase": "brake"
+    },
+    {
+      "s": 3629.657,
+      "speedKmh": 208.2,
+      "phase": "apex"
+    },
+    {
+      "s": 3637.608,
+      "speedKmh": 202.8,
+      "phase": "apex"
+    },
+    {
+      "s": 3645.559,
+      "speedKmh": 197.3,
+      "phase": "apex"
+    },
+    {
+      "s": 3650.29,
+      "speedKmh": 194.0,
+      "phase": "apex"
+    },
+    {
+      "s": 3653.51,
+      "speedKmh": 195.1,
+      "phase": "apex"
+    },
+    {
+      "s": 3661.462,
+      "speedKmh": 197.7,
+      "phase": "apex"
+    },
+    {
+      "s": 3669.413,
+      "speedKmh": 200.3,
+      "phase": "apex"
+    },
+    {
+      "s": 3677.364,
+      "speedKmh": 202.9,
+      "phase": "apex"
+    },
+    {
+      "s": 3685.316,
+      "speedKmh": 205.6,
+      "phase": "exit"
+    },
+    {
+      "s": 3693.267,
+      "speedKmh": 208.2,
+      "phase": "exit"
+    },
+    {
+      "s": 3701.218,
+      "speedKmh": 210.8,
+      "phase": "exit"
+    },
+    {
+      "s": 3709.169,
+      "speedKmh": 213.4,
+      "phase": "exit"
+    },
+    {
+      "s": 3717.121,
+      "speedKmh": 216.1,
+      "phase": "exit"
+    },
+    {
+      "s": 3725.072,
+      "speedKmh": 218.3,
+      "phase": "exit"
+    },
+    {
+      "s": 3733.023,
+      "speedKmh": 220.4,
+      "phase": "exit"
+    },
+    {
+      "s": 3740.974,
+      "speedKmh": 222.5,
+      "phase": "exit"
+    },
+    {
+      "s": 3748.926,
+      "speedKmh": 224.5,
+      "phase": "exit"
+    },
+    {
+      "s": 3756.877,
+      "speedKmh": 226.5,
+      "phase": "exit"
+    },
+    {
+      "s": 3764.828,
+      "speedKmh": 228.5,
+      "phase": "exit"
+    },
+    {
+      "s": 3772.78,
+      "speedKmh": 230.5,
+      "phase": "exit"
+    },
+    {
+      "s": 3780.731,
+      "speedKmh": 232.5,
+      "phase": "exit"
+    },
+    {
+      "s": 3788.682,
+      "speedKmh": 234.5,
+      "phase": "exit"
+    },
+    {
+      "s": 3796.633,
+      "speedKmh": 236.4,
+      "phase": "exit"
+    },
+    {
+      "s": 3804.585,
+      "speedKmh": 238.3,
+      "phase": "exit"
+    },
+    {
+      "s": 3812.536,
+      "speedKmh": 240.2,
+      "phase": "exit"
+    },
+    {
+      "s": 3820.487,
+      "speedKmh": 242.1,
+      "phase": "exit"
+    },
+    {
+      "s": 3828.439,
+      "speedKmh": 243.6,
+      "phase": "exit"
+    },
+    {
+      "s": 3836.39,
+      "speedKmh": 245.2,
+      "phase": "exit"
+    },
+    {
+      "s": 3844.341,
+      "speedKmh": 246.7,
+      "phase": "exit"
+    },
+    {
+      "s": 3852.292,
+      "speedKmh": 248.2,
+      "phase": "exit"
+    },
+    {
+      "s": 3860.244,
+      "speedKmh": 249.8,
+      "phase": "exit"
+    },
+    {
+      "s": 3868.195,
+      "speedKmh": 251.3,
+      "phase": "exit"
+    },
+    {
+      "s": 3876.146,
+      "speedKmh": 252.8,
+      "phase": "exit"
+    },
+    {
+      "s": 3884.097,
+      "speedKmh": 254.2,
+      "phase": "exit"
+    },
+    {
+      "s": 3884.268,
+      "speedKmh": 254.3,
+      "phase": "exit"
+    },
+    {
+      "s": 3892.049,
+      "speedKmh": 255.7,
+      "phase": "exit"
+    },
+    {
+      "s": 3900.0,
+      "speedKmh": 257.2,
+      "phase": "exit"
+    },
+    {
+      "s": 3924.394,
+      "speedKmh": 261.6,
+      "phase": "accel"
+    },
+    {
+      "s": 3948.788,
+      "speedKmh": 266.0,
+      "phase": "accel"
+    },
+    {
+      "s": 3973.182,
+      "speedKmh": 270.3,
+      "phase": "accel"
+    },
+    {
+      "s": 3997.576,
+      "speedKmh": 274.6,
+      "phase": "accel"
+    },
+    {
+      "s": 4021.97,
+      "speedKmh": 277.9,
+      "phase": "accel"
+    },
+    {
+      "s": 4046.364,
+      "speedKmh": 281.0,
+      "phase": "accel"
+    },
+    {
+      "s": 4070.758,
+      "speedKmh": 284.1,
+      "phase": "accel"
+    },
+    {
+      "s": 4095.152,
+      "speedKmh": 287.2,
+      "phase": "accel"
+    },
+    {
+      "s": 4119.545,
+      "speedKmh": 290.2,
+      "phase": "accel"
+    },
+    {
+      "s": 4143.939,
+      "speedKmh": 293.2,
+      "phase": "accel"
+    },
+    {
+      "s": 4168.333,
+      "speedKmh": 296.2,
+      "phase": "accel"
+    },
+    {
+      "s": 4192.727,
+      "speedKmh": 299.1,
+      "phase": "accel"
+    },
+    {
+      "s": 4217.121,
+      "speedKmh": 301.4,
+      "phase": "accel"
+    },
+    {
+      "s": 4241.515,
+      "speedKmh": 303.4,
+      "phase": "accel"
+    },
+    {
+      "s": 4265.909,
+      "speedKmh": 305.4,
+      "phase": "accel"
+    },
+    {
+      "s": 4290.303,
+      "speedKmh": 307.3,
+      "phase": "accel"
+    },
+    {
+      "s": 4314.697,
+      "speedKmh": 309.3,
+      "phase": "accel"
+    },
+    {
+      "s": 4339.091,
+      "speedKmh": 311.2,
+      "phase": "accel"
+    },
+    {
+      "s": 4363.485,
+      "speedKmh": 313.1,
+      "phase": "accel"
+    },
+    {
+      "s": 4387.879,
+      "speedKmh": 315.1,
+      "phase": "accel"
+    },
+    {
+      "s": 4412.273,
+      "speedKmh": 316.7,
+      "phase": "accel"
+    },
+    {
+      "s": 4436.667,
+      "speedKmh": 318.1,
+      "phase": "accel"
+    },
+    {
+      "s": 4461.061,
+      "speedKmh": 319.4,
+      "phase": "accel"
+    },
+    {
+      "s": 4485.455,
+      "speedKmh": 320.8,
+      "phase": "accel"
+    },
+    {
+      "s": 4509.848,
+      "speedKmh": 322.1,
+      "phase": "accel"
+    },
+    {
+      "s": 4534.242,
+      "speedKmh": 323.5,
+      "phase": "accel"
+    },
+    {
+      "s": 4558.636,
+      "speedKmh": 324.8,
+      "phase": "accel"
+    },
+    {
+      "s": 4583.03,
+      "speedKmh": 326.1,
+      "phase": "accel"
+    },
+    {
+      "s": 4607.424,
+      "speedKmh": 326.8,
+      "phase": "accel"
+    },
+    {
+      "s": 4631.818,
+      "speedKmh": 327.6,
+      "phase": "hold"
+    },
+    {
+      "s": 4656.212,
+      "speedKmh": 328.3,
+      "phase": "hold"
+    },
+    {
+      "s": 4680.606,
+      "speedKmh": 328.7,
+      "phase": "hold"
+    },
+    {
+      "s": 4705.0,
+      "speedKmh": 317.0,
+      "phase": "brake"
+    },
+    {
+      "s": 4714.919,
+      "speedKmh": 312.1,
+      "phase": "brake"
+    },
+    {
+      "s": 4724.839,
+      "speedKmh": 307.1,
+      "phase": "brake"
+    },
+    {
+      "s": 4725.0,
+      "speedKmh": 307.0,
+      "phase": "brake"
+    },
+    {
+      "s": 4734.758,
+      "speedKmh": 302.8,
+      "phase": "brake"
+    },
+    {
+      "s": 4744.677,
+      "speedKmh": 298.5,
+      "phase": "brake"
+    },
+    {
+      "s": 4754.597,
+      "speedKmh": 294.1,
+      "phase": "brake"
+    },
+    {
+      "s": 4764.516,
+      "speedKmh": 289.6,
+      "phase": "brake"
+    },
+    {
+      "s": 4774.435,
+      "speedKmh": 285.1,
+      "phase": "brake"
+    },
+    {
+      "s": 4784.355,
+      "speedKmh": 280.5,
+      "phase": "brake"
+    },
+    {
+      "s": 4794.274,
+      "speedKmh": 275.8,
+      "phase": "brake"
+    },
+    {
+      "s": 4804.194,
+      "speedKmh": 271.0,
+      "phase": "brake"
+    },
+    {
+      "s": 4814.113,
+      "speedKmh": 266.2,
+      "phase": "brake"
+    },
+    {
+      "s": 4824.032,
+      "speedKmh": 261.2,
+      "phase": "brake"
+    },
+    {
+      "s": 4833.952,
+      "speedKmh": 256.2,
+      "phase": "brake"
+    },
+    {
+      "s": 4843.871,
+      "speedKmh": 251.1,
+      "phase": "brake"
+    },
+    {
+      "s": 4853.79,
+      "speedKmh": 245.8,
+      "phase": "brake"
+    },
+    {
+      "s": 4863.71,
+      "speedKmh": 240.5,
+      "phase": "brake"
+    },
+    {
+      "s": 4864.548,
+      "speedKmh": 240.0,
+      "phase": "brake"
+    },
+    {
+      "s": 4873.629,
+      "speedKmh": 238.3,
+      "phase": "brake"
+    },
+    {
+      "s": 4883.548,
+      "speedKmh": 236.5,
+      "phase": "brake"
+    },
+    {
+      "s": 4893.468,
+      "speedKmh": 234.7,
+      "phase": "brake"
+    },
+    {
+      "s": 4903.387,
+      "speedKmh": 232.8,
+      "phase": "brake"
+    },
+    {
+      "s": 4913.306,
+      "speedKmh": 231.0,
+      "phase": "brake"
+    },
+    {
+      "s": 4923.226,
+      "speedKmh": 229.1,
+      "phase": "brake"
+    },
+    {
+      "s": 4933.145,
+      "speedKmh": 227.2,
+      "phase": "brake"
+    },
+    {
+      "s": 4943.065,
+      "speedKmh": 225.3,
+      "phase": "brake"
+    },
+    {
+      "s": 4952.984,
+      "speedKmh": 223.4,
+      "phase": "brake"
+    },
+    {
+      "s": 4962.903,
+      "speedKmh": 221.8,
+      "phase": "brake"
+    },
+    {
+      "s": 4972.823,
+      "speedKmh": 221.2,
+      "phase": "brake"
+    },
+    {
+      "s": 4982.742,
+      "speedKmh": 220.5,
+      "phase": "brake"
+    },
+    {
+      "s": 4992.661,
+      "speedKmh": 219.8,
+      "phase": "brake"
+    },
+    {
+      "s": 5002.581,
+      "speedKmh": 219.2,
+      "phase": "brake"
+    },
+    {
+      "s": 5012.5,
+      "speedKmh": 218.5,
+      "phase": "apex"
+    },
+    {
+      "s": 5022.419,
+      "speedKmh": 217.9,
+      "phase": "apex"
+    },
+    {
+      "s": 5032.339,
+      "speedKmh": 217.2,
+      "phase": "apex"
+    },
+    {
+      "s": 5042.258,
+      "speedKmh": 216.5,
+      "phase": "apex"
+    },
+    {
+      "s": 5052.177,
+      "speedKmh": 215.9,
+      "phase": "apex"
+    },
+    {
+      "s": 5062.097,
+      "speedKmh": 215.2,
+      "phase": "apex"
+    },
+    {
+      "s": 5065.0,
+      "speedKmh": 215.0,
+      "phase": "apex"
+    },
+    {
+      "s": 5072.016,
+      "speedKmh": 216.3,
+      "phase": "apex"
+    },
+    {
+      "s": 5081.935,
+      "speedKmh": 218.2,
+      "phase": "apex"
+    },
+    {
+      "s": 5091.855,
+      "speedKmh": 220.1,
+      "phase": "apex"
+    },
+    {
+      "s": 5101.774,
+      "speedKmh": 222.0,
+      "phase": "apex"
+    },
+    {
+      "s": 5111.694,
+      "speedKmh": 223.9,
+      "phase": "apex"
+    },
+    {
+      "s": 5121.613,
+      "speedKmh": 225.8,
+      "phase": "apex"
+    },
+    {
+      "s": 5131.532,
+      "speedKmh": 227.7,
+      "phase": "exit"
+    },
+    {
+      "s": 5141.452,
+      "speedKmh": 229.6,
+      "phase": "exit"
+    },
+    {
+      "s": 5151.371,
+      "speedKmh": 231.5,
+      "phase": "exit"
+    },
+    {
+      "s": 5161.29,
+      "speedKmh": 233.4,
+      "phase": "exit"
+    },
+    {
+      "s": 5171.21,
+      "speedKmh": 235.3,
+      "phase": "exit"
+    },
+    {
+      "s": 5181.129,
+      "speedKmh": 237.2,
+      "phase": "exit"
+    },
+    {
+      "s": 5191.048,
+      "speedKmh": 238.8,
+      "phase": "exit"
+    },
+    {
+      "s": 5200.968,
+      "speedKmh": 240.4,
+      "phase": "exit"
+    },
+    {
+      "s": 5210.887,
       "speedKmh": 242.0,
+      "phase": "exit"
+    },
+    {
+      "s": 5220.806,
+      "speedKmh": 243.6,
+      "phase": "exit"
+    },
+    {
+      "s": 5230.726,
+      "speedKmh": 245.2,
+      "phase": "exit"
+    },
+    {
+      "s": 5240.645,
+      "speedKmh": 246.8,
+      "phase": "exit"
+    },
+    {
+      "s": 5250.565,
+      "speedKmh": 248.3,
+      "phase": "exit"
+    },
+    {
+      "s": 5260.484,
+      "speedKmh": 249.9,
+      "phase": "exit"
+    },
+    {
+      "s": 5270.403,
+      "speedKmh": 251.4,
+      "phase": "exit"
+    },
+    {
+      "s": 5280.323,
+      "speedKmh": 253.0,
+      "phase": "exit"
+    },
+    {
+      "s": 5290.242,
+      "speedKmh": 254.5,
+      "phase": "exit"
+    },
+    {
+      "s": 5300.161,
+      "speedKmh": 256.0,
+      "phase": "exit"
+    },
+    {
+      "s": 5310.081,
+      "speedKmh": 257.6,
+      "phase": "exit"
+    },
+    {
+      "s": 5320.0,
+      "speedKmh": 259.3,
+      "phase": "exit"
+    },
+    {
+      "s": 5344.916,
+      "speedKmh": 263.3,
+      "phase": "exit"
+    },
+    {
+      "s": 5369.832,
+      "speedKmh": 267.2,
+      "phase": "exit"
+    },
+    {
+      "s": 5394.747,
+      "speedKmh": 271.1,
       "phase": "accel"
     },
     {
-      "s": 5099.56,
-      "speedKmh": 245.3,
+      "s": 5419.663,
+      "speedKmh": 274.9,
       "phase": "accel"
     },
     {
-      "s": 5124.34,
-      "speedKmh": 248.4,
+      "s": 5444.579,
+      "speedKmh": 278.7,
       "phase": "accel"
     },
     {
-      "s": 5149.12,
-      "speedKmh": 250.5,
+      "s": 5469.495,
+      "speedKmh": 282.4,
       "phase": "accel"
     },
     {
-      "s": 5173.9,
-      "speedKmh": 252.7,
+      "s": 5494.411,
+      "speedKmh": 285.7,
       "phase": "accel"
     },
     {
-      "s": 5198.68,
-      "speedKmh": 254.8,
+      "s": 5519.326,
+      "speedKmh": 288.5,
       "phase": "accel"
     },
     {
-      "s": 5223.46,
-      "speedKmh": 256.9,
+      "s": 5544.242,
+      "speedKmh": 291.4,
       "phase": "accel"
     },
     {
-      "s": 5248.24,
-      "speedKmh": 259.0,
+      "s": 5569.158,
+      "speedKmh": 294.2,
       "phase": "accel"
     },
     {
-      "s": 5273.02,
-      "speedKmh": 261.1,
+      "s": 5594.074,
+      "speedKmh": 296.9,
       "phase": "accel"
     },
     {
-      "s": 5297.8,
-      "speedKmh": 263.2,
+      "s": 5618.989,
+      "speedKmh": 299.7,
       "phase": "accel"
     },
     {
-      "s": 5322.58,
-      "speedKmh": 265.1,
+      "s": 5643.905,
+      "speedKmh": 302.4,
       "phase": "accel"
     },
     {
-      "s": 5347.36,
-      "speedKmh": 266.5,
+      "s": 5668.821,
+      "speedKmh": 304.7,
       "phase": "accel"
     },
     {
-      "s": 5372.14,
-      "speedKmh": 267.9,
+      "s": 5693.737,
+      "speedKmh": 307.0,
       "phase": "accel"
     },
     {
-      "s": 5396.92,
-      "speedKmh": 269.3,
+      "s": 5718.653,
+      "speedKmh": 309.3,
       "phase": "accel"
     },
     {
-      "s": 5421.7,
-      "speedKmh": 270.6,
+      "s": 5743.568,
+      "speedKmh": 311.5,
       "phase": "accel"
     },
     {
-      "s": 5446.48,
-      "speedKmh": 272.0,
-      "phase": "accel"
-    },
-    {
-      "s": 5471.26,
-      "speedKmh": 273.4,
-      "phase": "accel"
-    },
-    {
-      "s": 5496.04,
-      "speedKmh": 274.7,
-      "phase": "accel"
-    },
-    {
-      "s": 5520.82,
-      "speedKmh": 276.0,
-      "phase": "accel"
-    },
-    {
-      "s": 5545.6,
-      "speedKmh": 277.1,
-      "phase": "accel"
-    },
-    {
-      "s": 5570.38,
-      "speedKmh": 278.2,
-      "phase": "accel"
-    },
-    {
-      "s": 5595.16,
-      "speedKmh": 279.3,
-      "phase": "accel"
-    },
-    {
-      "s": 5619.94,
-      "speedKmh": 280.4,
-      "phase": "accel"
-    },
-    {
-      "s": 5644.72,
-      "speedKmh": 281.5,
-      "phase": "accel"
-    },
-    {
-      "s": 5669.5,
-      "speedKmh": 282.5,
-      "phase": "accel"
-    },
-    {
-      "s": 5694.28,
-      "speedKmh": 283.6,
-      "phase": "accel"
-    },
-    {
-      "s": 5719.06,
-      "speedKmh": 284.7,
-      "phase": "accel"
-    },
-    {
-      "s": 5743.84,
-      "speedKmh": 285.8,
-      "phase": "accel"
-    },
-    {
-      "s": 5768.62,
-      "speedKmh": 286.9,
+      "s": 5768.484,
+      "speedKmh": 313.8,
       "phase": "accel"
     },
     {
       "s": 5793.4,
-      "speedKmh": 288.0,
+      "speedKmh": 316.0,
       "phase": "accel"
     }
   ],
   "source": {
     "primary": [
-      "https://www.fia.com/system/files/decision-document/2026_italian_grand_prix_-_final_qualifying_classification.pdf",
-      "https://www.fia.com/sites/default/files/2026_13_ita_f1_q0_timing_qualifyingsessionmaximumspeeds_v01.pdf",
-      "https://www.fia.com/system/files/decision-document/2026_italian_grand_prix_-_competition_notes_-_circuit_map_pit_lane_drawing_emergency_exits_map_and_red_zone.pdf",
-      "F1 live timing car_data / timing data for 2026 Italian GP qualifying, accessed with FastF1 3.8.3 (summaries only)"
+      "https://www.fia.com/news/f1-norris-pole-mclaren-lock-out-front-row-monza-verstappen-seventh",
+      "https://api.fia.com/sites/default/files/2024_16_ita_f1_q0_timing_qualifyingsessionsectoranalysis_v01.pdf",
+      "https://www.fia.com/sites/default/files/2024_16_ita_f1_q0_timing_qualifyingsessionmaximumspeeds_v01.pdf",
+      "https://www.autosport.com/f1/results/2024/italian-gp-639981/?st=GRID",
+      "F1 live timing car_data / timing data for 2024 Italian GP qualifying, accessed with FastF1 3.8.3 (summaries only)"
     ],
     "secondary": [
-      "https://www.formuladream.app/blog/italian-gp-2026-qualifying-results",
-      "https://www.formuladream.app/blog/monza-2026-telemetry-analysis",
-      "https://www.planetf1.com/f1-data/pierre-gasly-italian-grand-prix-pole-data",
-      "https://www.brembo.com/en/motorsport/formula1/2026/facts-monza-2026",
-      "https://www.formula1.com/en/latest/article/gasly-charges-to-sensational-maiden-f1-pole-at-monza-over-russell-and-piastri.4CKkkbvgmqL04ijMNBfuXF"
+      "https://www.formula1.com/en/latest/article/watch-ride-onboard-for-norriss-formidable-pole-lap-in-monza-qualifying.4qWIftLYRedtL9ab1Jlt5M",
+      "https://www.planetf1.com/news/lando-norris-data-vs-max-verstappen-italian-gp-qualifying",
+      "https://www.brembo.com/en/motorsport/formula1/facts-formula1-gp-monza",
+      "https://github.com/peckz/poly-formula/pull/7"
     ],
     "license": "facts / fair-use telemetry summaries \u2014 no proprietary raw traces redistributed"
   }

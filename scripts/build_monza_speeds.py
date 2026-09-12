@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build monza.speeds.json from sourced 2026 Gasly pole-lap waypoints.
+"""Build monza.speeds.json from sourced 2024 Norris pole-lap waypoints.
 
 Does not redistribute FastF1 / F1 car_data traces. Waypoints below are
 summaries cited in docs/research/monza-speeds-notes.md.
@@ -25,21 +25,24 @@ SERRAGLIO = 2995.137
 ASCARI = 3650.29
 PARABOLICA = 4864.548
 
-# Official FIA loops on this centreline (see notes).
-SPEED_TRAP_S = RETTIFILO - 190.0  # 190 m before T1 (FIA 2026 circuit map)
-I1_S = ROGGIA - 230.0  # 230 m before T4
-I2_S = ASCARI - 210.0  # 210 m before T8
+# Racing apexes from racing-line PR #7 (same Norris 2024 pole).
+LESMO1_APEX = 2255.0
+PARABOLICA_APEX = 5065.0
+
+# Official FIA loops on this centreline (2024/2026 maps use the same offsets).
+SPEED_TRAP_S = RETTIFILO - 190.0
+I1_S = ROGGIA - 230.0
+I2_S = ASCARI - 210.0
 S1_S = 2061.0 * (LENGTH_M / 5793.0)
 S2_S = (2061.0 + 1823.0) * (LENGTH_M / 5793.0)
 
-# Brake Δ from Brembo 2026 (Rettifilo / Roggia) or FastF1 brake-flag→apex
-# time × mean speed on Gasly pole lap (Lesmos / Ascari / Parabolica).
-RETTIFILO_BRAKE = RETTIFILO - 153.0
-ROGGIA_BRAKE = ROGGIA - 121.0
-LESMO1_BRAKE = LESMO1 - 83.0
-LESMO2_BRAKE = LESMO2 - 89.0
-ASCARI_BRAKE = ASCARI - 123.0
-PARABOLICA_BRAKE = PARABOLICA - 129.0
+# Brembo same-gen T1 129 m / T4 107 m; FastF1 brake-on→min × mean v otherwise.
+RETTIFILO_BRAKE = RETTIFILO - 129.0
+ROGGIA_BRAKE = ROGGIA - 107.0
+LESMO1_BRAKE = LESMO1 - 102.0
+LESMO2_BRAKE = LESMO2 - 73.0
+ASCARI_BRAKE = ASCARI - 104.0
+PARABOLICA_BRAKE = 4725.0
 
 
 def dense_range(a: float, b: float, step: float) -> list[float]:
@@ -49,71 +52,67 @@ def dense_range(a: float, b: float, step: float) -> list[float]:
     return [a + i * (b - a) / n for i in range(n)]
 
 
-# Waypoints: (s, speed_kmh, phase). Sourced numbers keep their exact s.
-# Intermediate points only shape the envelope between sources.
 WAYPOINTS: list[tuple[float, float, str]] = [
-    (0.0, 288.0, "accel"),
-    (80.0, 308.0, "accel"),
-    (180.0, 322.0, "accel"),
-    (280.0, 332.0, "accel"),
-    (360.0, 340.0, "accel"),
-    (400.0, 342.0, "hold"),
-    (SPEED_TRAP_S, 334.0, "hold"),
-    (RETTIFILO_BRAKE, 334.0, "brake"),
-    (530.0, 250.0, "brake"),
-    (570.0, 160.0, "brake"),
-    (600.0, 100.0, "brake"),
-    (RETTIFILO, 71.0, "apex"),
-    (645.0, 90.0, "apex"),
-    (680.0, 130.0, "exit"),
-    (720.0, 165.0, "exit"),
-    (800.0, 220.0, "accel"),
-    (900.0, 268.0, "accel"),
+    (0.0, 316.0, "accel"),
+    (80.0, 326.0, "accel"),
+    (180.0, 334.0, "accel"),
+    (280.0, 340.0, "accel"),
+    (360.0, 344.0, "accel"),
+    (410.0, 347.0, "hold"),
+    (SPEED_TRAP_S, 346.0, "hold"),
+    (RETTIFILO_BRAKE, 346.0, "brake"),
+    (540.0, 250.0, "brake"),
+    (575.0, 150.0, "brake"),
+    (605.0, 95.0, "brake"),
+    (RETTIFILO, 73.0, "apex"),
+    (655.0, 81.0, "apex"),
+    (690.0, 120.0, "exit"),
+    (745.0, 160.0, "exit"),
+    (820.0, 210.0, "accel"),
+    (920.0, 260.0, "accel"),
     (1020.0, 295.0, "accel"),
-    (BIASSONO, 305.0, "hold"),
-    (1350.0, 307.0, "hold"),
-    (I1_S, 308.0, "hold"),
-    (ROGGIA_BRAKE, 308.0, "brake"),
-    (1765.0, 200.0, "brake"),
-    (1805.0, 145.0, "brake"),
-    (ROGGIA, 118.0, "apex"),
-    (1870.0, 140.0, "exit"),
-    (1920.0, 168.0, "exit"),
-    (2000.0, 205.0, "accel"),
-    (LESMO1_BRAKE, 232.0, "brake"),
-    (LESMO1, 205.0, "apex"),
-    (2260.0, 218.0, "exit"),
-    (2380.0, 230.0, "accel"),
-    (LESMO2_BRAKE, 239.0, "brake"),
-    (LESMO2, 184.0, "apex"),
-    (2640.0, 205.0, "exit"),
-    (2720.0, 235.0, "accel"),
-    (2820.0, 270.0, "accel"),
-    (2920.0, 295.0, "accel"),
-    (SERRAGLIO, 308.0, "hold"),
-    (3220.0, 320.0, "accel"),
-    (I2_S, 327.0, "hold"),
-    (ASCARI_BRAKE, 316.0, "brake"),
-    (3580.0, 245.0, "brake"),
-    (3620.0, 205.0, "brake"),
-    (ASCARI, 186.0, "apex"),
-    (3695.0, 205.0, "exit"),
-    (3760.0, 235.0, "exit"),
-    (3900.0, 268.0, "accel"),
-    (4100.0, 292.0, "accel"),
-    (4300.0, 305.0, "accel"),
-    (4500.0, 314.0, "accel"),
-    (4620.0, 319.0, "hold"),
-    (PARABOLICA_BRAKE, 293.0, "brake"),
-    (4795.0, 245.0, "brake"),
-    (4835.0, 222.0, "brake"),
-    (PARABOLICA, 211.0, "apex"),
-    (4960.0, 226.0, "exit"),
-    (5120.0, 248.0, "accel"),
-    (5320.0, 265.0, "accel"),
-    (5520.0, 276.0, "accel"),
-    (5680.0, 283.0, "accel"),
-    (LENGTH_M, 288.0, "accel"),
+    (BIASSONO, 318.0, "hold"),
+    (1400.0, 322.0, "hold"),
+    (I1_S, 324.0, "hold"),
+    (ROGGIA_BRAKE, 317.0, "brake"),
+    (1775.0, 200.0, "brake"),
+    (1810.0, 145.0, "brake"),
+    (ROGGIA, 113.0, "apex"),
+    (1884.0, 127.0, "exit"),
+    (1930.0, 160.0, "exit"),
+    (2020.0, 210.0, "accel"),
+    (LESMO1_BRAKE, 263.0, "brake"),
+    (LESMO1, 230.0, "brake"),
+    (LESMO1_APEX, 207.0, "apex"),
+    (2305.0, 226.0, "exit"),
+    (2400.0, 248.0, "accel"),
+    (LESMO2_BRAKE, 248.0, "brake"),
+    (LESMO2, 190.0, "apex"),
+    (2640.0, 219.0, "exit"),
+    (2740.0, 250.0, "accel"),
+    (2860.0, 285.0, "accel"),
+    (SERRAGLIO, 322.0, "hold"),
+    (3250.0, 332.0, "accel"),
+    (I2_S, 338.0, "hold"),
+    (ASCARI_BRAKE, 296.0, "brake"),
+    (3595.0, 230.0, "brake"),
+    (ASCARI, 194.0, "apex"),
+    (3720.0, 217.0, "exit"),
+    (3820.0, 242.0, "exit"),
+    (4000.0, 275.0, "accel"),
+    (4200.0, 300.0, "accel"),
+    (4400.0, 316.0, "accel"),
+    (4580.0, 326.0, "accel"),
+    (4680.0, 329.0, "hold"),
+    (PARABOLICA_BRAKE, 307.0, "brake"),
+    (PARABOLICA, 240.0, "brake"),
+    (4960.0, 222.0, "brake"),
+    (PARABOLICA_APEX, 215.0, "apex"),
+    (5180.0, 237.0, "exit"),
+    (5300.0, 256.0, "exit"),
+    (5480.0, 284.0, "accel"),
+    (5640.0, 302.0, "accel"),
+    (LENGTH_M, 316.0, "accel"),
 ]
 
 
@@ -131,7 +130,6 @@ def speed_at(s: float) -> tuple[float, str]:
         s1, v1, p1 = WAYPOINTS[i + 1]
         if s0 <= s <= s1:
             t = 0.0 if s1 == s0 else (s - s0) / (s1 - s0)
-            # Constant-decel / accel in v² between brake / accel pairs.
             if p0 in ("brake", "accel", "exit") or p1 in ("brake", "accel"):
                 u0, u1 = v0 / 3.6, v1 / 3.6
                 u2 = lerp(u0 * u0, u1 * u1, t)
@@ -150,14 +148,14 @@ def sample_stations() -> list[float]:
         (760.0, ROGGIA_BRAKE - 20, 25.0),
         (ROGGIA_BRAKE - 20, 1960.0, 8.0),
         (1960.0, LESMO1_BRAKE - 15, 20.0),
-        (LESMO1_BRAKE - 15, LESMO1 + 80, 10.0),
-        (LESMO1 + 80, LESMO2_BRAKE - 15, 20.0),
+        (LESMO1_BRAKE - 15, LESMO1_APEX + 80, 10.0),
+        (LESMO1_APEX + 80, LESMO2_BRAKE - 15, 20.0),
         (LESMO2_BRAKE - 15, LESMO2 + 90, 10.0),
         (LESMO2 + 90, ASCARI_BRAKE - 20, 25.0),
-        (ASCARI_BRAKE - 20, 3820.0, 8.0),
-        (3820.0, PARABOLICA_BRAKE - 20, 25.0),
-        (PARABOLICA_BRAKE - 20, 5050.0, 10.0),
-        (5050.0, LENGTH_M, 25.0),
+        (ASCARI_BRAKE - 20, 3900.0, 8.0),
+        (3900.0, PARABOLICA_BRAKE - 20, 25.0),
+        (PARABOLICA_BRAKE - 20, 5320.0, 10.0),
+        (5320.0, LENGTH_M, 25.0),
     ]
     stations: list[float] = []
     for a, b, step in fine:
@@ -176,6 +174,7 @@ def sample_stations() -> list[float]:
         S1_S,
         LESMO1_BRAKE,
         LESMO1,
+        LESMO1_APEX,
         LESMO2_BRAKE,
         LESMO2,
         SERRAGLIO,
@@ -185,6 +184,7 @@ def sample_stations() -> list[float]:
         S2_S,
         PARABOLICA_BRAKE,
         PARABOLICA,
+        PARABOLICA_APEX,
         LENGTH_M,
     ]
     stations.extend(must)
@@ -228,41 +228,36 @@ def nearest(samples: list[dict], s: float) -> dict:
     return min(samples, key=lambda p: abs(p["s"] - s))
 
 
+LOCK = {
+    0.0: (316.0, "accel"),
+    SPEED_TRAP_S: (346.0, "hold"),
+    RETTIFILO_BRAKE: (346.0, "brake"),
+    RETTIFILO: (73.0, "apex"),
+    BIASSONO: (318.0, "hold"),
+    I1_S: (324.0, "hold"),
+    ROGGIA_BRAKE: (317.0, "brake"),
+    ROGGIA: (113.0, "apex"),
+    LESMO1_BRAKE: (263.0, "brake"),
+    LESMO1_APEX: (207.0, "apex"),
+    LESMO2_BRAKE: (248.0, "brake"),
+    LESMO2: (190.0, "apex"),
+    SERRAGLIO: (322.0, "hold"),
+    I2_S: (338.0, "hold"),
+    ASCARI_BRAKE: (296.0, "brake"),
+    ASCARI: (194.0, "apex"),
+    PARABOLICA_BRAKE: (307.0, "brake"),
+    PARABOLICA_APEX: (215.0, "apex"),
+    LENGTH_M: (316.0, "accel"),
+}
+
+
 def build_samples() -> list[dict]:
     out = []
     for s in sample_stations():
         v, phase = speed_at(s)
-        out.append(
-            {
-                "s": round(s, 3),
-                "speedKmh": round(v, 1),
-                "phase": phase,
-            }
-        )
-    # Force sourced stations to the exact published speeds.
-    lock = {
-        0.0: (288.0, "accel"),
-        SPEED_TRAP_S: (334.0, "hold"),
-        RETTIFILO_BRAKE: (334.0, "brake"),
-        RETTIFILO: (71.0, "apex"),
-        BIASSONO: (305.0, "hold"),
-        I1_S: (308.0, "hold"),
-        ROGGIA_BRAKE: (308.0, "brake"),
-        ROGGIA: (118.0, "apex"),
-        LESMO1_BRAKE: (232.0, "brake"),
-        LESMO1: (205.0, "apex"),
-        LESMO2_BRAKE: (239.0, "brake"),
-        LESMO2: (184.0, "apex"),
-        SERRAGLIO: (308.0, "hold"),
-        I2_S: (327.0, "hold"),
-        ASCARI_BRAKE: (316.0, "brake"),
-        ASCARI: (186.0, "apex"),
-        PARABOLICA_BRAKE: (293.0, "brake"),
-        PARABOLICA: (211.0, "apex"),
-        LENGTH_M: (288.0, "accel"),
-    }
+        out.append({"s": round(s, 3), "speedKmh": round(v, 1), "phase": phase})
     for p in out:
-        for key, (v, phase) in lock.items():
+        for key, (v, phase) in LOCK.items():
             if abs(p["s"] - key) < 0.02:
                 p["speedKmh"] = v
                 p["phase"] = phase
@@ -275,152 +270,147 @@ def corners() -> list[dict]:
             "id": "rettifilo",
             "name": "Variante del Rettifilo",
             "s": RETTIFILO,
-            "entrySpeedKmh": 334,
-            "apexSpeedKmh": 71,
-            "exitSpeedKmh": 165,
+            "entrySpeedKmh": 346,
+            "apexSpeedKmh": 73,
+            "exitSpeedKmh": 160,
             "brakePointS": round(RETTIFILO_BRAKE, 3),
             "brakePointConfidence": "high",
             "apexS": RETTIFILO,
             "apexConfidence": "high",
-            "turnInS": 590.0,
-            "exitS": 720.0,
-            "gear": 1,
+            "turnInS": 555.0,
+            "exitS": 745.0,
+            "gear": 2,
             "notes": (
-                "Slower of the two chicane apexes (T1 right). FastF1 car_data min "
-                "71 km/h in 1st on Gasly pole lap; T2 is already accelerating. "
-                "Brake Δ 153 m from Brembo 2026 T1 simulation; official SpeedST "
-                "on this lap 334 km/h."
+                "Slower of T1/T2. FastF1 min 73 km/h in 2nd on Norris pole lap "
+                "(T2 second brush 81). Official SpeedST 346; FastF1 peak 347. "
+                "Brake Δ 129 m from Brembo same-gen T1 (337→89 in 2.75 s / 4.7 g)."
             ),
         },
         {
             "id": "biassono",
             "name": "Curva Biassono",
             "s": BIASSONO,
-            "entrySpeedKmh": 305,
-            "apexSpeedKmh": 305,
-            "exitSpeedKmh": 307,
+            "entrySpeedKmh": 318,
+            "apexSpeedKmh": 318,
+            "exitSpeedKmh": 322,
             "brakePointS": BIASSONO,
             "brakePointConfidence": "high",
             "apexS": BIASSONO,
             "apexConfidence": "high",
             "gear": 8,
             "notes": (
-                "No brake or lift on the pole lap (full throttle through Curva "
-                "Grande). Speed is still climbing out of Rettifilo; 305 km/h at "
-                "the geometric apex, 307–308 km/h by the I1 loop."
+                "No brake or lift on the pole lap. Still climbing out of "
+                "Rettifilo; 318 km/h at the geometric apex, 324 km/h by I1."
             ),
         },
         {
             "id": "roggia",
             "name": "Variante della Roggia",
             "s": ROGGIA,
-            "entrySpeedKmh": 308,
-            "apexSpeedKmh": 118,
-            "exitSpeedKmh": 168,
+            "entrySpeedKmh": 317,
+            "apexSpeedKmh": 113,
+            "exitSpeedKmh": 160,
             "brakePointS": round(ROGGIA_BRAKE, 3),
-            "brakePointConfidence": "medium",
+            "brakePointConfidence": "high",
             "apexS": ROGGIA,
-            "apexConfidence": "medium",
+            "apexConfidence": "high",
             "turnInS": 1810.0,
-            "exitS": 1920.0,
-            "gear": 2,
+            "exitS": 1930.0,
+            "gear": 3,
             "notes": (
-                "Official SpeedI1 on this lap 308 km/h (230 m before T4). Apex "
-                "118 km/h is the first valid FastF1 sample after a timing dropout "
-                "through the stop, matching FormulaDream's published Gasly Q3 "
-                "chicane min. Brake Δ 121 m from Brembo 2026 T4 note."
+                "Official SpeedI1 324 km/h; FastF1 brake-on 317, min 113 in 3rd "
+                "(clean trace — no dropout). Brake Δ 107 m from Brembo 2025 T4 "
+                "same-generation figure."
             ),
         },
         {
             "id": "lesmo1",
             "name": "Lesmo 1",
             "s": LESMO1,
-            "entrySpeedKmh": 232,
-            "apexSpeedKmh": 205,
-            "exitSpeedKmh": 218,
+            "entrySpeedKmh": 263,
+            "apexSpeedKmh": 207,
+            "exitSpeedKmh": 226,
             "brakePointS": round(LESMO1_BRAKE, 3),
             "brakePointConfidence": "high",
-            "apexS": LESMO1,
+            "apexS": LESMO1_APEX,
             "apexConfidence": "high",
             "gear": 5,
             "notes": (
-                "Short brake, not a lift-only. FastF1 pole lap: brake-on 232 km/h, "
-                "min 205 km/h in 5th. FP2 top-7 mean was 239→203."
+                "FastF1 brake-on 263, min 207 in 5th. apexS is the racing apex "
+                "at 2255 m (PR #7), 45 m after the centreline heading peak."
             ),
         },
         {
             "id": "lesmo2",
             "name": "Lesmo 2",
             "s": LESMO2,
-            "entrySpeedKmh": 239,
-            "apexSpeedKmh": 184,
-            "exitSpeedKmh": 218,
+            "entrySpeedKmh": 248,
+            "apexSpeedKmh": 190,
+            "exitSpeedKmh": 219,
             "brakePointS": round(LESMO2_BRAKE, 3),
             "brakePointConfidence": "high",
             "apexS": LESMO2,
             "apexConfidence": "high",
-            "gear": 4,
+            "gear": 5,
             "notes": (
-                "Harder stop than Lesmo 1. FastF1 pole lap: brake-on 239 km/h, "
-                "min 184 km/h in 4th. FP2 top-7 mean was 236→182."
+                "FastF1 brake-on 248, min 190 in 5th. Harder stop than Lesmo 1."
             ),
         },
         {
             "id": "serraglio",
             "name": "Curva del Serraglio",
             "s": SERRAGLIO,
-            "entrySpeedKmh": 308,
-            "apexSpeedKmh": 308,
-            "exitSpeedKmh": 320,
+            "entrySpeedKmh": 322,
+            "apexSpeedKmh": 322,
+            "exitSpeedKmh": 332,
             "brakePointS": SERRAGLIO,
             "brakePointConfidence": "high",
             "apexS": SERRAGLIO,
             "apexConfidence": "high",
             "gear": 8,
             "notes": (
-                "No brake or lift on the pole lap. Wide left kink taken as part "
-                "of the drive from Lesmo 2 to the I2 loop (327 km/h)."
+                "No brake or lift. DRS-era drive from Lesmo 2 toward I2 338 km/h."
             ),
         },
         {
             "id": "ascari",
             "name": "Variante Ascari",
             "s": ASCARI,
-            "entrySpeedKmh": 316,
-            "apexSpeedKmh": 186,
-            "exitSpeedKmh": 235,
+            "entrySpeedKmh": 296,
+            "apexSpeedKmh": 194,
+            "exitSpeedKmh": 242,
             "brakePointS": round(ASCARI_BRAKE, 3),
             "brakePointConfidence": "high",
             "apexS": ASCARI,
             "apexConfidence": "high",
-            "turnInS": 3580.0,
-            "exitS": 3765.0,
-            "gear": 4,
+            "turnInS": 3570.0,
+            "exitS": 4020.0,
+            "gear": 5,
             "notes": (
-                "Slower of the L–R–L (first left / Vialone). FastF1 pole lap: "
-                "I2 327 km/h, brake-on 316 km/h, min 186 km/h in 4th. FP2 top-7 "
-                "mean was 314→189."
+                "Slower of the L–R–L (first left). Official I2 338; FastF1 "
+                "brake-on 296 after a lift, min 194 in 5th. PlanetF1: Norris "
+                "9 km/h faster than Verstappen here on this weekend."
             ),
         },
         {
             "id": "parabolica",
             "name": "Curva Alboreto",
             "s": PARABOLICA,
-            "entrySpeedKmh": 293,
-            "apexSpeedKmh": 211,
-            "exitSpeedKmh": 248,
-            "brakePointS": round(PARABOLICA_BRAKE, 3),
+            "entrySpeedKmh": 307,
+            "apexSpeedKmh": 215,
+            "exitSpeedKmh": 256,
+            "brakePointS": PARABOLICA_BRAKE,
             "brakePointConfidence": "high",
-            "apexS": PARABOLICA,
+            "apexS": PARABOLICA_APEX,
             "apexConfidence": "high",
-            "turnInS": 4780.0,
-            "exitS": 5080.0,
+            "turnInS": 4765.0,
+            "exitS": 5260.0,
             "gear": 5,
             "notes": (
-                "FastF1 min 211 km/h in 5th — same figure FormulaDream published "
-                "for Gasly Q3 (highest of the top seven). Peak on the opposite "
-                "straight 319 km/h then a lift/harvest before brake-on at 293. "
-                "Official SpeedFL on this lap 287 km/h."
+                "FastF1 min 215 in 5th at the late racing apex (s=5065, PR #7), "
+                "not the centreline heading peak at 4864. Opposite-straight peak "
+                "329 then brake-on 307. Official SpeedFL 315. PlanetF1: Norris "
+                "~10 km/h faster than Verstappen through Parabolica."
             ),
         },
     ]
@@ -432,16 +422,16 @@ def write_plot(samples: list[dict], implied: float) -> None:
     xs = [p["s"] for p in samples]
     ys = [p["speedKmh"] for p in samples]
     fig, ax = plt.subplots(figsize=(12.5, 4.6), dpi=140)
-    ax.plot(xs, ys, color="#1d4ed8", lw=1.6, label="Gasly 2026 Q3 pole envelope")
+    ax.plot(xs, ys, color="#1d4ed8", lw=1.6, label="Norris 2024 Q3 pole envelope")
     marks = [
-        (RETTIFILO, 71, "Rettifilo"),
-        (BIASSONO, 305, "Biassono"),
-        (ROGGIA, 118, "Roggia"),
-        (LESMO1, 205, "Lesmo 1"),
-        (LESMO2, 184, "Lesmo 2"),
-        (SERRAGLIO, 308, "Serraglio"),
-        (ASCARI, 186, "Ascari"),
-        (PARABOLICA, 211, "Parabolica"),
+        (RETTIFILO, 73, "Rettifilo"),
+        (BIASSONO, 318, "Biassono"),
+        (ROGGIA, 113, "Roggia"),
+        (LESMO1_APEX, 207, "Lesmo 1"),
+        (LESMO2, 190, "Lesmo 2"),
+        (SERRAGLIO, 322, "Serraglio"),
+        (ASCARI, 194, "Ascari"),
+        (PARABOLICA_APEX, 215, "Parabolica"),
     ]
     for s, v, name in marks:
         ax.scatter([s], [v], c="#b91c1c", s=22, zorder=3)
@@ -449,18 +439,18 @@ def write_plot(samples: list[dict], implied: float) -> None:
             f"{name}\n{v:.0f}",
             (s, v),
             textcoords="offset points",
-            xytext=(0, 8 if v < 250 else -22),
+            xytext=(0, 8 if v < 260 else -22),
             ha="center",
             fontsize=7,
             color="#7f1d1d",
         )
-    ax.axhline(342, color="#94a3b8", ls="--", lw=0.8, label="top 342 km/h")
+    ax.axhline(347, color="#94a3b8", ls="--", lw=0.8, label="top 347 km/h")
     ax.set_xlim(0, LENGTH_M)
     ax.set_ylim(40, 380)
     ax.set_xlabel("s (m) — monza.json centreline")
     ax.set_ylabel("speed (km/h)")
     ax.set_title(
-        f"Monza GP · 2026 quali pole (Gasly 1:21.786) · implied {implied:.3f}s"
+        f"Monza GP · 2024 quali pole (Norris 1:19.327) · implied {implied:.3f}s"
     )
     ax.grid(True, alpha=0.25)
     ax.legend(loc="lower right", fontsize=8)
@@ -486,66 +476,66 @@ def main() -> None:
         "units": {"speed": "km/h", "distance": "m", "time": "s"},
         "reference": {
             "class": "f1",
-            "season": 2026,
+            "season": 2024,
             "session": "qualifying",
-            "driver": "Pierre Gasly",
-            "team": "BWT Alpine F1 Team",
-            "car": "A526",
-            "lapTimeS": 81.786,
-            "sectorTimesS": [26.817, 27.706, 27.263],
+            "driver": "Lando Norris",
+            "team": "McLaren Formula 1 Team",
+            "car": "MCL38",
+            "lapTimeS": 79.327,
+            "sectorTimesS": [26.492, 26.579, 26.256],
             "source": (
-                "FIA 2026 Italian GP Final Qualifying Classification "
-                "(Doc 50, 2026-09-05): pole 1:21.786 / 254.992 km/h. "
-                "Sector splits and SpeedI1/I2/FL/ST from F1 live timing "
-                "via FastF1 3.8.3 on that lap (no raw trace redistributed)."
+                "FIA 2024 Italian GP qualifying: pole 1:19.327 / 262.896 km/h "
+                "(Autosport / FIA). Sector splits 26.492 / 26.579 / 26.256 and "
+                "SpeedI1/I2/FL/ST 324 / 338 / 315 / 346 from F1 live timing via "
+                "FastF1 3.8.3 and FIA sector-analysis PDF (no raw trace redistributed)."
             ),
             "notes": (
-                "Dry Q3 pole, current GP layout, 2026 active-aero cars "
-                "(no DRS). Soft tyre, tyre life 2. Layout matches monza.json "
-                "(Rettifilo / Roggia / Ascari chicanes, no oval)."
+                "Dry Q3 pole, current GP layout (2024 flattened Ascari kerbs). "
+                "Soft tyre, tyre life 2, DRS-era car. Same reference lap as "
+                "racing-line PR #7. This speeds PR first committed Pierre Gasly "
+                "2026 Q3 pole 1:21.786 (new-reg, no DRS); retargeted here so "
+                "line and speeds describe one lap."
             ),
         },
         "lap": {
             "lengthM": LENGTH_M,
-            "topSpeedKmh": 342.0,
-            "topSpeedS": 400.0,
-            "speedTrapKmh": 334.0,
+            "topSpeedKmh": 347.0,
+            "topSpeedS": 410.0,
+            "speedTrapKmh": 346.0,
             "speedTrapS": round(SPEED_TRAP_S, 3),
-            "finishLineKmh": 287.0,
+            "finishLineKmh": 315.0,
             "impliedLapTimeS": round(implied, 3),
             "impliedSectorTimesS": [round(t1, 3), round(t2, 3), round(t3, 3)],
             "sectorBeams": {
                 "kind": "fiaLoopsOnThisCenterline",
                 "s": [round(I1_S, 3), round(I2_S, 3), LENGTH_M],
                 "note": (
-                    "Splits at I1 (230 m before T4) and I2 (210 m before T8), "
-                    "not the FIA surveyed 2.061 / 3.884 km marks. I1→I2 length "
-                    "is 1832 m vs published S2 1823 m."
+                    "Splits at I1 (230 m before T4) and I2 (210 m before T8). "
+                    "I1→I2 length is 1832 m vs published S2 1823 m."
                 ),
             },
             "method": (
                 "Trapezoidal ∫ ds/v over samples (v in m/s), closed 0→5793.4. "
                 "Waypoints are official timing loops + FastF1 pole-lap event "
-                "speeds + Brembo 2026 brake distances. Straight samples are "
-                "v²-interpolated between those waypoints; apex and brake-point "
-                "speeds are locked to the sourced values."
+                "speeds + Brembo same-gen brake distances. Straight samples are "
+                "v²-interpolated; apex and brake-point speeds are locked."
             ),
         },
         "corners": corners(),
         "samples": samples,
         "source": {
             "primary": [
-                "https://www.fia.com/system/files/decision-document/2026_italian_grand_prix_-_final_qualifying_classification.pdf",
-                "https://www.fia.com/sites/default/files/2026_13_ita_f1_q0_timing_qualifyingsessionmaximumspeeds_v01.pdf",
-                "https://www.fia.com/system/files/decision-document/2026_italian_grand_prix_-_competition_notes_-_circuit_map_pit_lane_drawing_emergency_exits_map_and_red_zone.pdf",
-                "F1 live timing car_data / timing data for 2026 Italian GP qualifying, accessed with FastF1 3.8.3 (summaries only)",
+                "https://www.fia.com/news/f1-norris-pole-mclaren-lock-out-front-row-monza-verstappen-seventh",
+                "https://api.fia.com/sites/default/files/2024_16_ita_f1_q0_timing_qualifyingsessionsectoranalysis_v01.pdf",
+                "https://www.fia.com/sites/default/files/2024_16_ita_f1_q0_timing_qualifyingsessionmaximumspeeds_v01.pdf",
+                "https://www.autosport.com/f1/results/2024/italian-gp-639981/?st=GRID",
+                "F1 live timing car_data / timing data for 2024 Italian GP qualifying, accessed with FastF1 3.8.3 (summaries only)",
             ],
             "secondary": [
-                "https://www.formuladream.app/blog/italian-gp-2026-qualifying-results",
-                "https://www.formuladream.app/blog/monza-2026-telemetry-analysis",
-                "https://www.planetf1.com/f1-data/pierre-gasly-italian-grand-prix-pole-data",
-                "https://www.brembo.com/en/motorsport/formula1/2026/facts-monza-2026",
-                "https://www.formula1.com/en/latest/article/gasly-charges-to-sensational-maiden-f1-pole-at-monza-over-russell-and-piastri.4CKkkbvgmqL04ijMNBfuXF",
+                "https://www.formula1.com/en/latest/article/watch-ride-onboard-for-norriss-formidable-pole-lap-in-monza-qualifying.4qWIftLYRedtL9ab1Jlt5M",
+                "https://www.planetf1.com/news/lando-norris-data-vs-max-verstappen-italian-gp-qualifying",
+                "https://www.brembo.com/en/motorsport/formula1/facts-formula1-gp-monza",
+                "https://github.com/peckz/poly-formula/pull/7",
             ],
             "license": (
                 "facts / fair-use telemetry summaries — no proprietary raw traces redistributed"
@@ -558,24 +548,24 @@ def main() -> None:
     write_plot(samples, implied)
 
     print(f"samples {len(samples)}")
-    print(f"implied {implied:.3f}  ref 81.786  d{implied-81.786:+.3f}")
-    print(f"I1/I2 splits {t1:.3f}/{t2:.3f}/{t3:.3f}  official S2 {27.706}")
-    print(f"FIA-km marks {t1_km:.3f}/{t2_km:.3f}/{t3_km:.3f}  official 26.817/27.706/27.263")
+    print(f"implied {implied:.3f}  ref 79.327  d{implied-79.327:+.3f}")
+    print(f"I1/I2 splits {t1:.3f}/{t2:.3f}/{t3:.3f}  official 26.492/26.579/26.256")
+    print(f"FIA-km marks {t1_km:.3f}/{t2_km:.3f}/{t3_km:.3f}")
     print(
-        f"gaps straight-ish {max_gap(samples, 0, RETTIFILO_BRAKE-1):.2f} "
-        f"T1 {max_gap(samples, RETTIFILO_BRAKE, 750):.2f} "
+        f"gaps T1 {max_gap(samples, RETTIFILO_BRAKE, 750):.2f} "
         f"Roggia {max_gap(samples, ROGGIA_BRAKE, 1960):.2f} "
-        f"Ascari {max_gap(samples, ASCARI_BRAKE, 3820):.2f}"
+        f"Ascari {max_gap(samples, ASCARI_BRAKE, 3900):.2f} "
+        f"max {max(samples[i+1]['s']-samples[i]['s'] for i in range(len(samples)-1)):.2f}"
     )
     for cid, s, apex, brake, entry in [
-        ("rettifilo", RETTIFILO, 71, RETTIFILO_BRAKE, 334),
-        ("biassono", BIASSONO, 305, BIASSONO, 305),
-        ("roggia", ROGGIA, 118, ROGGIA_BRAKE, 308),
-        ("lesmo1", LESMO1, 205, LESMO1_BRAKE, 232),
-        ("lesmo2", LESMO2, 184, LESMO2_BRAKE, 239),
-        ("serraglio", SERRAGLIO, 308, SERRAGLIO, 308),
-        ("ascari", ASCARI, 186, ASCARI_BRAKE, 316),
-        ("parabolica", PARABOLICA, 211, PARABOLICA_BRAKE, 293),
+        ("rettifilo", RETTIFILO, 73, RETTIFILO_BRAKE, 346),
+        ("biassono", BIASSONO, 318, BIASSONO, 318),
+        ("roggia", ROGGIA, 113, ROGGIA_BRAKE, 317),
+        ("lesmo1", LESMO1_APEX, 207, LESMO1_BRAKE, 263),
+        ("lesmo2", LESMO2, 190, LESMO2_BRAKE, 248),
+        ("serraglio", SERRAGLIO, 322, SERRAGLIO, 322),
+        ("ascari", ASCARI, 194, ASCARI_BRAKE, 296),
+        ("parabolica", PARABOLICA_APEX, 215, PARABOLICA_BRAKE, 307),
     ]:
         sa = nearest(samples, s)
         sb = nearest(samples, brake)
