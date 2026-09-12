@@ -13,7 +13,7 @@ const LEFT_CHEEK = 234
 const RIGHT_CHEEK = 454
 const SCALE = 1.25
 
-const DEFAULT_ATLAS = '/sprites/leclerc-atlas.png'
+const DEFAULT_ATLAS = '/sprites/drivers/leclerc-atlas.png'
 
 const sprite = new Image()
 sprite.crossOrigin = 'anonymous'

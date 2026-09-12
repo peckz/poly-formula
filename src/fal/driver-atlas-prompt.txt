@@ -1,8 +1,4 @@
-/**
- * Canonical 5×5 head-atlas brief. Iterate here — the bake script reads the
- * same text from `driver-atlas-prompt.txt` (keep those two in sync).
- */
-export const DRIVER_ATLAS_PROMPT = `Create a single game-ready sprite atlas depicting {{CHARACTER_NAME}} as a recognizable low-poly retro video-game avatar.
+Create a single game-ready sprite atlas depicting {{CHARACTER_NAME}} as a recognizable low-poly retro video-game avatar.
 
 STYLE
 PlayStation 1–inspired 3D character rendered as pixelated 2D sprites. Angular facial geometry, flat polygon shading, simple textures, limited colors. Preserve the subject’s recognizable facial features, hairstyle, and characteristic appearance. Choose one recognizable outfit and keep it identical throughout. No text, logos, accessories obscuring the face, or objects.
@@ -53,17 +49,4 @@ Genuine transparent alpha background, including gaps around hair, neck, and shou
 Do not draw a checkerboard, solid backdrop, scenery, floor, or cast shadow.
 
 OUTPUT
-Only the finished square 5×5 sprite atlas. Crisp, readable facial silhouettes suitable for sampling each cell at low resolution and using it as a webcam-controlled avatar.`
-
-export function buildDriverAtlasPrompt(character: string): string {
-  const name = character.trim() || 'a formula racer'
-  return DRIVER_ATLAS_PROMPT.replaceAll('{{CHARACTER_NAME}}', name)
-}
-
-/** Single-portrait variant (not the 5×5 atlas). Kept for tooling / experiments. */
-export const DRIVER_AVATAR_PROMPT = `Use case: stylized-concept. Square portrait of {{name}} as a recognizable low-poly retro PlayStation 1 racing-game driver. Head and upper shoulders only. Flat faceted polygon geometry, crunchy limited palette, NOT photorealistic. Simple racing suit with no text or logos. Genuine transparent alpha background. Bust centered with even padding. Crisp deliberately low-resolution video game sprite art. Output only the portrait.`
-
-export function buildDriverAvatarPrompt(name: string): string {
-  const character = name.trim() || 'a formula racer'
-  return DRIVER_AVATAR_PROMPT.replaceAll('{{name}}', character)
-}
+Only the finished square 5×5 sprite atlas. Crisp, readable facial silhouettes suitable for sampling each cell at low resolution and using it as a webcam-controlled avatar.

@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
+    "generate:atlases": "node scripts/generate-driver-atlases.mjs",
     "postinstall": "mkdir -p public/mediapipe && rm -rf public/mediapipe/wasm && cp -R node_modules/@mediapipe/tasks-vision/wasm public/mediapipe/wasm"
   },
   "dependencies": {

@@ -1,53 +1,44 @@
 import { observer } from 'mobx-react-lite'
 import type { FormEvent, KeyboardEvent } from 'react'
 import { useEffect } from 'react'
-import {
-  AVATAR_SUBJECT_LIMIT,
-  entryStore,
-  NICKNAME_LIMIT,
-} from '../entry/store'
+import { entryStore, NICKNAME_LIMIT } from '../entry/store'
 
 function falLine(): string {
-  const { falStatus, avatarStatus, avatarError } = entryStore
-  if (avatarStatus === 'generating') {
-    return 'Generating 5×5 head atlas…'
+  const { falStatus, selectedSlot, totalDrivers } = entryStore
+  if (selectedSlot.status === 'generating') {
+    return `Generating ${selectedSlot.driver.name}…`
   }
-  if (avatarError) {
-    return avatarError
-  }
-  if (falStatus === 'ready') {
-    return 'fal.ai ready'
+  if (selectedSlot.error) {
+    return selectedSlot.error
   }
   if (falStatus === 'missing') {
-    return 'fal.ai key missing. Generate uses a placeholder.'
+    return `Bundled roster · ${totalDrivers} drivers (reroll needs fal.ai key)`
+  }
+  if (falStatus === 'ready') {
+    return `Bundled roster · ${totalDrivers} drivers`
   }
   return 'Checking fal.ai…'
 }
 
 function statusClass(): string {
-  const { falStatus, avatarStatus, avatarError } = entryStore
-  if (
-    avatarStatus === 'error' ||
-    avatarStatus === 'placeholder' ||
-    falStatus === 'missing'
-  ) {
+  const { falStatus, selectedSlot } = entryStore
+  if (selectedSlot.error) {
     return 'entry-status is-warn'
   }
-  if (falStatus === 'ready' && !avatarError) {
-    return 'entry-status is-ok'
+  if (falStatus === 'missing') {
+    return 'entry-status is-warn'
   }
-  return 'entry-status'
+  return 'entry-status is-ok'
 }
 
 export const EntryScreen = observer(function EntryScreen() {
   const {
     nickname,
-    avatarSubject,
-    avatarUrl,
-    avatarStatus,
     canStart,
-    canGenerate,
-    generating,
+    selectedSlot,
+    selectedDriverId,
+    slots,
+    previewAtlasUrl,
   } = entryStore
 
   useEffect(() => {
@@ -66,20 +57,9 @@ export const EntryScreen = observer(function EntryScreen() {
     }
   }
 
-  function onAvatarKeyDown(event: KeyboardEvent<HTMLInputElement>) {
-    if (event.key === 'Enter') {
-      event.preventDefault()
-      void entryStore.generateAvatar()
-    }
-  }
-
-  const subjectLabel = avatarSubject.trim() || 'driver'
-  const avatarLabel =
-    avatarStatus === 'ready'
-      ? `Head sprite atlas of ${subjectLabel}`
-      : avatarStatus === 'placeholder' || avatarStatus === 'error'
-        ? `Placeholder for ${subjectLabel}`
-        : 'Sprite atlas placeholder'
+  const selected = selectedSlot.driver
+  const previewReady = selectedSlot.status === 'ready' && previewAtlasUrl
+  const previewBusy = selectedSlot.status === 'generating'
 
   return (
     <div className="entry-screen">
@@ -98,12 +78,12 @@ export const EntryScreen = observer(function EntryScreen() {
           <p className="entry-sub">Monza · 5793 m</p>
         </header>
 
-        <div
-          className={`entry-avatar${generating ? ' is-generating' : ''}${avatarStatus === 'ready' ? ' is-atlas' : ''}`}
-          data-state={avatarStatus}
-        >
-          {avatarUrl ? (
-            <img src={avatarUrl} alt={avatarLabel} />
+        <div className="entry-avatar" aria-hidden={!previewReady}>
+          {previewReady ? (
+            <div
+              className="entry-avatar-face"
+              style={{ backgroundImage: `url(${previewAtlasUrl})` }}
+            />
           ) : (
             <div className="entry-avatar-empty" aria-hidden="true">
               <span className="entry-brick entry-brick-red" />
@@ -112,12 +92,53 @@ export const EntryScreen = observer(function EntryScreen() {
               <span className="entry-brick entry-brick-asphalt" />
             </div>
           )}
-          {!avatarUrl ? (
-            <p className="entry-avatar-caption">No sprite atlas</p>
-          ) : avatarStatus === 'ready' ? (
-            <p className="entry-avatar-caption">5×5 head atlas</p>
-          ) : null}
+          <p className="entry-avatar-caption">
+            {previewBusy
+              ? `Generating ${selected.name}`
+              : previewReady
+                ? `${selected.name} · #${selected.number}`
+                : 'Select a driver'}
+          </p>
         </div>
+
+        <div className="entry-picker" role="listbox" aria-label="Driver select">
+          <div className="entry-picker-track">
+            {slots.map((slot) => {
+              const active = slot.driver.id === selectedDriverId
+              const ready = slot.status === 'ready' && slot.atlasUrl
+              return (
+                <button
+                  key={slot.driver.id}
+                  type="button"
+                  role="option"
+                  aria-selected={active}
+                  className={`entry-picker-cell${active ? ' is-selected' : ''}${slot.status === 'generating' ? ' is-busy' : ''}`}
+                  title={`${slot.driver.name} · ${slot.driver.team}`}
+                  onClick={() => {
+                    entryStore.selectDriver(slot.driver.id)
+                  }}
+                >
+                  {ready ? (
+                    <span
+                      className="entry-picker-face"
+                      style={{ backgroundImage: `url(${slot.atlasUrl})` }}
+                    />
+                  ) : (
+                    <span className="entry-picker-fallback">
+                      {slot.status === 'generating' ? '…' : slot.driver.number}
+                    </span>
+                  )}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
+        <p className="entry-picker-name">
+          <span className="entry-picker-number">#{selected.number}</span>
+          {selected.name}
+          <span className="entry-picker-team">{selected.team}</span>
+        </p>
 
         <label className="entry-field" htmlFor="entry-nickname">
           <span>Nickname</span>
@@ -130,7 +151,7 @@ export const EntryScreen = observer(function EntryScreen() {
             maxLength={NICKNAME_LIMIT}
             placeholder="Your name"
             value={nickname}
-            disabled={generating}
+            disabled={previewBusy}
             onChange={(event) => {
               entryStore.setNickname(event.target.value)
             }}
@@ -138,39 +159,24 @@ export const EntryScreen = observer(function EntryScreen() {
           />
         </label>
 
-        <label className="entry-field" htmlFor="entry-avatar-subject">
-          <span>Avatar</span>
-          <input
-            id="entry-avatar-subject"
-            name="avatar"
-            type="text"
-            autoComplete="off"
-            maxLength={AVATAR_SUBJECT_LIMIT}
-            placeholder="Who to draw, e.g. Carlos Sainz"
-            value={avatarSubject}
-            disabled={generating}
-            onChange={(event) => {
-              entryStore.setAvatarSubject(event.target.value)
-            }}
-            onKeyDown={onAvatarKeyDown}
-          />
-        </label>
-
         <div className="entry-actions">
           <button
             type="button"
             className="entry-btn entry-btn-ghost"
-            disabled={!canGenerate}
+            disabled={
+              entryStore.falStatus !== 'ready' ||
+              selectedSlot.status === 'generating'
+            }
             onClick={() => {
-              void entryStore.generateAvatar()
+              void entryStore.regenerateSelected()
             }}
           >
-            {generating ? 'Generating' : 'Generate'}
+            {selectedSlot.status === 'generating' ? 'Generating' : 'Reroll'}
           </button>
           <button
             type="submit"
             className="entry-btn entry-btn-start"
-            disabled={!canStart || generating}
+            disabled={!canStart}
           >
             Start
           </button>

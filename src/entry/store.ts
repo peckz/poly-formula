@@ -1,16 +1,24 @@
 import { makeAutoObservable, runInAction } from 'mobx'
-import { fal } from '../fal/client'
-import { fetchFalHealth, type FalHealth } from '../fal/health'
-import { buildDriverAtlasPrompt } from '../fal/prompt'
 import { setDriverAtlasUrl } from '../tracking/driver-sprite'
-import { buildPlaceholderAvatar } from './placeholder'
+import { generateDriverAtlas } from './atlas'
+import { bundledAtlasUrl } from './atlas-paths'
+import {
+  DEFAULT_DRIVER_ID,
+  DRIVERS_2026,
+  type DriverInfo,
+} from './drivers'
+import { fetchFalHealth, type FalHealth } from '../fal/health'
 
-/** Latest OpenAI image model on fal — Flare is the default 2.5 variant. */
-const ATLAS_MODEL = 'openai/gpt-image-2.5/flare/text-to-image'
 const NICKNAME_MAX = 20
-const AVATAR_SUBJECT_MAX = 40
 
-export type AvatarStatus = 'empty' | 'generating' | 'ready' | 'placeholder' | 'error'
+export type DriverSlotStatus = 'idle' | 'generating' | 'ready' | 'error'
+
+export type DriverSlot = {
+  driver: DriverInfo
+  status: DriverSlotStatus
+  atlasUrl: string | null
+  error: string | null
+}
 
 export type FalStatus = 'unknown' | FalHealth
 
@@ -21,60 +29,73 @@ function errorMessage(error: unknown): string {
   return 'Generation failed'
 }
 
-function firstImageUrl(data: unknown): string | null {
-  if (!data || typeof data !== 'object') {
-    return null
-  }
-  const images = (data as { images?: Array<{ url?: string }> }).images
-  const url = images?.[0]?.url
-  if (typeof url !== 'string' || url.length === 0) {
-    return null
-  }
-  return url
+function bundledSlots(): DriverSlot[] {
+  return DRIVERS_2026.map((driver) => ({
+    driver,
+    status: 'ready' as const,
+    atlasUrl: bundledAtlasUrl(driver.id),
+    error: null,
+  }))
 }
 
 class EntryStore {
-  /** Player display name — required to start. */
   nickname = ''
-  /** Who fal should draw into the 5×5 head atlas. */
-  avatarSubject = ''
   entered = false
   falStatus: FalStatus = 'unknown'
-  avatarStatus: AvatarStatus = 'empty'
-  /** URL of the generated 5×5 sprite atlas (or placeholder portrait). */
-  avatarUrl: string | null = null
-  avatarError: string | null = null
+  slots: DriverSlot[] = bundledSlots()
+  selectedDriverId = DEFAULT_DRIVER_ID
 
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
+    this.applySelectedAtlas()
   }
 
   get trimmedNickname(): string {
     return this.nickname.trim()
   }
 
-  get trimmedAvatarSubject(): string {
-    return this.avatarSubject.trim()
-  }
-
   get canStart(): boolean {
     return this.trimmedNickname.length > 0
   }
 
-  get canGenerate(): boolean {
-    return this.trimmedAvatarSubject.length > 0 && !this.generating
+  get selectedSlot(): DriverSlot {
+    return (
+      this.slots.find((slot) => slot.driver.id === this.selectedDriverId) ??
+      this.slots[0]
+    )
   }
 
-  get generating(): boolean {
-    return this.avatarStatus === 'generating'
+  get selectedDriver(): DriverInfo {
+    return this.selectedSlot.driver
+  }
+
+  get readyCount(): number {
+    return this.slots.filter((slot) => slot.status === 'ready').length
+  }
+
+  get totalDrivers(): number {
+    return this.slots.length
+  }
+
+  get previewAtlasUrl(): string | null {
+    return this.selectedSlot.atlasUrl
   }
 
   setNickname(value: string) {
     this.nickname = value.slice(0, NICKNAME_MAX)
   }
 
-  setAvatarSubject(value: string) {
-    this.avatarSubject = value.slice(0, AVATAR_SUBJECT_MAX)
+  selectDriver(id: string) {
+    if (!this.slots.some((slot) => slot.driver.id === id)) {
+      return
+    }
+    this.selectedDriverId = id
+    this.applySelectedAtlas()
+  }
+
+  applySelectedAtlas() {
+    const url = this.selectedSlot.atlasUrl
+    setDriverAtlasUrl(url)
   }
 
   start() {
@@ -82,17 +103,8 @@ class EntryStore {
       return
     }
     this.nickname = this.trimmedNickname
-    this.avatarSubject = this.trimmedAvatarSubject
+    this.applySelectedAtlas()
     this.entered = true
-  }
-
-  applyPlaceholder(message: string, status: 'placeholder' | 'error') {
-    const seed = this.trimmedAvatarSubject || this.trimmedNickname || 'driver'
-    this.avatarUrl = buildPlaceholderAvatar(seed)
-    this.avatarStatus = status
-    this.avatarError = message
-    // Keep the baked Leclerc atlas for head tracking when fal fails.
-    setDriverAtlasUrl(null)
   }
 
   async checkFal() {
@@ -102,54 +114,33 @@ class EntryStore {
     })
   }
 
-  async generateAvatar() {
-    if (!this.canGenerate) {
+  /** Re-roll a single driver via fal (runtime only — bake with npm run generate:atlases). */
+  async regenerateSelected() {
+    const id = this.selectedDriverId
+    const slot = this.slots.find((item) => item.driver.id === id)
+    if (!slot || this.falStatus !== 'ready' || slot.status === 'generating') {
       return
     }
 
-    this.avatarSubject = this.trimmedAvatarSubject
-    this.avatarStatus = 'generating'
-    this.avatarError = null
-
-    const health = await fetchFalHealth()
     runInAction(() => {
-      this.falStatus = health
+      slot.status = 'generating'
+      slot.error = null
     })
 
-    if (health !== 'ready') {
-      runInAction(() => {
-        this.applyPlaceholder(
-          'fal.ai key missing. Using a placeholder.',
-          'placeholder',
-        )
-      })
-      return
-    }
-
     try {
-      const result = await fal.subscribe(ATLAS_MODEL, {
-        input: {
-          prompt: buildDriverAtlasPrompt(this.trimmedAvatarSubject),
-          image_size: 'square_hd',
-          background: 'transparent',
-          quality: 'high',
-          output_format: 'png',
-          num_images: 1,
-        },
-      })
-      const url = firstImageUrl(result.data)
-      if (!url) {
-        throw new Error('No atlas returned')
-      }
-      setDriverAtlasUrl(url)
+      const url = await generateDriverAtlas(slot.driver.name)
       runInAction(() => {
-        this.avatarUrl = url
-        this.avatarStatus = 'ready'
-        this.avatarError = null
+        slot.atlasUrl = url
+        slot.status = 'ready'
+        slot.error = null
+        this.applySelectedAtlas()
       })
     } catch (caught) {
       runInAction(() => {
-        this.applyPlaceholder(errorMessage(caught), 'error')
+        slot.status = 'ready'
+        slot.error = errorMessage(caught)
+        slot.atlasUrl = bundledAtlasUrl(id)
+        this.applySelectedAtlas()
       })
     }
   }
@@ -157,4 +148,3 @@ class EntryStore {
 
 export const entryStore = new EntryStore()
 export const NICKNAME_LIMIT = NICKNAME_MAX
-export const AVATAR_SUBJECT_LIMIT = AVATAR_SUBJECT_MAX
