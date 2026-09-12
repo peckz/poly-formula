@@ -8,7 +8,10 @@ Prompt: [`docs/research/monza-racingline-prompt.md`](monza-racingline-prompt.md)
 
 **Correction (PR #7 review).** The first revision sat on the **right** of the main straight into Rettifilo (`turnIn +4.60`). That is the inside of a right-hander. The line is now **left-side from Parabolica exit through T1 turn-in** (negative `offsetM` until the car darts to the right kerb). Other corners were already outside-in and were not flipped.
 
-Validation plot: [`monza-racingline-overview.png`](monza-racingline-overview.png) (overview + Rettifilo / Roggia / Ascari / Parabolica insets). Same `x`/`−z` frame as the scenery overview.
+Validation plots (same `x`/`−z` frame as the scenery overview):
+
+- [`monza-racingline-overview.png`](monza-racingline-overview.png) — full lap + Rettifilo / Roggia / Ascari / Parabolica insets
+- [`monza-racingline-t1-left-approach.png`](monza-racingline-t1-left-approach.png) — pit-straight + Rettifilo plan view and `offsetM` vs `s` (left-side approach check)
 
 ## Reference lap
 
