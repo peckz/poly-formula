@@ -93,7 +93,7 @@ body,
 
 .generate-atlas {
   position: absolute;
-  top: 16px;
+  top: 64px;
   left: 16px;
   width: 260px;
   padding: 12px 14px;
@@ -101,6 +101,7 @@ body,
   background: rgba(0, 0, 0, 0.7);
   font: 12px/1.45 ui-monospace, monospace;
   pointer-events: auto;
+  z-index: 10;
 }
 
 .generate-atlas h2 {
@@ -163,3 +164,55 @@ body,
 .off {
   color: #666;
 }
+
+.track-controls {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid #333;
+  border-radius: 4px;
+  font: 12px/1 ui-monospace, monospace;
+  z-index: 10;
+}
+
+.track-title {
+  color: #f3f3f3;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.view-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.view-buttons button {
+  background: #222;
+  border: 1px solid #444;
+  color: #aaa;
+  padding: 5px 9px;
+  font: 11px ui-monospace, monospace;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.view-buttons button:hover {
+  background: #333;
+  color: #fff;
+  border-color: #666;
+}
+
+.view-buttons button.active {
+  background: #dc143c;
+  color: #fff;
+  border-color: #ff4d4d;
+  font-weight: 600;
+}
+

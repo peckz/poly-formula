@@ -21,7 +21,7 @@ The camera loop does not go through React. It writes numbers into a store once p
 
 ## Now
 
-Live camera preview with the driver overlay, plus a HUD for head, mouth, hands, and wheel angle. The 3D scene is still a cube.
+Live camera preview with the driver overlay, plus a HUD for head, mouth, hands, and wheel angle. The 3D scene renders the Monza GP track ribbon (`src/tracks/monza/`) with top-down camera views (keys `1`–`4` or bottom/top controls).
 
 ## Run
 
