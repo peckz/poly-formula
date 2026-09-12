@@ -3,6 +3,7 @@ import type { CSSProperties, FormEvent, KeyboardEvent } from 'react'
 import { useEffect, useRef } from 'react'
 import { entryPreview, EntryPreviewPipeline } from '../entry/preview'
 import { entryStore, NICKNAME_LIMIT } from '../entry/store'
+import { leaderboardStore } from '../leaderboard/store'
 
 function falLine(): string {
   const { falStatus, selectedSlot, totalDrivers } = entryStore
@@ -201,6 +202,16 @@ export const EntryScreen = observer(function EntryScreen() {
             Start
           </button>
         </div>
+
+        <button
+          type="button"
+          className="entry-btn entry-btn-ghost"
+          onClick={() => {
+            leaderboardStore.toggle()
+          }}
+        >
+          Times
+        </button>
 
         <p className={statusClass()} role="status">
           {falLine()}

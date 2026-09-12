@@ -2,6 +2,7 @@ import { observer } from 'mobx-react-lite'
 import { CameraView } from './components/CameraView'
 import { EntryScreen } from './components/EntryScreen'
 import { GameOverlay } from './components/GameOverlay'
+import { LeaderboardPanel } from './components/LeaderboardPanel'
 import { RaceHud } from './components/RaceHud'
 import { Scene } from './components/Scene'
 import { TrackingHud } from './components/TrackingHud'
@@ -23,6 +24,7 @@ const App = observer(function App() {
       ) : (
         <EntryScreen />
       )}
+      <LeaderboardPanel />
     </div>
   )
 })

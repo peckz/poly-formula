@@ -11,6 +11,8 @@ import { Keyboard } from '../game/input'
 import { CarSim } from '../game/sim'
 import { entryStore } from '../entry/store'
 import { raceStore } from '../game/store'
+import { MIN_LAP_FRACTION, MIN_LAP_MS } from '../leaderboard/format'
+import { leaderboardStore } from '../leaderboard/store'
 import { buildTrack } from '../game/trackModel'
 import { monzaPath } from '../game/trackPath'
 import { trackingStore } from '../tracking/store'
@@ -128,6 +130,18 @@ export function Scene() {
     let handsLostAt = 0
     let stuckSince = 0
     let boost = 0
+    let lapClockMs = 0
+    let lastLapMs: number | null = null
+    let lastLapCount = sim.lap
+    let maxSThisLap = sim.s
+    let flyingLap = false
+
+    const invalidateLap = () => {
+      flyingLap = false
+      lapClockMs = 0
+      maxSThisLap = sim.s
+      lastLapCount = sim.lap
+    }
 
     const animate = (now: number) => {
       frame = requestAnimationFrame(animate)
@@ -205,6 +219,7 @@ export function Scene() {
         sim.resetToTrack()
         cameraReady = false
         boost = 0
+        invalidateLap()
       }
       resetHeld = keyboard.reset
 
@@ -212,6 +227,24 @@ export function Scene() {
         const boostThrust =
           usingWheel && attacking ? Math.min(1, boost * 1.2) : 0
         sim.step(dt, { throttle, brake, steer, boost: boostThrust })
+        lapClockMs += dt * 1000
+        if (sim.s > maxSThisLap) {
+          maxSThisLap = sim.s
+        }
+        if (sim.lap > lastLapCount) {
+          const traveledFar = maxSThisLap > monzaPath.length * MIN_LAP_FRACTION
+          if (flyingLap && traveledFar && lapClockMs >= MIN_LAP_MS) {
+            const ms = Math.round(lapClockMs)
+            lastLapMs = ms
+            void leaderboardStore.submitLap(ms)
+          }
+          flyingLap = true
+          lapClockMs = 0
+          maxSThisLap = sim.s
+          lastLapCount = sim.lap
+        } else if (sim.lap < lastLapCount) {
+          invalidateLap()
+        }
 
         // Never leave the player beached: crawling off track (or fully
         // lost in the scenery) rolls the car back onto the centerline.
@@ -293,6 +326,8 @@ export function Scene() {
         speedKmh,
         gear: gearFor(speedKmh),
         lap: Math.max(1, sim.lap),
+        lapMs: Math.round(lapClockMs),
+        lastLapMs,
         steerSource: usingWheel ? 'wheel' : 'keys',
         offTrack: sim.offTrack,
         cornerName: corner.name,

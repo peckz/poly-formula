@@ -42,8 +42,11 @@ body,
 .tracking-hud,
 .race-pace,
 .race-map,
+.race-times-btn,
 .game-overlay-card,
-.game-overlay-card * {
+.game-overlay-card *,
+.lb-overlay,
+.lb-overlay * {
   border-radius: 0;
 }
 
@@ -135,6 +138,28 @@ body,
   border: 2px solid var(--ui-line);
   font: 12px/1.4 ui-monospace, monospace;
   pointer-events: none;
+}
+
+.race-times-btn {
+  position: absolute;
+  top: var(--ui-pad);
+  left: var(--ui-pad);
+  padding: var(--ui-pad);
+  color: var(--ui-paper);
+  background: var(--ui-asphalt);
+  border: 2px solid var(--ui-line);
+  font:
+    12px/1.2 ui-monospace,
+    monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  appearance: none;
+}
+
+.race-times-btn:focus-visible {
+  outline: 2px solid var(--ui-paper);
+  outline-offset: 2px;
 }
 
 .race-pace {
@@ -802,4 +827,130 @@ body,
 
 .off {
   color: #666;
+}
+
+.lb-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: var(--ui-pad);
+  background: rgba(26, 26, 29, 0.55);
+}
+
+.lb-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-pad);
+  box-sizing: border-box;
+  width: min(420px, 100%);
+  padding: var(--ui-pad);
+  color: var(--ui-paper);
+  background: var(--ui-asphalt);
+  border: 2px solid var(--ui-line);
+}
+
+.lb-stripe {
+  display: flex;
+  gap: 8px;
+}
+
+.lb-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--ui-pad);
+}
+
+.lb-title {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lb-track {
+  margin: 0;
+  color: var(--ui-muted);
+  font:
+    11px/1.4 ui-monospace,
+    monospace;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.lb-empty {
+  margin: 0;
+  padding: var(--ui-pad);
+  color: var(--ui-muted);
+  background: var(--ui-asphalt-mid);
+  font:
+    11px/1.4 ui-monospace,
+    monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lb-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-pad);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lb-row {
+  display: grid;
+  grid-template-columns: 32px 24px 1fr auto;
+  gap: var(--ui-pad);
+  align-items: center;
+  padding: var(--ui-pad);
+  background: var(--ui-asphalt-mid);
+}
+
+.lb-row.is-you {
+  color: var(--ui-ink);
+  background: var(--ui-paper);
+}
+
+.lb-rank,
+.lb-time {
+  font:
+    12px/1.2 ui-monospace,
+    monospace;
+  letter-spacing: 0.08em;
+}
+
+.lb-time {
+  color: var(--ui-warn);
+}
+
+.lb-row.is-you .lb-time {
+  color: var(--ui-red);
+}
+
+.lb-name {
+  overflow: hidden;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.lb-face {
+  display: block;
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+  background: var(--ui-ink);
+  image-rendering: pixelated;
+}
+
+.lb-face-empty {
+  background: var(--ui-line);
 }

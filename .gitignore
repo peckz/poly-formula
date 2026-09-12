@@ -15,6 +15,7 @@ dist-ssr
 .env.*
 !.env.example
 public/mediapipe
+.convex
 
 # Editor directories and files
 .vscode/*
