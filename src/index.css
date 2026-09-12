@@ -1,12 +1,23 @@
 html,
 body,
 #root,
-.app {
+.app,
+.game-container {
   margin: 0;
+  padding: 0;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #111;
+  background-color: #0d1117;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.game-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
 }
 
 .scene-canvas {
@@ -15,16 +26,20 @@ body,
   height: 100%;
 }
 
+/* Tracking Camera Feed */
 .camera-feed {
   position: absolute;
-  left: 16px;
-  bottom: 16px;
-  width: 280px;
+  left: 20px;
+  bottom: 24px;
+  width: 240px;
   aspect-ratio: 4 / 3;
   overflow: hidden;
   background: #000;
-  border: 1px solid #333;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
   transform: scaleX(-1);
+  z-index: 15;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
 }
 
 .camera-feed video,
@@ -46,22 +61,29 @@ body,
   place-items: center;
   padding: 12px;
   color: #ddd;
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(0, 0, 0, 0.75);
   font: 12px/1.4 ui-monospace, monospace;
   text-align: center;
   transform: scaleX(-1);
 }
 
+/* Tracking Head & Hand Pose HUD */
 .tracking-hud {
   position: absolute;
   top: 16px;
-  right: 16px;
-  min-width: 180px;
-  padding: 12px 14px;
+  right: 230px;
+  min-width: 170px;
+  padding: 10px 14px;
   color: #d4d4d4;
-  background: rgba(0, 0, 0, 0.7);
-  font: 12px/1.45 ui-monospace, monospace;
+  background: rgba(13, 17, 23, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  font: 11px/1.4 ui-monospace, monospace;
   pointer-events: none;
+  z-index: 10;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 .tracking-hud h2,
@@ -70,20 +92,20 @@ body,
 }
 
 .tracking-hud section + section {
-  margin-top: 12px;
+  margin-top: 8px;
 }
 
 .tracking-hud h2 {
-  margin-bottom: 4px;
-  font-size: 11px;
+  margin-bottom: 2px;
+  font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #f3f3f3;
+  color: #00f0ff;
 }
 
 .tracking-hud .fps {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   color: #888;
 }
 
@@ -93,4 +115,237 @@ body,
 
 .off {
   color: #666;
+}
+
+/* Glassmorphic UI Card Base */
+.hud-panel {
+  background: rgba(13, 17, 23, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: #e6edf3;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  pointer-events: auto;
+}
+
+/* Top Header */
+.hud-header {
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 10;
+}
+
+.hud-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #00f0ff;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.hud-badge {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(0, 240, 255, 0.15);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  color: #00f0ff;
+  text-transform: uppercase;
+}
+
+/* Speedometer & Pedals (Bottom Right) */
+.hud-cluster {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  padding: 18px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  z-index: 10;
+  min-width: 220px;
+}
+
+.hud-speed-value {
+  font-size: 3.6rem;
+  font-weight: 900;
+  line-height: 1;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -2px;
+  text-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+}
+
+.hud-speed-unit {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #8b949e;
+  letter-spacing: 1px;
+  margin-top: -4px;
+}
+
+.hud-pedals {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.hud-pedal-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.hud-pedal-label {
+  width: 50px;
+  color: #8b949e;
+}
+
+.hud-pedal-bar-bg {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.hud-pedal-bar-fill {
+  height: 100%;
+  transition: width 0.05s ease-out;
+}
+
+.hud-pedal-bar-fill.throttle {
+  background: #39d353;
+}
+
+.hud-pedal-bar-fill.brake {
+  background: #ff453a;
+}
+
+.hud-pedal-bar-fill.steer {
+  background: #00f0ff;
+}
+
+/* Telemetry Stats Card (Bottom Left, above camera feed) */
+.hud-telemetry {
+  position: absolute;
+  bottom: 220px;
+  left: 20px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.78rem;
+  min-width: 240px;
+  z-index: 10;
+}
+
+.hud-telemetry-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: #8b949e;
+  font-variant-numeric: tabular-nums;
+}
+
+.hud-telemetry-val {
+  color: #e6edf3;
+  font-weight: 600;
+}
+
+/* Controls Guide (Top Right) */
+.hud-controls {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.75rem;
+  z-index: 10;
+}
+
+.hud-control-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #c9d1d9;
+}
+
+.hud-key {
+  display: inline-block;
+  padding: 2px 6px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+  font-weight: 700;
+  font-size: 0.7rem;
+  color: #ffffff;
+}
+
+/* Tuning Panel Toggle / Controls */
+.hud-tuning-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.hud-tuning-btn:hover {
+  background: rgba(0, 240, 255, 0.2);
+  border-color: #00f0ff;
+}
+
+.hud-tuning-drawer {
+  position: absolute;
+  top: 75px;
+  left: 20px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.78rem;
+  width: 290px;
+  z-index: 10;
+}
+
+.hud-slider-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hud-slider-label {
+  display: flex;
+  justify-content: space-between;
+  color: #8b949e;
+}
+
+.hud-slider-label span {
+  color: #00f0ff;
+  font-weight: 600;
+}
+
+.hud-slider {
+  width: 100%;
+  accent-color: #00f0ff;
+  cursor: pointer;
 }
