@@ -1,8 +1,7 @@
 import * as THREE from 'three'
-import { ENVELOPE_LAT_ACCEL } from './driveAssist'
-import { BRAKE_DECEL, ENGINE, MAX_SPEED } from './sim'
+import { sourcedSpeedKmh } from './driveAssist'
 import type { LinePoint } from './racingLine'
-import { computeRacingLine, computeSpeedProfile } from './racingLine'
+import { computeRacingLine } from './racingLine'
 import { buildBarriers } from './barriers'
 import { buildScenery } from './scenery'
 import type { TrackPath } from './trackPath'
@@ -336,19 +335,29 @@ function brakingZoneMask(decel: number[]): boolean[] {
 /**
  * Ghost racing line: dashed translucent trail hugging the apexes.
  * Green where you can stay on power; solid orange-red across each
- * braking zone.
+ * braking zone — zones come from the sourced F1 speed profile.
  */
 function racingLineTrail(path: TrackPath): RacingLineHandle {
   const line = computeRacingLine(path, ROAD_HALF_WIDTH - 1.6)
-  const profile = computeSpeedProfile(
-    line,
-    ENVELOPE_LAT_ACCEL,
-    BRAKE_DECEL,
-    ENGINE,
-    MAX_SPEED,
-  )
 
-  const zones = brakingZoneMask(profile.decel)
+  // Map each racing-line point to the sourced centreline speed (m/s).
+  const speeds = new Float64Array(line.length)
+  for (let i = 0; i < line.length; i++) {
+    const s = path.nearest(line[i].x, line[i].z).s
+    speeds[i] = sourcedSpeedKmh(s, path.length) / 3.6
+  }
+
+  // Deceleration along the ghost polyline (positive = braking).
+  const decel: number[] = []
+  for (let i = 0; i < line.length; i++) {
+    const a = line[i]
+    const b = line[(i + 1) % line.length]
+    const ds = Math.hypot(b.x - a.x, b.z - a.z)
+    const dv = speeds[(i + 1) % line.length] - speeds[i]
+    decel.push(ds > 0.05 ? Math.max(0, -dv / ds) * speeds[i] : 0)
+  }
+
+  const zones = brakingZoneMask(decel)
   const colors: Array<[number, number, number]> = zones.map((braking) =>
     braking ? LINE_BRAKE : LINE_GREEN,
   )
