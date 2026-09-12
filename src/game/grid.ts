@@ -58,22 +58,25 @@ export function playerSlot(slots: GridSlot[]): GridSlot {
   return slot
 }
 
-/** 3/4 view from behind the last row, looking toward pole. */
+/**
+ * Close 3/4 of the front of the grid so papaya / teal / navy / red read
+ * as cars, not specks. Fog starts at 180 m; stay well inside that.
+ */
 export function gridLook(slots: GridSlot[], path: TrackPath = monzaPath): GridLook {
-  const front = slots[0]
-  const back = slots[slots.length - 1]
-  if (!front || !back) {
+  const anchor = slots[6] ?? slots[0]
+  const target = slots[2] ?? slots[0]
+  if (!anchor || !target) {
     throw new Error('Grid is empty')
   }
-  const sample = path.sampleAt(back.s)
+  const sample = path.sampleAt(anchor.s)
   const rightX = -sample.tz
   const rightZ = sample.tx
   return {
-    x: back.x + rightX * 30 - sample.tx * 36,
-    y: 20,
-    z: back.z + rightZ * 30 - sample.tz * 36,
-    lookX: front.x,
-    lookY: 0.6,
-    lookZ: front.z,
+    x: anchor.x + rightX * 12 - sample.tx * 10,
+    y: 4.2,
+    z: anchor.z + rightZ * 12 - sample.tz * 10,
+    lookX: target.x,
+    lookY: 0.55,
+    lookZ: target.z,
   }
 }
