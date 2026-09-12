@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "test": "node --test --experimental-strip-types src/physics/physics.test.ts",
+    "test": "node --test --experimental-strip-types src/physics/physics.test.ts src/landscape/landscape.test.ts",
     "lint": "oxlint",
     "preview": "vite preview",
     "postinstall": "mkdir -p public/mediapipe && rm -rf public/mediapipe/wasm && cp -R node_modules/@mediapipe/tasks-vision/wasm public/mediapipe/wasm"

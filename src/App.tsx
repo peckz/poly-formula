@@ -3,8 +3,8 @@ import * as THREE from 'three'
 import { CameraView } from './components/CameraView'
 import { TrackingHud } from './components/TrackingHud'
 import { createCarMesh } from './demo/carMesh'
-import { createEnvironment } from './demo/ground'
 import { createInputController } from './demo/input'
+import { createLandscape } from './landscape'
 import {
   DEFAULT_CAR_CONFIG,
   SURFACE_ASPHALT,
@@ -94,8 +94,8 @@ export function App() {
 
     const camera = new THREE.PerspectiveCamera(65, 1, 0.2, 2000)
 
-    // 2. Add Environment and Car Mesh
-    const env = createEnvironment(scene)
+    // 2. Add Landscape Scenery and Car Mesh
+    const landscape = createLandscape(scene)
     const carMesh = createCarMesh()
     scene.add(carMesh)
 
@@ -272,7 +272,7 @@ export function App() {
       resizeObserver.disconnect()
       window.removeEventListener('keydown', handleKeyDown)
       inputController.dispose()
-      env.dispose()
+      landscape.dispose()
       renderer.dispose()
     }
   }, [])

@@ -19,7 +19,7 @@ The camera loop does not go through React. It writes numbers into a store once p
 
 ## Now
 
-Live camera preview with an overlay, plus a HUD for head, hands, and wheel angle. Point-mass vehicle physics stub (Monza trim) with keyboard drive harness (`WASD` / arrows).
+Live camera preview with an overlay, plus a HUD for head, hands, and wheel angle. Point-mass vehicle physics stub (Monza trim) with keyboard drive harness (`WASD` / arrows). Low-poly Monza park landscape scaffold with trees, grandstands, sponsor boards, and chicane tire barriers.
 
 ## Run
 
