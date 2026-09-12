@@ -157,7 +157,7 @@ Esri shows a small marked loop inside Piazzale Parabolica that is **not** OSM `s
 - **Race control / media** as separate buildings — no OSM name.
 - **Kart circuit** as `sport=karting` — none in the bbox. Tondo is the only named infield loop.
 - **Junior raccordo, Ex Circuito Pirelli, GP raceway, pit lane** — track or historic raceway, not scenery (except Tondo as `other`).
-- **Crash fencing, tyre walls, kerbs, braking boards, marshal posts, DRS** — not sourced here.
+- **Crash fencing, tyre walls, kerbs, braking boards, marshal posts, DRS** — not sourced here. GP-lap barriers are a separate file: [`monza.barriers.json`](../../src/tracks/monza.barriers.json) / [`monza-barriers-notes.md`](monza-barriers-notes.md).
 - **Per-vertex elevation** — OSM footprints are flat; `y = 0`.
 - **Forest inner rings / holes** — v1 has no holes.
 - **Unnamed grandstands > 120 m from the centreline** and one `building=roof` 833 m away (not paddock).
