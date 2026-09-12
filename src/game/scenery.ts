@@ -12,6 +12,7 @@ type Feature = {
   heightM?: number
   widthM?: number
   colorHint?: string
+  roof?: boolean
 }
 
 const features = sceneryData.features as Feature[]
@@ -77,6 +78,124 @@ function extrudedPolygon(
   })
   geometry.rotateX(-Math.PI / 2)
   return new THREE.Mesh(geometry, lambert(color))
+}
+
+/**
+ * Grandstand as a seating wedge instead of a plain block: fit an
+ * oriented rectangle to the OSM footprint (longest edge = stand axis),
+ * then build a profile that is low at the track-facing edge and rises
+ * to full height at the back, so the seating tips toward the circuit.
+ */
+function wedgeStand(
+  feature: Feature,
+  path: TrackPath,
+  height: number,
+  color: number,
+): THREE.Group {
+  const group = new THREE.Group()
+  const ring = feature.polygon
+  if (!ring) {
+    return group
+  }
+
+  // Longest edge sets the stand axis u; v is the depth direction.
+  let ux = 1
+  let uz = 0
+  let best = 0
+  for (let i = 0; i < ring.length - 1; i++) {
+    const dx = ring[i + 1].x - ring[i].x
+    const dz = ring[i + 1].z - ring[i].z
+    const len = Math.hypot(dx, dz)
+    if (len > best) {
+      best = len
+      ux = dx / len
+      uz = dz / len
+    }
+  }
+  const vx = -uz
+  const vz = ux
+
+  // Footprint extents projected on (u, v).
+  let minU = Infinity
+  let maxU = -Infinity
+  let minV = Infinity
+  let maxV = -Infinity
+  for (const p of ring) {
+    const pu = p.x * ux + p.z * uz
+    const pv = p.x * vx + p.z * vz
+    minU = Math.min(minU, pu)
+    maxU = Math.max(maxU, pu)
+    minV = Math.min(minV, pv)
+    maxV = Math.max(maxV, pv)
+  }
+  const length = maxU - minU
+  const depth = maxV - minV
+  const centerU = (minU + maxU) / 2
+  const centerV = (minV + maxV) / 2
+  const cx = ux * centerU + vx * centerV
+  const cz = uz * centerU + vz * centerV
+
+  // Which way is the track? The wedge's low edge points there.
+  const trackPoint = path.sampleAt(path.nearest(cx, cz).s)
+  const toTrackX = trackPoint.x - cx
+  const toTrackZ = trackPoint.z - cz
+  const trackSign = Math.sign(toTrackX * vx + toTrackZ * vz) || 1
+
+  // Cross-section in (depth, height): front wall low at the track edge,
+  // seating slope up to a tall back wall.
+  const frontWall = Math.max(1.2, height * 0.15)
+  const shape = new THREE.Shape()
+  shape.moveTo(-depth / 2, 0)
+  shape.lineTo(depth / 2, 0)
+  shape.lineTo(depth / 2, height)
+  shape.lineTo(-depth / 2 + depth * 0.08, frontWall)
+  shape.lineTo(-depth / 2, frontWall)
+  shape.closePath()
+
+  const geometry = new THREE.ExtrudeGeometry(shape, {
+    depth: length,
+    bevelEnabled: false,
+  })
+  // Shape plane (x=depth, y=height), extrusion z=length; center the length.
+  geometry.translate(0, 0, -length / 2)
+  const wedge = new THREE.Mesh(geometry, lambert(color))
+
+  // (wx, wz) points toward the track; the wedge's low edge sits at
+  // local -x, so local +x must map to (-wx, -wz). rotateY(theta) sends
+  // +x to (cos theta, 0, -sin theta) => theta = atan2(wz, -wx).
+  const wx = vx * trackSign
+  const wz = vz * trackSign
+  const yaw = Math.atan2(wz, -wx)
+  wedge.rotation.y = yaw
+  wedge.position.set(cx, 0, cz)
+  group.add(wedge)
+
+  // Covered stands get a flat roof on posts over the seating.
+  if (feature.roof || height >= 10) {
+    const roof = new THREE.Mesh(
+      new THREE.BoxGeometry(depth * 0.95, 0.6, length + 2),
+      lambert(0xdfe0e2),
+    )
+    roof.position.set(cx, height + 2, cz)
+    roof.rotation.y = yaw
+    group.add(roof)
+
+    // Posts at the track-facing corners, where the wall is low.
+    for (const end of [-1, 1]) {
+      const post = new THREE.Mesh(
+        new THREE.BoxGeometry(0.5, height + 2, 0.5),
+        lambert(0xb9bcc0),
+      )
+      const px =
+        cx + wx * (depth / 2 - 0.5) + ux * end * (length / 2 - 0.5)
+      const pz =
+        cz + wz * (depth / 2 - 0.5) + uz * end * (length / 2 - 0.5)
+      post.position.set(px, (height + 2) / 2, pz)
+      group.add(post)
+    }
+  }
+
+  return group
 }
 
 function flatPolygon(ring: Vertex[], y: number, color: number): THREE.Mesh {
@@ -379,7 +498,13 @@ export function buildScenery(path: TrackPath): THREE.Group {
     const color = featureColor(feature)
 
     switch (feature.kind) {
-      case 'grandstand':
+      case 'grandstand': {
+        if (feature.polygon) {
+          const height = feature.heightM ?? DEFAULTS.grandstand.height
+          group.add(wedgeStand(feature, path, height, color))
+        }
+        break
+      }
       case 'pit-building':
       case 'building': {
         if (feature.polygon) {
