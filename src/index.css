@@ -160,6 +160,37 @@ body,
   text-transform: uppercase;
 }
 
+.track-view-tabs {
+  display: flex;
+  gap: 6px;
+  margin-left: 6px;
+}
+
+.track-tab-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #c9d1d9;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font: 11px ui-monospace, monospace;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.track-tab-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.track-tab-btn.active {
+  background: #dc143c;
+  border-color: #ff4d4d;
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(220, 20, 60, 0.5);
+}
+
+
 /* Speedometer & Pedals (Bottom Right) */
 .hud-cluster {
   position: absolute;

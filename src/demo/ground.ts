@@ -1,117 +1,51 @@
 import * as THREE from 'three'
+import { createMonzaTrackMeshGroup, monzaTrack } from '../tracks/monza'
 
 /**
- * Creates the environment ground: asphalt plane with high-contrast grid,
- * distance markers, and visual reference poles.
+ * Creates the environment: Monza GP circuit ribbon, grass ground terrain,
+ * ambient & sun lighting.
  */
 export function createEnvironment(scene: THREE.Scene): { dispose: () => void } {
   const disposables: Array<{ dispose: () => void }> = []
 
-  // 1. Procedural Asphalt Checkerboard/Grid Canvas Texture
-  const canvas = document.createElement('canvas')
-  canvas.width = 512
-  canvas.height = 512
-  const ctx = canvas.getContext('2d')!
-
-  // Base asphalt dark grey
-  ctx.fillStyle = '#1e2229'
-  ctx.fillRect(0, 0, 512, 512)
-
-  // Inner tile
-  ctx.fillStyle = '#232832'
-  ctx.fillRect(4, 4, 248, 248)
-  ctx.fillRect(260, 260, 248, 248)
-
-  // Grid line accents
-  ctx.strokeStyle = '#2f3747'
-  ctx.lineWidth = 4
-  ctx.strokeRect(2, 2, 508, 508)
-
-  const groundTexture = new THREE.CanvasTexture(canvas)
-  groundTexture.wrapS = THREE.RepeatWrapping
-  groundTexture.wrapT = THREE.RepeatWrapping
-  // 1 tile = 10 metres, so repeat across 4000m = 400
-  groundTexture.repeat.set(400, 400)
-  groundTexture.anisotropy = 8
-
-  const groundGeom = new THREE.PlaneGeometry(4000, 4000)
+  // 1. Surrounding ground terrain (large flat plane for Monza park backdrop)
+  const groundGeom = new THREE.PlaneGeometry(6000, 6000)
   const groundMat = new THREE.MeshStandardMaterial({
-    map: groundTexture,
-    roughness: 0.85,
-    metalness: 0.1,
+    color: 0x182c18, // Monza park green
+    roughness: 0.95,
+    metalness: 0.0,
   })
   const groundMesh = new THREE.Mesh(groundGeom, groundMat)
   groundMesh.rotation.x = -Math.PI / 2
-  groundMesh.position.y = 0
+  groundMesh.position.set(440, -0.05, -550)
   groundMesh.receiveShadow = true
   scene.add(groundMesh)
-  disposables.push(groundGeom, groundMat, groundTexture)
+  disposables.push(groundGeom, groundMat)
 
-  // 2. Center Runway / Straight line markings (North-South main straight)
-  const runwayGeom = new THREE.PlaneGeometry(24, 4000)
-  const runwayMat = new THREE.MeshStandardMaterial({
-    color: 0x181c22,
-    roughness: 0.8,
+  // 2. Monza Track Meshes (Asphalt ribbon, F1 kerbs, aprons, start/finish line, corner markers)
+  const trackGroup = createMonzaTrackMeshGroup(monzaTrack, {
+    showApron: true,
+    showKerbs: true,
+    showCenterline: false,
+    showCornerMarkers: true,
   })
-  const runwayMesh = new THREE.Mesh(runwayGeom, runwayMat)
-  runwayMesh.rotation.x = -Math.PI / 2
-  runwayMesh.position.y = 0.01
-  scene.add(runwayMesh)
-  disposables.push(runwayGeom, runwayMat)
+  scene.add(trackGroup)
 
-  // Distance marker lines every 50m along main straight
-  const lineGeom = new THREE.PlaneGeometry(20, 1.0)
-  const lineMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.7 })
-  const lineInstanced = new THREE.InstancedMesh(lineGeom, lineMat, 80)
-  lineInstanced.rotation.x = -Math.PI / 2
-  const dummy = new THREE.Object3D()
-  for (let i = 0; i < 80; i++) {
-    const z = -2000 + i * 50
-    dummy.position.set(0, z, 0.02)
-    dummy.updateMatrix()
-    lineInstanced.setMatrixAt(i, dummy.matrix)
-  }
-  lineInstanced.instanceMatrix.needsUpdate = true
-  scene.add(lineInstanced)
-  disposables.push(lineGeom, lineMat, lineInstanced)
-
-  // 3. Grid Helper overlay for immediate spatial feedback
-  const gridHelper = new THREE.GridHelper(4000, 400, 0x00f0ff, 0x2a364a)
-  gridHelper.position.y = 0.03
-  scene.add(gridHelper)
-  disposables.push(gridHelper.geometry, gridHelper.material as THREE.Material)
-
-  // 4. Perimeter marker cones/pillars to provide parallax depth
-  const poleGeom = new THREE.CylinderGeometry(0.2, 0.2, 3.5, 8)
-  const poleMat = new THREE.MeshStandardMaterial({ color: 0xff6600, roughness: 0.4 })
-  const poleCount = 60
-  const poleInstanced = new THREE.InstancedMesh(poleGeom, poleMat, poleCount)
-  for (let i = 0; i < poleCount; i++) {
-    const z = -1500 + i * 50
-    const side = i % 2 === 0 ? -14 : 14
-    dummy.position.set(side, 1.75, z)
-    dummy.updateMatrix()
-    poleInstanced.setMatrixAt(i, dummy.matrix)
-  }
-  poleInstanced.instanceMatrix.needsUpdate = true
-  scene.add(poleInstanced)
-  disposables.push(poleGeom, poleMat, poleInstanced)
-
-  // 5. Lighting
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.8)
+  // 3. Lighting
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.75)
   scene.add(ambientLight)
 
-  const dirLight = new THREE.DirectionalLight(0xfffaed, 1.8)
-  dirLight.position.set(40, 80, 50)
+  const dirLight = new THREE.DirectionalLight(0xfffaed, 1.4)
+  dirLight.position.set(400, 1000, 300)
   dirLight.castShadow = true
   dirLight.shadow.mapSize.width = 2048
   dirLight.shadow.mapSize.height = 2048
   dirLight.shadow.camera.near = 10
-  dirLight.shadow.camera.far = 200
-  dirLight.shadow.camera.left = -50
-  dirLight.shadow.camera.right = 50
-  dirLight.shadow.camera.top = 50
-  dirLight.shadow.camera.bottom = -50
+  dirLight.shadow.camera.far = 2500
+  dirLight.shadow.camera.left = -600
+  dirLight.shadow.camera.right = 600
+  dirLight.shadow.camera.top = 600
+  dirLight.shadow.camera.bottom = -600
   scene.add(dirLight)
 
   return {
@@ -121,6 +55,18 @@ export function createEnvironment(scene: THREE.Scene): { dispose: () => void } {
           item.dispose()
         }
       }
+      trackGroup.traverse((obj) => {
+        if (obj instanceof THREE.Mesh || obj instanceof THREE.Line) {
+          obj.geometry.dispose()
+          if (Array.isArray(obj.material)) {
+            for (const mat of obj.material) {
+              mat.dispose()
+            }
+          } else {
+            obj.material.dispose()
+          }
+        }
+      })
     },
   }
 }

@@ -21,8 +21,31 @@ import type {
   SurfaceConfig,
 } from './physics/types'
 
-type CameraMode = 'chase' | 'topDown'
+export type CameraMode =
+  | 'chase'
+  | 'topDown'
+  | 'monzaFull'
+  | 'monzaRettifilo'
+  | 'monzaParabolica'
+
 type SurfaceName = 'asphalt' | 'gravel' | 'wet'
+
+function parseHashCameraMode(): CameraMode {
+  const hash = window.location.hash.toLowerCase().replace(/^#/, '')
+  if (hash === 'full' || hash === 'monza-full' || hash === '1') {
+    return 'monzaFull'
+  }
+  if (hash === 'rettifilo' || hash === 't1' || hash === '2') {
+    return 'monzaRettifilo'
+  }
+  if (hash === 'parabolica' || hash === 't11' || hash === '3') {
+    return 'monzaParabolica'
+  }
+  if (hash === 'topdown' || hash === 'top-down') {
+    return 'topDown'
+  }
+  return 'chase'
+}
 
 export function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -32,7 +55,7 @@ export function App() {
     ...DEFAULT_CAR_CONFIG,
   })
   const [surfaceName, setSurfaceName] = useState<SurfaceName>('asphalt')
-  const [cameraMode, setCameraMode] = useState<CameraMode>('chase')
+  const [cameraMode, setCameraMode] = useState<CameraMode>(parseHashCameraMode)
   const [showTuning, setShowTuning] = useState(false)
   const [showCameraTracking, setShowCameraTracking] = useState(true)
 
@@ -73,6 +96,16 @@ export function App() {
   }, [carConfig, activeSurface, cameraMode])
 
   useEffect(() => {
+    const handleHashChange = () => {
+      setCameraMode(parseHashCameraMode())
+    }
+    window.addEventListener('hashchange', handleHashChange)
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange)
+    }
+  }, [])
+
+  useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) {
       return
@@ -83,6 +116,7 @@ export function App() {
       canvas,
       antialias: true,
       powerPreference: 'high-performance',
+      preserveDrawingBuffer: true,
     })
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     renderer.shadowMap.enabled = true
@@ -90,11 +124,13 @@ export function App() {
 
     const scene = new THREE.Scene()
     scene.background = new THREE.Color(0x0d1117)
-    scene.fog = new THREE.FogExp2(0x0d1117, 0.0018)
+    // Keep fog light so top-down view across 2000m has full clarity
+    scene.fog = new THREE.FogExp2(0x0d1117, 0.0001)
 
-    const camera = new THREE.PerspectiveCamera(65, 1, 0.2, 2000)
+    const persCamera = new THREE.PerspectiveCamera(65, 1, 0.2, 5000)
+    const orthoCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 1, 10000)
 
-    // 2. Add Environment and Car Mesh
+    // 2. Add Environment (Monza Track Ribbon + Ground) and Car Mesh
     const env = createEnvironment(scene)
     const carMesh = createCarMesh()
     scene.add(carMesh)
@@ -113,21 +149,22 @@ export function App() {
 
     // Responsive Canvas Resize
     const resize = () => {
-      const width = canvas.clientWidth
-      const height = canvas.clientHeight
+      const width = canvas.clientWidth || 1920
+      const height = canvas.clientHeight || 1080
       if (width === 0 || height === 0) {
         return
       }
+      const aspect = width / height
       renderer.setSize(width, height, false)
-      camera.aspect = width / height
-      camera.updateProjectionMatrix()
+      persCamera.aspect = aspect
+      persCamera.updateProjectionMatrix()
     }
 
     const resizeObserver = new ResizeObserver(resize)
     resizeObserver.observe(canvas)
     resize()
 
-    // 4. Key listener for shortcut toggles: [C] Camera, [G] Surface, [T] Tracking UI
+    // 4. Key listener for shortcut toggles: [C] Camera, [G] Surface, [T] Tracking UI, [1-4] Track views
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement) {
         return
@@ -146,6 +183,14 @@ export function App() {
         })
       } else if (e.code === 'KeyT') {
         setShowCameraTracking((prev) => !prev)
+      } else if (e.key === '1') {
+        window.location.hash = 'full'
+      } else if (e.key === '2') {
+        window.location.hash = 'rettifilo'
+      } else if (e.key === '3') {
+        window.location.hash = 'parabolica'
+      } else if (e.key === '4') {
+        window.location.hash = 'chase'
       }
     }
     window.addEventListener('keydown', handleKeyDown)
@@ -186,16 +231,69 @@ export function App() {
       carMesh.position.set(carState.position.x, 0, carState.position.z)
       carMesh.rotation.y = carState.heading
 
-      // Camera Position & Tracking
-      const sinH = Math.sin(carState.heading)
-      const cosH = Math.cos(carState.heading)
-      const fwdX = sinH
-      const fwdZ = -cosH
+      // Camera Positioning based on active mode
+      const width = canvas.clientWidth || 1920
+      const height = canvas.clientHeight || 1080
+      const aspect = width / Math.max(height, 1)
 
-      if (cameraModeRef.current === 'chase') {
-        // Smooth dynamic chase camera behind the car
+      const mode = cameraModeRef.current
+      let activeCam: THREE.Camera = persCamera
+
+      if (mode === 'monzaFull') {
+        // Whole circuit top-down orthographic view
+        const viewHeight = 1750
+        const viewWidth = viewHeight * aspect
+        orthoCamera.left = -viewWidth / 2
+        orthoCamera.right = viewWidth / 2
+        orthoCamera.top = viewHeight / 2
+        orthoCamera.bottom = -viewHeight / 2
+        orthoCamera.position.set(440, 2000, -555)
+        orthoCamera.lookAt(440, 0, -555)
+        orthoCamera.updateProjectionMatrix()
+        activeCam = orthoCamera
+      } else if (mode === 'monzaRettifilo') {
+        // Zoomed top-down on Variante del Rettifilo (T1-T2)
+        const viewHeight = 220
+        const viewWidth = viewHeight * aspect
+        orthoCamera.left = -viewWidth / 2
+        orthoCamera.right = viewWidth / 2
+        orthoCamera.top = viewHeight / 2
+        orthoCamera.bottom = -viewHeight / 2
+        orthoCamera.position.set(22, 1000, -1070)
+        orthoCamera.lookAt(22, 0, -1070)
+        orthoCamera.updateProjectionMatrix()
+        activeCam = orthoCamera
+      } else if (mode === 'monzaParabolica') {
+        // Zoomed top-down on Curva Parabolica / Alboreto (T11)
+        const viewHeight = 460
+        const viewWidth = viewHeight * aspect
+        orthoCamera.left = -viewWidth / 2
+        orthoCamera.right = viewWidth / 2
+        orthoCamera.top = viewHeight / 2
+        orthoCamera.bottom = -viewHeight / 2
+        orthoCamera.position.set(-85, 1000, 70)
+        orthoCamera.lookAt(-85, 0, 70)
+        orthoCamera.updateProjectionMatrix()
+        activeCam = orthoCamera
+      } else if (mode === 'topDown') {
+        // Dynamic Car Top-Down Bird's Eye View
+        const topHeight = 60.0
+        persCamera.position.set(
+          carState.position.x,
+          topHeight,
+          carState.position.z + 0.1,
+        )
+        persCamera.lookAt(carState.position.x, 0, carState.position.z)
+        activeCam = persCamera
+      } else {
+        // Dynamic Chase camera behind car
+        const sinH = Math.sin(carState.heading)
+        const cosH = Math.cos(carState.heading)
+        const fwdX = sinH
+        const fwdZ = -cosH
+
         const speedRatio = Math.min(carState.speed / 80, 1.0)
-        const chaseDist = 8.0 + speedRatio * 3.0 // camera pulls back slightly at 300+ km/h
+        const chaseDist = 8.0 + speedRatio * 3.0 // camera pulls back slightly at high speed
         const chaseHeight = 2.8 + speedRatio * 0.8
 
         const targetCamX = carState.position.x - fwdX * chaseDist
@@ -207,9 +305,9 @@ export function App() {
         cameraCurrentPos.y += (targetCamY - cameraCurrentPos.y) * lerpFactor
         cameraCurrentPos.z += (targetCamZ - cameraCurrentPos.z) * lerpFactor
 
-        camera.position.copy(cameraCurrentPos)
+        persCamera.position.copy(cameraCurrentPos)
 
-        // Look slightly ahead of the car nose
+        // Look slightly ahead of car nose
         const lookAheadDist = 6.0 + speedRatio * 8.0
         const targetLookX = carState.position.x + fwdX * lookAheadDist
         const targetLookZ = carState.position.z + fwdZ * lookAheadDist
@@ -222,19 +320,11 @@ export function App() {
         cameraTargetLookAt.z +=
           (targetLookZ - cameraTargetLookAt.z) * lerpFactor
 
-        camera.lookAt(cameraTargetLookAt)
-      } else {
-        // Top-Down Bird's Eye View
-        const topHeight = 55.0
-        camera.position.set(
-          carState.position.x,
-          topHeight,
-          carState.position.z + 0.1,
-        )
-        camera.lookAt(carState.position.x, 0, carState.position.z)
+        persCamera.lookAt(cameraTargetLookAt)
+        activeCam = persCamera
       }
 
-      renderer.render(scene, camera)
+      renderer.render(scene, activeCam)
 
       // Throttle HUD updates to ~30 fps for smooth DOM performance
       hudUpdateTimer += deltaSeconds
@@ -277,6 +367,11 @@ export function App() {
     }
   }, [])
 
+  const handleSelectCameraMode = (mode: CameraMode, hash: string) => {
+    setCameraMode(mode)
+    window.location.hash = hash
+  }
+
   return (
     <div className="game-container">
       <canvas ref={canvasRef} className="scene-canvas" />
@@ -289,10 +384,44 @@ export function App() {
         </>
       )}
 
-      {/* Header Info */}
+      {/* Header Info & View Mode Bar */}
       <div className="hud-panel hud-header">
         <h1 className="hud-title">Poly Formula</h1>
-        <span className="hud-badge">Physics v1 (Monza Trim)</span>
+        <span className="hud-badge">Monza GP &bull; Physics v1</span>
+        <div className="track-view-tabs">
+          <button
+            type="button"
+            className={`track-tab-btn ${cameraMode === 'chase' ? 'active' : ''}`}
+            onClick={() => handleSelectCameraMode('chase', 'chase')}
+            title="Drive Chase Cam (Key: C / 4)"
+          >
+            Chase [4]
+          </button>
+          <button
+            type="button"
+            className={`track-tab-btn ${cameraMode === 'monzaFull' ? 'active' : ''}`}
+            onClick={() => handleSelectCameraMode('monzaFull', 'full')}
+            title="Full Circuit Top-Down (Key: 1)"
+          >
+            Full Track [1]
+          </button>
+          <button
+            type="button"
+            className={`track-tab-btn ${cameraMode === 'monzaRettifilo' ? 'active' : ''}`}
+            onClick={() => handleSelectCameraMode('monzaRettifilo', 'rettifilo')}
+            title="Variante del Rettifilo T1-T2 (Key: 2)"
+          >
+            Rettifilo [2]
+          </button>
+          <button
+            type="button"
+            className={`track-tab-btn ${cameraMode === 'monzaParabolica' ? 'active' : ''}`}
+            onClick={() => handleSelectCameraMode('monzaParabolica', 'parabolica')}
+            title="Curva Parabolica T11 (Key: 3)"
+          >
+            Parabolica [3]
+          </button>
+        </div>
         <button
           className="hud-tuning-btn"
           onClick={() => setShowTuning((prev) => !prev)}
@@ -426,7 +555,7 @@ export function App() {
           <span className="hud-key">R</span> Reset Car
         </div>
         <div className="hud-control-item">
-          <span className="hud-key">C</span> Camera ({cameraMode})
+          <span className="hud-key">C / 1–4</span> Camera View
         </div>
         <div className="hud-control-item">
           <span className="hud-key">G</span> Surface ({surfaceName})
