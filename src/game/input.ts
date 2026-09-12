@@ -41,4 +41,8 @@ export class Keyboard {
   get steer(): number {
     return (this.any(LEFT_KEYS) ? 1 : 0) - (this.any(RIGHT_KEYS) ? 1 : 0)
   }
+
+  get reset(): boolean {
+    return this.pressed.has('KeyR')
+  }
 }

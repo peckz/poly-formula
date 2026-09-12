@@ -20,9 +20,17 @@ The camera loop does not go through React. It writes numbers into a store once p
 - **Driver sprite** — 5×5 atlas. Nose vs eyes/mouth picks yaw/pitch, then snaps to a cell. Overlay is counter-mirrored so left/right match
 - **Wheel sprite** — two palm centers set position, tilt, and size so the grips sit in your hands
 
+## Track data
+
+Real circuits come in as data files, researched separately (possibly by other agents) and consumed by the game as-is.
+
+- [`docs/track-format.md`](docs/track-format.md) — the shared standard: coordinate system, arc-length convention, JSON schema, acceptance checklist. Any track research must deliver this format.
+- Track files live in `src/tracks/<slug>.json`, research notes in `docs/research/<slug>-notes.md`.
+- `src/game/trackPath.ts` loads a track file and answers geometry questions (sample at arc length, nearest point, next corner); `src/game/trackModel.ts` builds the meshes from it.
+
 ## Now
 
-Live camera preview with the driver overlay, plus a HUD for head, hands, and wheel angle. The 3D scene is still a cube.
+Drivable low-poly F1 car on the real 1:1 Monza layout, built at runtime from [`src/tracks/monza.json`](src/tracks/monza.json) (OSM-sourced, 5793 m): arcade physics, chase camera, HUD with minimap and corner callouts. Keyboard (WASD/arrows) drives, `R` resets you onto the track; holding the hand wheel takes over steering with a gentle auto-throttle.
 
 ## Run
 

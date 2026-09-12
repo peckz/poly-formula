@@ -5,6 +5,7 @@ import { Keyboard } from '../game/input'
 import { CarSim } from '../game/sim'
 import { raceStore } from '../game/store'
 import { buildTrack } from '../game/trackModel'
+import { monzaPath } from '../game/trackPath'
 import { trackingStore } from '../tracking/store'
 
 const SKY = 0xa9c3e0
@@ -70,6 +71,7 @@ export function Scene() {
     let cameraReady = false
     let previous = performance.now()
     let frame = 0
+    let resetHeld = false
 
     const animate = (now: number) => {
       frame = requestAnimationFrame(animate)
@@ -88,6 +90,12 @@ export function Scene() {
       if (usingWheel && throttle === 0 && brake === 0) {
         throttle = WHEEL_AUTO_THROTTLE
       }
+
+      if (keyboard.reset && !resetHeld) {
+        sim.resetToTrack()
+        cameraReady = false
+      }
+      resetHeld = keyboard.reset
 
       sim.step(dt, { throttle, brake, steer })
 
@@ -121,12 +129,17 @@ export function Scene() {
       camera.lookAt(cameraTarget)
 
       const speedKmh = Math.round(Math.abs(sim.speed) * 3.6)
+      const upcoming = monzaPath.nextCorner(sim.s)
       raceStore.update({
         speedKmh,
         gear: gearFor(speedKmh, sim.speed),
-        lap: sim.lap,
+        lap: Math.max(1, sim.lap),
         steerSource: usingWheel ? 'wheel' : 'keys',
         offTrack: sim.offTrack,
+        cornerName: upcoming.corner.name,
+        cornerDistM: Math.round(upcoming.distance / 10) * 10,
+        carX: Math.round(sim.x / 4) * 4,
+        carZ: Math.round(sim.z / 4) * 4,
       })
 
       renderer.render(scene, camera)

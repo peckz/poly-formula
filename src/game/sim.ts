@@ -1,4 +1,5 @@
-import { KERB_OUTER, TRACK_HALF, TRACK_LENGTH } from './trackModel'
+import { KERB_OUTER } from './trackModel'
+import { monzaPath } from './trackPath'
 
 export type SimControls = {
   /** 0..1 */
@@ -17,26 +18,52 @@ const OFF_TRACK_DRAG = 14
 const BRAKE_DECEL = 46
 const REVERSE_ACCEL = 12
 const REVERSE_MAX = 10
-const GRASS_LIMIT = 15 // walls sit at ±16
+const SPAWN_S = monzaPath.length - 60 // on the grid, just before the line
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value))
 }
 
+/** Heading so that the sim's forward (-sin h, -cos h) matches a tangent. */
+function headingFromTangent(tx: number, tz: number) {
+  return Math.atan2(-tx, -tz)
+}
+
 /**
- * Arcade point-mass car on the straight. World: x lateral, z along the
- * track; heading 0 faces -z and positive heading turns left.
+ * Arcade point-mass car, free in the x/z plane; the track path only
+ * provides off-track detection and lap progress. Heading 0 faces -z and
+ * positive heading turns left.
  */
 export class CarSim {
   x = 0
-  z = TRACK_HALF * 0.8
+  z = 0
   heading = 0
   speed = 0
   steer = 0
-  lap = 1
+  lap = 0
+  /** Arc length along the lap at the nearest centerline point. */
+  s = SPAWN_S
+  distFromCenter = 0
+
+  constructor() {
+    this.resetToTrack(SPAWN_S)
+  }
 
   get offTrack(): boolean {
-    return Math.abs(this.x) > KERB_OUTER
+    return this.distFromCenter > KERB_OUTER
+  }
+
+  /** Drop the car back onto the centerline, pointing down the track. */
+  resetToTrack(atS?: number) {
+    const s = atS ?? this.s
+    const sample = monzaPath.sampleAt(s)
+    this.x = sample.x
+    this.z = sample.z
+    this.heading = headingFromTangent(sample.tx, sample.tz)
+    this.speed = 0
+    this.steer = 0
+    this.s = s
+    this.distFromCenter = 0
   }
 
   step(dt: number, controls: SimControls) {
@@ -77,18 +104,18 @@ export class CarSim {
     this.x -= Math.sin(this.heading) * this.speed * dt
     this.z -= Math.cos(this.heading) * this.speed * dt
 
-    if (Math.abs(this.x) > GRASS_LIMIT) {
-      this.x = clamp(this.x, -GRASS_LIMIT, GRASS_LIMIT)
-      this.speed *= 0.985
-    }
+    const previousS = this.s
+    const nearest = monzaPath.nearest(this.x, this.z)
+    this.s = nearest.s
+    this.distFromCenter = nearest.distance
 
-    // Loop the straight so you can keep flat out forever.
-    if (this.z < -TRACK_HALF) {
-      this.z += TRACK_LENGTH
+    // Lap line crossing (with hysteresis so wandering near the line
+    // does not double count).
+    const quarter = monzaPath.length / 4
+    if (previousS > monzaPath.length - quarter && this.s < quarter) {
       this.lap += 1
-    } else if (this.z > TRACK_HALF) {
-      this.z -= TRACK_LENGTH
-      this.lap = Math.max(1, this.lap - 1)
+    } else if (this.s > monzaPath.length - quarter && previousS < quarter) {
+      this.lap = Math.max(0, this.lap - 1)
     }
   }
 }

@@ -196,6 +196,22 @@ body,
   color: #ffb347;
 }
 
+.race-hud-map {
+  display: block;
+  width: 100%;
+  height: 170px;
+  margin: 0 0 8px;
+}
+
+.race-hud-corner {
+  margin-top: 6px;
+  color: #f3f3f3;
+}
+
+.race-hud-corner span {
+  color: #999;
+}
+
 .ok {
   color: #7dff9a;
 }

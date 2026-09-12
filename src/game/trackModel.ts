@@ -1,8 +1,8 @@
 import * as THREE from 'three'
+import type { TrackPath } from './trackPath'
+import { monzaLandmarks, monzaPath } from './trackPath'
 
-export const TRACK_LENGTH = 1000
-export const TRACK_HALF = TRACK_LENGTH / 2
-export const ROAD_HALF_WIDTH = 7
+export const ROAD_HALF_WIDTH = 5.5 // published width 10-12 m
 export const KERB_OUTER = ROAD_HALF_WIDTH + 1.2
 
 const GRASS = 0x6cab51
@@ -11,6 +11,10 @@ const ASPHALT = 0x4a4a50
 const KERB_RED = 0xd23a2e
 const ORANGE = 0xf0922e
 const YELLOW = 0xe8c93e
+
+// Kerbs appear where the corner radius drops below ~1/threshold meters.
+const KERB_CURVATURE = 1 / 120
+const KERB_DILATE_POINTS = 14
 
 function lambert(color: number) {
   return new THREE.MeshLambertMaterial({ color, flatShading: true })
@@ -49,35 +53,126 @@ function checkerTexture(repeatsX: number, repeatsY: number): THREE.DataTexture {
   return texture
 }
 
-function tree(scale: number): THREE.Group {
-  const group = new THREE.Group()
-  const trunk = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.15 * scale, 0.2 * scale, scale, 5),
-    lambert(0x7a5230),
-  )
-  trunk.position.y = scale / 2
-  group.add(trunk)
-
-  const crown = new THREE.Mesh(
-    new THREE.IcosahedronGeometry(1.1 * scale, 0),
-    lambert(0x4d8f3a),
-  )
-  crown.position.y = scale * 1.5
-  group.add(crown)
-  return group
+/** Driver-right unit normal at point i (average of adjacent tangents). */
+function rightNormal(path: TrackPath, i: number): { x: number; z: number } {
+  const n = path.points.length
+  const prev = path.points[(i - 1 + n) % n]
+  const next = path.points[(i + 1) % n]
+  let dx = next.x - prev.x
+  let dz = next.z - prev.z
+  const len = Math.hypot(dx, dz)
+  if (len > 0.001) {
+    dx /= len
+    dz /= len
+  }
+  return { x: -dz, z: dx }
 }
 
-function grandstand(): THREE.Group {
+/**
+ * Triangle strip along the centerline between lateral offsets
+ * [inner, outer] (meters, positive = driver right). `runs` are point index
+ * ranges [from, to] inclusive; null means the full closed loop.
+ * UV u is arc length in meters.
+ */
+function ribbon(
+  path: TrackPath,
+  inner: number,
+  outer: number,
+  y: number,
+  runs: Array<[number, number]> | null,
+  material: THREE.Material,
+): THREE.Mesh {
+  const positions: number[] = []
+  const uvs: number[] = []
+  const indices: number[] = []
+  const n = path.points.length
+
+  const addRun = (from: number, to: number, wrap: boolean) => {
+    const base = positions.length / 3
+    const count = to - from + (wrap ? 2 : 1)
+    for (let k = 0; k < count; k++) {
+      const idx = (from + k) % n
+      const point = path.points[idx]
+      const normal = rightNormal(path, idx)
+      const u = from + k >= n ? path.length : point.s
+      positions.push(
+        point.x + normal.x * inner,
+        y,
+        point.z + normal.z * inner,
+        point.x + normal.x * outer,
+        y,
+        point.z + normal.z * outer,
+      )
+      uvs.push(u, 0, u, 1)
+      if (k > 0) {
+        const a = base + (k - 1) * 2
+        indices.push(a, a + 1, a + 2, a + 1, a + 3, a + 2)
+      }
+    }
+  }
+
+  if (runs === null) {
+    addRun(0, n - 1, true)
+  } else {
+    for (const [from, to] of runs) {
+      addRun(from, to, false)
+    }
+  }
+
+  const geometry = new THREE.BufferGeometry()
+  geometry.setAttribute(
+    'position',
+    new THREE.Float32BufferAttribute(positions, 3),
+  )
+  geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2))
+  geometry.setIndex(indices)
+  geometry.computeVertexNormals()
+  return new THREE.Mesh(geometry, material)
+}
+
+/** Point index ranges where the track is curved enough to deserve kerbs. */
+function kerbRuns(path: TrackPath): Array<[number, number]> {
+  const n = path.points.length
+  const marked = new Array<boolean>(n).fill(false)
+  for (let i = 0; i < n; i++) {
+    if (Math.abs(path.curvature[i]) > KERB_CURVATURE) {
+      for (let k = -KERB_DILATE_POINTS; k <= KERB_DILATE_POINTS; k++) {
+        marked[(i + k + n) % n] = true
+      }
+    }
+  }
+
+  const runs: Array<[number, number]> = []
+  let start = -1
+  for (let i = 0; i < n; i++) {
+    if (marked[i] && start === -1) {
+      start = i
+    }
+    if (!marked[i] && start !== -1) {
+      runs.push([start, i - 1])
+      start = -1
+    }
+  }
+  if (start !== -1) {
+    runs.push([start, n - 1])
+  }
+  return runs
+}
+
+/** Yaw that maps the local +x axis onto world direction (dx, dz). */
+function yawForX(dx: number, dz: number) {
+  return Math.atan2(-dz, dx)
+}
+
+function grandstand(length: number): THREE.Group {
   const group = new THREE.Group()
-  const length = 180
   const depth = 16
   const height = 14
 
-  // Sloped seating face with fan-color stripes, like Monza's main stand.
   const seats = new THREE.Mesh(
     new THREE.BoxGeometry(length, height, depth),
     new THREE.MeshLambertMaterial({
-      map: stripeTexture([0xdfe5ea, 0x64b5dd, 0x2c3e50, 0xdfe5ea], 36),
+      map: stripeTexture([0xdfe5ea, 0x64b5dd, 0x2c3e50, 0xdfe5ea], length / 5),
       flatShading: true,
     }),
   )
@@ -91,15 +186,6 @@ function grandstand(): THREE.Group {
   )
   roof.position.set(0, height + 2.2, -1)
   group.add(roof)
-
-  for (const side of [-1, 1]) {
-    const pillar = new THREE.Mesh(
-      new THREE.BoxGeometry(1, height + 2, 1),
-      lambert(0x8d949c),
-    )
-    pillar.position.set(side * (length / 2 - 4), (height + 2) / 2, depth / 2)
-    group.add(pillar)
-  }
 
   return group
 }
@@ -134,113 +220,203 @@ function gantry(): THREE.Group {
   return group
 }
 
-function hill(radius: number, height: number, color: number): THREE.Mesh {
-  const mesh = new THREE.Mesh(new THREE.ConeGeometry(radius, height, 6), lambert(color))
-  mesh.position.y = height / 2 - 1
-  return mesh
-}
-
-/**
- * Monza main straight, running along the z axis from -TRACK_HALF to
- * +TRACK_HALF. Start/finish gantry sits at z = 0; driving direction is -z.
- */
-export function buildTrack(): THREE.Group {
+/** The old Sopraelevata banking crossing over the track (scenery only). */
+function overpass(): THREE.Group {
   const group = new THREE.Group()
 
-  const grass = new THREE.Mesh(
-    new THREE.PlaneGeometry(700, TRACK_LENGTH + 600),
-    new THREE.MeshLambertMaterial({
-      map: (() => {
-        const texture = stripeTexture([GRASS, GRASS_DARK], 1)
-        texture.repeat.set(1, 55)
-        texture.rotation = Math.PI / 2
-        return texture
-      })(),
-    }),
+  const deck = new THREE.Mesh(
+    new THREE.BoxGeometry(56, 1.6, 16),
+    lambert(0x9b9b98),
   )
-  grass.rotation.x = -Math.PI / 2
-  grass.position.y = -0.02
-  group.add(grass)
+  deck.position.y = 8
+  group.add(deck)
 
-  const road = new THREE.Mesh(
-    new THREE.PlaneGeometry(ROAD_HALF_WIDTH * 2, TRACK_LENGTH + 200),
-    lambert(ASPHALT),
-  )
-  road.rotation.x = -Math.PI / 2
-  group.add(road)
-
-  // Kerbs: long boxes rotated so the striped U axis runs down the track.
   for (const side of [-1, 1]) {
-    const kerb = new THREE.Mesh(
-      new THREE.BoxGeometry(TRACK_LENGTH + 200, 0.1, KERB_OUTER - ROAD_HALF_WIDTH),
-      new THREE.MeshLambertMaterial({
-        map: stripeTexture([KERB_RED, 0xf0f0ec], (TRACK_LENGTH + 200) / 8),
-      }),
+    const rail = new THREE.Mesh(
+      new THREE.BoxGeometry(56, 1, 0.5),
+      lambert(0xe8e8e4),
     )
-    kerb.rotation.y = Math.PI / 2
-    kerb.position.set(side * (ROAD_HALF_WIDTH + 0.6), 0.04, 0)
-    group.add(kerb)
+    rail.position.set(0, 9.3, side * 7.5)
+    group.add(rail)
+
+    const abutment = new THREE.Mesh(
+      new THREE.BoxGeometry(18, 8, 16),
+      lambert(0x5d8f4a),
+    )
+    abutment.position.set(side * 33, 4, 0)
+    group.add(abutment)
   }
 
+  return group
+}
+
+function seededRandom(seed: number) {
+  let state = seed
+  return () => {
+    state = (state * 1664525 + 1013904223) % 4294967296
+    return state / 4294967296
+  }
+}
+
+/** Royal park forest: instanced low-poly trees kept off the asphalt. */
+function forest(path: TrackPath): THREE.Group {
+  const group = new THREE.Group()
+  const rand = seededRandom(20260912)
+
+  const matrices: THREE.Matrix4[] = []
+  const scales: number[] = []
+  const target = 340
+  for (let attempt = 0; attempt < 4000 && matrices.length < target; attempt++) {
+    const x = -120 + rand() * 1340
+    const z = -1620 + rand() * 2510
+
+    let minDist = Infinity
+    for (let i = 0; i < path.points.length; i += 5) {
+      const point = path.points[i]
+      const dist = Math.hypot(x - point.x, z - point.z)
+      if (dist < minDist) {
+        minDist = dist
+      }
+    }
+    if (minDist < 16 || minDist > 320) {
+      continue
+    }
+
+    const scale = 1.8 + rand() * 2.2
+    scales.push(scale)
+    matrices.push(
+      new THREE.Matrix4().compose(
+        new THREE.Vector3(x, 0, z),
+        new THREE.Quaternion().setFromAxisAngle(
+          new THREE.Vector3(0, 1, 0),
+          rand() * Math.PI,
+        ),
+        new THREE.Vector3(scale, scale, scale),
+      ),
+    )
+  }
+
+  const trunks = new THREE.InstancedMesh(
+    new THREE.CylinderGeometry(0.15, 0.2, 1, 5).translate(0, 0.5, 0),
+    lambert(0x7a5230),
+    matrices.length,
+  )
+  const crowns = new THREE.InstancedMesh(
+    new THREE.IcosahedronGeometry(1.1, 0).translate(0, 1.5, 0),
+    lambert(0x4d8f3a),
+    matrices.length,
+  )
+  matrices.forEach((matrix, i) => {
+    trunks.setMatrixAt(i, matrix)
+    crowns.setMatrixAt(i, matrix)
+  })
+  group.add(trunks)
+  group.add(crowns)
+  return group
+}
+
+/** Places a group at arc length s, offset laterally, facing the track. */
+function placeTrackside(
+  path: TrackPath,
+  object: THREE.Object3D,
+  s: number,
+  lateral: number,
+) {
+  const sample = path.sampleAt(s)
+  const rx = -sample.tz
+  const rz = sample.tx
+  object.position.set(sample.x + rx * lateral, 0, sample.z + rz * lateral)
+  // Face the track: local +z toward the centerline.
+  const toTrack = lateral > 0 ? -1 : 1
+  object.rotation.y = Math.atan2(rx * toTrack, rz * toTrack)
+}
+
+export function buildTrack(): THREE.Group {
+  const path = monzaPath
+  const group = new THREE.Group()
+
+  const grassTexture = stripeTexture([GRASS, GRASS_DARK], 1)
+  grassTexture.repeat.set(1, 120)
+  grassTexture.rotation = Math.PI / 2
+  const grass = new THREE.Mesh(
+    new THREE.PlaneGeometry(1500, 2700),
+    new THREE.MeshLambertMaterial({ map: grassTexture }),
+  )
+  grass.rotation.x = -Math.PI / 2
+  grass.position.set(530, -0.02, -370)
+  group.add(grass)
+
+  group.add(
+    ribbon(
+      path,
+      -ROAD_HALF_WIDTH,
+      ROAD_HALF_WIDTH,
+      0,
+      null,
+      lambert(ASPHALT),
+    ),
+  )
+
+  const kerbMaterial = new THREE.MeshLambertMaterial({
+    map: stripeTexture([KERB_RED, 0xf0f0ec], 1 / 8),
+  })
+  const runs = kerbRuns(path)
+  group.add(ribbon(path, -KERB_OUTER, -ROAD_HALF_WIDTH, 0.04, runs, kerbMaterial))
+  group.add(ribbon(path, ROAD_HALF_WIDTH, KERB_OUTER, 0.04, runs, kerbMaterial))
+
+  // Start/finish line.
+  const start = path.sampleAt(0)
   const startLine = new THREE.Mesh(
     new THREE.PlaneGeometry(ROAD_HALF_WIDTH * 2, 1.6),
     new THREE.MeshLambertMaterial({ map: checkerTexture(9, 2) }),
   )
-  startLine.rotation.x = -Math.PI / 2
-  startLine.position.set(0, 0.01, 0)
+  startLine.geometry.rotateX(-Math.PI / 2)
+  startLine.position.set(start.x, 0.01, start.z)
+  startLine.rotation.y = yawForX(-start.tz, start.tx)
   group.add(startLine)
 
-  for (const side of [-1, 1]) {
-    const wall = new THREE.Mesh(
-      new THREE.BoxGeometry(0.5, 0.9, TRACK_LENGTH + 200),
-      lambert(0xe8e8e4),
-    )
-    wall.position.set(side * 16, 0.45, 0)
-    group.add(wall)
-  }
-
   const gate = gantry()
+  gate.position.set(start.x, 0, start.z)
+  gate.rotation.y = yawForX(-start.tz, start.tx)
   group.add(gate)
 
-  const stand = grandstand()
-  stand.rotation.y = Math.PI / 2
-  stand.position.set(-38, 0, -60)
-  group.add(stand)
+  // Main grandstand on the driver's left after the line; pit building right.
+  const mainStand = grandstand(220)
+  placeTrackside(path, mainStand, 230, -34)
+  group.add(mainStand)
 
-  const standFar = grandstand()
-  standFar.rotation.y = -Math.PI / 2
-  standFar.position.set(38, 0, 140)
-  group.add(standFar)
+  const pits = new THREE.Mesh(
+    new THREE.BoxGeometry(260, 9, 18),
+    lambert(0xb9b4a6),
+  )
+  pits.position.y = 4.5
+  const pitGroup = new THREE.Group()
+  pitGroup.add(pits)
+  placeTrackside(path, pitGroup, 5793 - 180, 26)
+  group.add(pitGroup)
 
-  // Trees behind the walls, thinning out with distance.
-  for (let i = 0; i < 46; i++) {
-    const side = i % 2 === 0 ? -1 : 1
-    const z = -TRACK_HALF + (i / 46) * TRACK_LENGTH + (((i * 37) % 17) - 8)
-    const nearStand = side === -1 && z > -160 && z < 40
-    const nearStandFar = side === 1 && z > 40 && z < 240
-    if (nearStand || nearStandFar) {
+  // Smaller stands at the biggest braking points.
+  const rettifiloStand = grandstand(110)
+  placeTrackside(path, rettifiloStand, 590, 30)
+  group.add(rettifiloStand)
+
+  const parabolicaStand = grandstand(140)
+  placeTrackside(path, parabolicaStand, 4900, -32)
+  group.add(parabolicaStand)
+
+  // Sourced landmark: the old banking crosses over before Ascari.
+  for (const landmark of monzaLandmarks) {
+    if (landmark.id !== 'oval-north-underpass') {
       continue
     }
-    const item = tree(2.2 + ((i * 13) % 5) * 0.5)
-    item.position.set(side * (24 + ((i * 7) % 20)), 0, z)
-    group.add(item)
+    const bridge = overpass()
+    const sample = path.sampleAt(landmark.s)
+    bridge.position.set(sample.x, 0, sample.z)
+    bridge.rotation.y = yawForX(-sample.tz, sample.tx)
+    group.add(bridge)
   }
 
-  // Distant low-poly hills, mostly hidden in the fog.
-  const hillSpots: Array<{ x: number; z: number; r: number; h: number; c: number }> = [
-    { x: -180, z: -320, r: 120, h: 55, c: 0x4c8a3c },
-    { x: -240, z: 60, r: 150, h: 70, c: 0x558f43 },
-    { x: 200, z: -220, r: 130, h: 60, c: 0x4c8a3c },
-    { x: 230, z: 220, r: 160, h: 75, c: 0x5e9a4c },
-    { x: -60, z: -TRACK_HALF - 260, r: 200, h: 80, c: 0x558f43 },
-    { x: 120, z: TRACK_HALF + 280, r: 220, h: 90, c: 0x4c8a3c },
-  ]
-  for (const spot of hillSpots) {
-    const mesh = hill(spot.r, spot.h, spot.c)
-    mesh.position.x = spot.x
-    mesh.position.z = spot.z
-    group.add(mesh)
-  }
+  group.add(forest(path))
 
   return group
 }
