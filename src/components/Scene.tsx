@@ -8,6 +8,7 @@ import {
 } from '../game/driveAssist'
 import { Keyboard } from '../game/input'
 import { CarSim } from '../game/sim'
+import { entryStore } from '../entry/store'
 import { raceStore } from '../game/store'
 import { buildTrack } from '../game/trackModel'
 import { monzaPath } from '../game/trackPath'
@@ -106,12 +107,18 @@ export function Scene() {
 
       // Start on a calibrated wheel grip (or keyboard as a fallback);
       // pause when a wheel-driven session loses both hands.
+      // Stay parked until the entry screen has been dismissed so typing
+      // a nickname (WASD) cannot launch the race.
+      const entered = entryStore.entered
       if (usingWheel) {
         wheelDriven = true
       } else if (keysActive) {
         wheelDriven = false
       }
-      if (phase !== 'running') {
+      if (!entered) {
+        phase = 'waiting'
+        handsLostAt = 0
+      } else if (phase !== 'running') {
         if (usingWheel || keysActive) {
           phase = 'running'
           handsLostAt = 0
