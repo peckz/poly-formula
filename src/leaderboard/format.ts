@@ -1,5 +1,5 @@
 export const DEFAULT_TRACK_ID = 'monza'
-export const LEADERBOARD_LIMIT = 10
+export const LEADERBOARD_LIMIT = 50
 export const MIN_LAP_MS = 15_000
 export const MIN_LAP_FRACTION = 0.75
 
@@ -53,6 +53,10 @@ export function publicAvatarUrl(url: string | null | undefined): string | undefi
     return undefined
   }
   if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url
+  }
+  // Bundled driver atlases live under /sprites/… on the same origin.
+  if (url.startsWith('/')) {
     return url
   }
   return undefined

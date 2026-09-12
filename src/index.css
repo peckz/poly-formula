@@ -42,11 +42,11 @@ body,
 .tracking-hud,
 .race-pace,
 .race-map,
-.race-times-btn,
+.race-lb-btn,
 .game-overlay-card,
 .game-overlay-card *,
-.lb-overlay,
-.lb-overlay * {
+.lb-screen,
+.lb-screen * {
   border-radius: 0;
 }
 
@@ -140,7 +140,7 @@ body,
   pointer-events: none;
 }
 
-.race-times-btn {
+.race-lb-btn {
   position: absolute;
   top: var(--ui-pad);
   left: var(--ui-pad);
@@ -157,7 +157,7 @@ body,
   appearance: none;
 }
 
-.race-times-btn:focus-visible {
+.race-lb-btn:focus-visible {
   outline: 2px solid var(--ui-paper);
   outline-offset: 2px;
 }
@@ -829,24 +829,38 @@ body,
   color: #666;
 }
 
-.lb-overlay {
+.lb-screen {
   position: absolute;
   inset: 0;
   z-index: 30;
   display: grid;
-  place-items: center;
-  padding: var(--ui-pad);
-  background: rgba(26, 26, 29, 0.78);
-}
-
-.lb-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--ui-pad);
-  box-sizing: border-box;
-  width: min(420px, 100%);
   padding: var(--ui-pad);
   color: var(--ui-paper);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(169, 195, 224, 0.88) 0%,
+      rgba(169, 195, 224, 0.62) 46%,
+      rgba(108, 171, 81, 0.78) 46%,
+      rgba(108, 171, 81, 0.86) 62%,
+      rgba(42, 42, 46, 0.92) 62%,
+      rgba(26, 26, 29, 0.96) 100%
+    );
+  font:
+    14px/1.4 ui-sans-serif,
+    system-ui,
+    sans-serif;
+}
+
+.lb-panel {
+  display: grid;
+  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+  gap: var(--ui-pad);
+  box-sizing: border-box;
+  width: min(920px, 100%);
+  height: 100%;
+  margin: 0 auto;
+  padding: var(--ui-pad);
   background: var(--ui-asphalt);
   border: 2px solid var(--ui-line);
 }
@@ -858,17 +872,24 @@ body,
 
 .lb-head {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   justify-content: space-between;
   gap: var(--ui-pad);
 }
 
+.lb-head-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
 .lb-title {
   margin: 0;
-  font-size: 40px;
+  font-size: clamp(40px, 8vw, 72px);
   font-weight: 700;
   line-height: 0.92;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
@@ -877,6 +898,23 @@ body,
   color: var(--ui-muted);
   font:
     11px/1.4 ui-monospace,
+    monospace;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.lb-close {
+  flex-shrink: 0;
+}
+
+.lb-cols {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  gap: var(--ui-pad);
+  padding: 0 16px;
+  color: var(--ui-muted);
+  font:
+    11px/1.2 ui-monospace,
     monospace;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -897,18 +935,19 @@ body,
 .lb-list {
   display: flex;
   flex-direction: column;
-  gap: var(--ui-pad);
+  gap: 8px;
   margin: 0;
   padding: 0;
+  overflow: auto;
   list-style: none;
 }
 
 .lb-row {
   display: grid;
-  grid-template-columns: 32px 24px 1fr auto;
+  grid-template-columns: 48px 36px minmax(0, 1fr) auto;
   gap: var(--ui-pad);
   align-items: center;
-  padding: var(--ui-pad);
+  padding: 14px 16px;
   background: var(--ui-asphalt-mid);
 }
 
@@ -920,13 +959,14 @@ body,
 .lb-rank,
 .lb-time {
   font:
-    12px/1.2 ui-monospace,
+    14px/1.2 ui-monospace,
     monospace;
   letter-spacing: 0.08em;
 }
 
 .lb-time {
   color: var(--ui-warn);
+  font-variant-numeric: tabular-nums;
 }
 
 .lb-row.is-you .lb-time {
@@ -935,6 +975,7 @@ body,
 
 .lb-name {
   overflow: hidden;
+  font-size: 18px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-overflow: ellipsis;
@@ -944,8 +985,8 @@ body,
 
 .lb-face {
   display: block;
-  width: 24px;
-  height: 24px;
+  width: 36px;
+  height: 36px;
   object-fit: cover;
   background: var(--ui-ink);
   image-rendering: pixelated;
@@ -953,4 +994,56 @@ body,
 
 .lb-face-empty {
   background: var(--ui-line);
+}
+
+.lb-foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--ui-pad);
+}
+
+.lb-count {
+  margin: 0;
+  color: var(--ui-muted);
+  font:
+    11px/1.4 ui-monospace,
+    monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 640px) {
+  .lb-panel {
+    padding: 12px;
+  }
+
+  .lb-title {
+    font-size: 40px;
+  }
+
+  .lb-cols {
+    grid-template-columns: 40px 1fr auto;
+    padding: 0 12px;
+  }
+
+  .lb-row {
+    grid-template-columns: 40px 28px minmax(0, 1fr) auto;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .lb-face {
+    width: 28px;
+    height: 28px;
+  }
+
+  .lb-name {
+    font-size: 15px;
+  }
+
+  .lb-foot {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

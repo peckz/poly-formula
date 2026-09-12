@@ -53,12 +53,12 @@ export const RaceHud = observer(function RaceHud() {
     <>
       <button
         type="button"
-        className="race-times-btn"
+        className="race-lb-btn"
         onClick={() => {
           leaderboardStore.toggle()
         }}
       >
-        Times
+        Leaderboard
       </button>
       <aside className="race-pace">
         {attacking ? (

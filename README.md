@@ -49,11 +49,11 @@ npm run dev
 
 Allow the camera when the browser asks.
 
-## Lap times
+## Leaderboard
 
-Finish a flying lap (first start/finish crossing starts the clock; the next crossing posts the time). Open **Times** on the entry screen or the in-race chip.
+Finish a flying lap (first start/finish crossing starts the clock; the next crossing posts the time). Open **Leaderboard** on the entry screen or the in-race chip.
 
-Times sync to Convex when `VITE_CONVEX_URL` is set. Leave it empty and the board still works — it just stays in `localStorage`.
+Laps sync to Convex when `VITE_CONVEX_URL` is set. Leave it empty and the board still works — it just stays in `localStorage`.
 
 ```bash
 npx convex dev

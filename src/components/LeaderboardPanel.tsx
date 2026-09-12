@@ -1,4 +1,5 @@
 import { observer } from 'mobx-react-lite'
+import { useEffect } from 'react'
 import { entryStore } from '../entry/store'
 import {
   DEFAULT_TRACK_ID,
@@ -16,7 +17,7 @@ function sourceLine(): string {
     return 'Local only — set VITE_CONVEX_URL to sync.'
   }
   if (status === 'loading') {
-    return 'Loading times…'
+    return 'Loading leaderboard…'
   }
   if (source === 'convex') {
     return `Synced · ${DEFAULT_TRACK_ID}`
@@ -37,6 +38,22 @@ function statusClass(): string {
 
 export const LeaderboardPanel = observer(function LeaderboardPanel() {
   const { open, rows } = leaderboardStore
+
+  useEffect(() => {
+    if (!open) {
+      return
+    }
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        leaderboardStore.close()
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+    }
+  }, [open])
+
   if (!open) {
     return null
   }
@@ -44,33 +61,40 @@ export const LeaderboardPanel = observer(function LeaderboardPanel() {
   const you = entryStore.trimmedNickname
 
   return (
-    <div
-      className="lb-overlay"
-      onClick={() => {
-        leaderboardStore.close()
-      }}
-    >
-      <div
-        className="lb-card"
-        role="dialog"
-        aria-labelledby="lb-title"
-        onClick={(event) => {
-          event.stopPropagation()
-        }}
-      >
+    <div className="lb-screen" role="dialog" aria-labelledby="lb-title">
+      <div className="lb-panel">
         <div className="lb-stripe" aria-hidden="true">
           <span className="entry-brick entry-brick-red" />
           <span className="entry-brick entry-brick-white" />
           <span className="entry-brick entry-brick-mint" />
         </div>
+
         <header className="lb-head">
-          <h2 id="lb-title" className="lb-title">
-            Times
-          </h2>
-          <p className="lb-track">{DEFAULT_TRACK_ID}</p>
+          <div className="lb-head-copy">
+            <h2 id="lb-title" className="lb-title">
+              Leaderboard
+            </h2>
+            <p className="lb-track">{DEFAULT_TRACK_ID}</p>
+          </div>
+          <button
+            type="button"
+            className="entry-btn entry-btn-ghost lb-close"
+            onClick={() => {
+              leaderboardStore.close()
+            }}
+          >
+            Close
+          </button>
         </header>
+
+        <div className="lb-cols" aria-hidden="true">
+          <span>Pos</span>
+          <span>Driver</span>
+          <span>Best</span>
+        </div>
+
         {rows.length === 0 ? (
-          <p className="lb-empty">No times yet. Finish a lap.</p>
+          <p className="lb-empty">No laps yet. Finish a flying lap.</p>
         ) : (
           <ol className="lb-list">
             {rows.map((row, index) => {
@@ -84,11 +108,7 @@ export const LeaderboardPanel = observer(function LeaderboardPanel() {
                     {String(index + 1).padStart(2, '0')}
                   </span>
                   {row.avatarUrl ? (
-                    <img
-                      className="lb-face"
-                      src={row.avatarUrl}
-                      alt=""
-                    />
+                    <img className="lb-face" src={row.avatarUrl} alt="" />
                   ) : (
                     <span className="lb-face lb-face-empty" aria-hidden="true" />
                   )}
@@ -99,18 +119,17 @@ export const LeaderboardPanel = observer(function LeaderboardPanel() {
             })}
           </ol>
         )}
-        <p className={statusClass()} role="status">
-          {sourceLine()}
-        </p>
-        <button
-          type="button"
-          className="entry-btn entry-btn-ghost"
-          onClick={() => {
-            leaderboardStore.close()
-          }}
-        >
-          Close
-        </button>
+
+        <footer className="lb-foot">
+          <p className={statusClass()} role="status">
+            {sourceLine()}
+          </p>
+          <p className="lb-count">
+            {rows.length === 0
+              ? 'Empty board'
+              : `${rows.length} driver${rows.length === 1 ? '' : 's'}`}
+          </p>
+        </footer>
       </div>
     </div>
   )

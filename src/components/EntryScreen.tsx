@@ -210,7 +210,7 @@ export const EntryScreen = observer(function EntryScreen() {
             leaderboardStore.toggle()
           }}
         >
-          Times
+          Leaderboard
         </button>
 
         <p className={statusClass()} role="status">

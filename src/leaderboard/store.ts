@@ -99,7 +99,7 @@ class LeaderboardStore {
           this.rows = bestLaps(readLocal(), LEADERBOARD_LIMIT)
           this.source = 'local'
           this.status = 'ready'
-          this.lastError = 'Convex unavailable. Showing local times.'
+          this.lastError = 'Convex unavailable. Showing local board.'
         }
       })
     } catch (caught) {
@@ -120,12 +120,13 @@ class LeaderboardStore {
       return
     }
 
+    const avatarUrl = publicAvatarUrl(entryStore.previewAtlasUrl)
     const record: LapRecord = {
       id: `local-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       nickname,
       lapMs,
       trackId: DEFAULT_TRACK_ID,
-      avatarUrl: entryStore.avatarUrl ?? undefined,
+      avatarUrl,
       createdAt: Date.now(),
     }
 
@@ -143,7 +144,7 @@ class LeaderboardStore {
         nickname,
         lapMs,
         trackId: DEFAULT_TRACK_ID,
-        avatarUrl: publicAvatarUrl(entryStore.avatarUrl),
+        avatarUrl,
       })
       await this.refresh()
     } catch (caught) {

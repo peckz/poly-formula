@@ -52,7 +52,8 @@ export const submit = mutationGeneric({
     const avatarUrl =
       typeof args.avatarUrl === 'string' &&
       (args.avatarUrl.startsWith('http://') ||
-        args.avatarUrl.startsWith('https://'))
+        args.avatarUrl.startsWith('https://') ||
+        args.avatarUrl.startsWith('/'))
         ? args.avatarUrl
         : undefined
 
@@ -73,7 +74,7 @@ export const listBest = queryGeneric({
   },
   handler: async (ctx, args) => {
     const trackId = (args.trackId ?? DEFAULT_TRACK).trim() || DEFAULT_TRACK
-    const limit = Math.min(Math.max(args.limit ?? 10, 1), 50)
+    const limit = Math.min(Math.max(args.limit ?? 50, 1), 50)
     const rows = await ctx.db
       .query('laps')
       .withIndex('by_track_and_time', (q) => q.eq('trackId', trackId))
