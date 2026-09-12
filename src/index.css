@@ -70,6 +70,10 @@ body,
   height: 100%;
 }
 
+.camera-feed video {
+  opacity: 0.3;
+}
+
 .camera-feed canvas {
   pointer-events: none;
 }
