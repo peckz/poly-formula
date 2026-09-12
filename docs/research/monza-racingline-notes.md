@@ -6,12 +6,15 @@ Prompt: [`docs/research/monza-racingline-prompt.md`](monza-racingline-prompt.md)
 
 `src/tracks/monza.speeds.json` does **not** exist. This line is locked to a dry qualifying push lap so a later speed profile can share the same reference. No speeds are stored here.
 
-**Correction (PR #7 review).** The first revision sat on the **right** of the main straight into Rettifilo (`turnIn +4.60`). That is the inside of a right-hander. The line is now **left-side from Parabolica exit through T1 turn-in** (negative `offsetM` until the car darts to the right kerb). Other corners were already outside-in and were not flipped.
+**Correction (PR #7 review, T1).** The first revision sat on the **right** of the main straight into Rettifilo (`turnIn +4.60`). That is the inside of a right-hander. The line is now **left-side from Parabolica exit through T1 turn-in** (negative `offsetM` until the car darts to the right kerb).
+
+**Correction (this PR, Parabolica).** PR #10 merged only the T1 left-side fix. PR #7 still labelled the racing apex `s = 5065`, `+4.20` and started coming inside from `s ≈ 4825` (already mid-track by the 90° mark). That is an **early** line. On Norris’s 2024 pole the car is still ~329 km/h with almost no yaw at the geometric pinch (`s = 4864`). FastF1 on that lap: lift `T+69.2`, brake-on `T+69.5` / 307 km/h, min **215 km/h at `T+71.5`** (~130 m later) — the late right clip. The old `5065` station is mid trail-brake (`offsetM ≈ −0.5` now). Apex moved to **`s = 5145`, `+4.40`, not on the painted kerb**. Confidence on Parabolica metres is **medium** (see below). Rettifilo / Lesmo / Ascari were not flipped.
 
 Validation plots (same `x`/`−z` frame as the scenery overview):
 
 - [`monza-racingline-overview.png`](monza-racingline-overview.png) — full lap + Rettifilo / Roggia / Ascari / Parabolica insets
 - [`monza-racingline-t1-left-approach.png`](monza-racingline-t1-left-approach.png) — pit-straight + Rettifilo plan view and `offsetM` vs `s` (left-side approach check)
+- [`monza-racingline-parabolica.png`](monza-racingline-parabolica.png) — Parabolica plan + `offsetM` vs `s` (late-apex check)
 
 ## Reference lap
 
@@ -34,7 +37,7 @@ Reused from `monza.json`. No second origin, no ENU re-fit, no GPS polyline.
 | S/F centerline | `(x, z) = (0.000, 0.000)` | offset `0` lands on `(0.000, 0.000)`; racing-line sample at `s = 0` is `offsetM = −4.30` → `(−4.300, 0.000)` | Frame origin holds. Line stays left on the pit straight (T1 outside). |
 | T1 / Rettifilo | `s = 622.279`, centreline `(−15.999, −621.625)` | same station; `offsetM = +5.85` along the local right-normal `(0.790, 0.613)` → racing-line `(−11.377, −618.039)` | Reconstruct error **0.5 mm**. |
 
-Right-normal rule (same as `src/game/racingLine.ts`): unit tangent `(tx, tz)`, right = `(−tz, tx)`, so racing direction `(0, −1)` maps to `+x`. Every sample is `centerline(s) + offsetM * rightNormal`. Spot checks at `s = 0, 622.279, 1838.272, 2255, 3650.29, 5065, 5793.44` all reconstruct within **1 mm**.
+Right-normal rule (same as `src/game/racingLine.ts`): unit tangent `(tx, tz)`, right = `(−tz, tx)`, so racing direction `(0, −1)` maps to `+x`. Every sample is `centerline(s) + offsetM * rightNormal`. Spot checks at `s = 0, 622.279, 1838.272, 2255, 3650.29, 5145, 5793.44` reconstruct within **1 mm** on unchanged stations; new Parabolica samples within **1 mm** of the neighbour-normal projection.
 
 Positive `offsetM` = driver’s right. Published asphalt width 10–12 m ([monzanet](https://www.monzanet.it/en/circuit/)); conversion uses local width **≈ 11 m** (half-width 5.5 m). `|offsetM| ≤ 5.5` is asphalt; `5.5–6.2` is a flagged kerb ride; hard clamp 6.5. **No sample was clipped.** Max `|offsetM|` = **5.95 m** (Roggia T4 left kerb).
 
@@ -60,7 +63,7 @@ Timestamps below are **flying-lap time from S/F on the 1:19.327 lap** (`T+`), no
 | Lesmo 2 | 31–34 s | Still from the left; later / tighter; painted inside kerb; full left exit |
 | Serraglio | 36–38 s | Almost no steer; line barely moves |
 | Ascari | 42–47 s | From the **right**; T8 not a full sausage attack; T9 and T10 take the flattened 2024 kerbs; exit uses the right edge |
-| Parabolica | 57–68 s | Brakes on the **left**; long wait; late inside-right; unwind to the left white line |
+| Parabolica | **69.2–74.0 s** (FastF1 on this lap; see corner notes) | Still full left / ~329 km/h through the geometric pinch; lift `T+69.2`; brake-on `T+69.5`; min 215 at `T+71.5` (late right clip, **not** on the painted kerb); unwind left. F1.com / YouTube onboard could **not** be frame-scrubbed in this environment (player / bot-check). Times are official-timing car_data on the pole lap, not a video-file clock. |
 
 ### 2. Official circuit / FIA maps
 
@@ -83,12 +86,12 @@ Esri World Imagery was already used (not traced) in [`monza-scenery-notes.md`](m
 
 [Track Titan F1 2021 sector guides](https://www.tracktitan.io/post/monza-track-guide-sector-1-f1-2021) ([sector 2](https://www.tracktitan.io/post/monza-track-guide-sector-2-f1-2021), [sector 3](https://www.tracktitan.io/post/monza-track-guide-sector-3-f1-2021)) — **sim-estimated**, used only where they match onboard/trackside. Sector 1: “use the full width of the track to reduce the angle into Turn 1” is the **left / outside** setup (agrees with Coach Dave). Called out when they do not match: Biassono “inside white line”; T1 “straddle the sausage in the game, not so much in real life.” Sector 3’s “ease right toward the finish line” is a last-metre chord to the timing beam, **not** the T1 braking lane.
 
-No iRacing / ACC GPS, no FastF1 car-data polylines, no team telemetry dumps.
+No iRacing / ACC GPS, no FastF1 **position** polylines, no team telemetry dumps. FastF1 **car_data** (speed / brake / throttle / time) for Norris’s 1:19.327 Q3 lap was used only to timestamp Parabolica events. Those times are facts; they are not a redistributed GPS trace.
 
 ## Method
 
 1. Lock Norris 2024 Q3 pole as the reference lap.
-2. For each named corner, scrub the onboard against the monzanet / Wurz / Palmer / 2024 trackside notes until turn-in, apex(es) and exit are clear. Estimate lane as a fraction of the ~11 m asphalt, then convert to `offsetM`. Kerb rides that are obviously on paint/sausage are set in `5.6–6.2` with `onKerb: true`.
+2. For each named corner, scrub the onboard against the monzanet / Wurz / Palmer / 2024 trackside notes until turn-in, apex(es) and exit are clear. Estimate lane as a fraction of the ~11 m asphalt, then convert to `offsetM`. Kerb rides that are obviously on paint/sausage are set in `5.6–6.2` with `onKerb: true`. Parabolica stations additionally use FastF1 car_data times on the pole lap (the onboard file could not be frame-scrubbed here).
 3. Place keyframes on our centreline `s` (copied corner `s` from `monza.json`; racing apex may be *later* than the format-v1 heading peak — see Parabolica and Lesmo 1).
 4. Interpolate: cosine ease on straights, linear in the chicanes so the direction change stays sharp. Densify to ≤ 4 m on straights and ≤ 1.5 m through Rettifilo, Roggia, both Lesmos, Ascari and Parabolica. Force a sample on every `turnIn` / `apex` / `apex2` / `apex3` / `exit` station.
 5. Project: `x, z = centerline(s) + offsetM * rightNormal`. Close the loop at `s = 5793.44` (`metrics.centerlineLengthM`).
@@ -157,18 +160,31 @@ OSM splits Vialone + connector + Variante Ascari; one corner record covers the L
 
 2024 trackside (Motorsport.com) overrules older “attack every sausage” advice: stay **wider on the first left**, ride the new flat kerbs on T9/T10, exit wide right. Track Titan sector 3 agrees on T9 full kerb, T10 “don’t take much inside kerb,” exit as much as needed for full throttle. Extra field `apex3` is the third distinct apex; unknown fields are ignored by format v1 consumers.
 
-### Parabolica / Alboreto — `s = 4864.548` — confidence **high**
+### Parabolica / Alboreto — `s = 4864.548` — confidence **medium**
 
-The track file’s `s` is the **tightest centreline heading change, which is at entry**. A geometric min-curvature line would apex there and ruin the pit-straight run. The F1 line is the opposite:
+The track file’s `s` is the **tightest centreline heading change, at entry** (`R ≈ 29 m`). A geometric min-curvature line would apex there and ruin the pit-straight run. PR #7 still did that in disguise: it labelled `s = 5065` as the apex but the *path* was already coming inside from `s ≈ 4825` and crossed the centreline at `s ≈ 4950` (just after 90° of heading). That is a mid-corner clip.
 
-| Event | `s` | `offsetM` | Kerb |
-| --- | ---: | ---: | --- |
-| Turn-in | 4765 | −5.05 | no (wide left) |
-| At track `s` | 4864.548 | −3.55 | still outside |
-| Racing apex | 5065 | +4.20 | no (late inside-right, **miss** the kerb) |
-| Exit | 5260 | −4.55 | no (left white line) |
+**What was wrong.** `5065` is ~200 m after `4864`, so it *looked* late on a spreadsheet. FastF1 on the actual pole lap puts min speed **~130 m after brake-on**, not 340 m. Mapping `v·dt` from the Ascari-exit anchor (`s = 4020` at `T+57.69`) puts:
 
-Palmer: “run right around the outside to carry speed.” Track Titan: late apex, miss the inside kerb, drift to the left white line. Stay **left** from there through S/F — that *is* the T1 setup. (A last-metre dart right at the timing beam is a finish-line chord, not the racing line into Rettifilo.) This is the largest disagreement with an elastic-band line.
+| Event | Flying-lap `T+` | `s` (medium) | `offsetM` | Kerb |
+| --- | ---: | ---: | ---: | --- |
+| Still left, ~329 km/h, almost no yaw | 67.9 | ≈ 4864 (pinch) | **−5.00** | no |
+| Lift / first real steer (turn-in) | **69.2** | **4990** | **−4.80** | no |
+| Brake-on 307 km/h | **69.5** | ≈ 5012 | −3.60 | no |
+| PR #7 “apex” (now mid-track) | ~70.3 | 5065 | **−0.50** | no |
+| Min speed 215 km/h, 5th, throttle 75% (racing apex) | **71.5** | **5145** | **+4.40** | **no** |
+| Throttle 100% | 71.9 | ≈ 5172 | +3.3 | no |
+| Road opening / left white line (exit) | ~74.0 | **5280** | **−4.60** | no |
+
+Heading on our centreline: 90° at `4937`, 135° at `5048`, 150° at `5099`, 165° at `5165`. The new apex sits ~155–160° — after the geometric mid, not at the entry pinch. First positive offset in the corner is `s ≈ 5073`.
+
+**Onboard video.** The official F1.com / Pirelli pole onboard is the primary *visual* source, but it could not be frame-scrubbed here (YouTube bot-check; F1.com is a player). Do **not** treat the metre stations as footage-digitised. Times above are FastF1 car_data on this exact lap (high confidence). `s` mapping is v·dt from the Ascari-exit station onto our OSM centreline (medium: OSM S3 is longer than the racing line; ±20–30 m). Offsets are lane-fraction estimates on the ~11 m asphalt (medium: ±0.7 m). Signs and late-vs-early are high.
+
+**Second source.** Track Titan sector 3: “throw the car towards a **late apex but miss the inside kerb**”; exit to the left white line. Palmer (F1.com circuit guide): “**run right around the outside** to carry speed, get on the throttle as soon as possible.” Full Grip: late apex, early-apex is the common mistake. Aerial rubber (already used for scenery) is left after Parabolica onto the pit straight.
+
+**Disagreement, onboard/timing wins.** Coach Dave Academy (sim / GT-oriented): turn in at the 50 m board, “catch an **early** apex and hug the inside curb.” That is the opposite of the pole-lap speed trace and of Palmer / Track Titan. We kept late / miss-kerb / medium confidence rather than invent a kerb-hugging millimetre.
+
+Stay **left** from the exit through S/F — that *is* the T1 setup. (A last-metre dart right at the timing beam is a finish-line chord, not the racing line into Rettifilo.)
 
 ## How this differs from a geometric min-curvature line
 
@@ -180,7 +196,7 @@ The in-game elastic band (`src/game/racingLine.ts`) straightens the centreline a
 | Biassono | Invents a shallow inside apex | Mid-outside, almost no offset |
 | Lesmo 1 | Apex at the heading peak (`s ≈ 2210`) | Late apex 45 m later, miss the kerb |
 | Ascari | One compromise radius | Wide T8, hard T9, late T10, exit right |
-| Parabolica | Apex at entry tightness (`s ≈ 4865`) | Apex ~200 m later; wide in, left out |
+| Parabolica | Apex at entry tightness (`s ≈ 4865`) | Stay outside through the pinch and the 90°; racing apex `s ≈ 5145` (~280 m later); miss the kerb; left out |
 
 That is the whole reason this file exists.
 
@@ -189,12 +205,12 @@ That is the whole reason this file exists.
 | Test | Result |
 | --- | --- |
 | All 8 GP corner ids; `s` copied from `monza.json` | Pass |
-| `samples` spacing ≤ 5 m; ≤ 2 m in named chicanes / Lesmos / Parabolica | Pass (max 4.074 m; dense regions max 1.721 m) |
+| `samples` spacing ≤ 5 m; ≤ 2 m in named chicanes / Lesmos / Parabolica | Pass (max 4.074 m; Parabolica window max 1.55 m) |
 | Every sample has `s`, `offsetM`, `x`, `z`, `onKerb`, `phase` | Pass (`phase` ∈ straight \| turnIn \| apex \| exit \| kink) |
 | `\|offsetM\| ≤ 6.5`; kerb rides flagged | Pass (max 5.95 m; 15 samples `\|off\| > 5.5`, all `onKerb`) |
 | Loop close (first/last offset within 0.5 m) | **0.00 m** |
 | Apex sample vs `corners[].apex.offsetM` within 0.4 m | **0.00 m** on every apex / apex2 / apex3 |
-| Qualitative gates | Pass. Rettifilo approach is now left-side (v1 was mirrored). Remaining checklist notes: T1/T2 kerb *order* in the prompt is inverted; Roggia exit is left |
+| Qualitative gates | Pass. Rettifilo approach left-side (v1 mirrored). Parabolica stays left through `s = 4864` / 90°; late right clip, not on kerb; exit left. Remaining checklist notes: T1/T2 kerb *order* in the prompt is inverted; Roggia exit is left; Coach Dave’s early-apex Parabolica was rejected |
 | Frame proof | S/F and T1 table above |
 | No second coordinate system, no proprietary GPS | Pass |
 | `monza.json` untouched; no speeds | Pass |
@@ -208,9 +224,11 @@ lesmo1     |  −4.40     |  +4.20   |  −2.90   |  n    | high
 lesmo2     |  −4.55     |  +5.40   |  −4.70   |  y    | high
 serraglio  |  −2.50     |  −2.20   |  −1.70   |  n    | medium
 ascari     |  +4.80     |  −3.55   |  +5.15   |  y    | high
-parabolica |  −5.05     |  +4.20   |  −4.55   |  n    | high
-sample count: 2109 · max |offset|: 5.95m · loop close Δ: 0.00m
+parabolica |  −4.80     |  +4.40   |  −4.60   |  n    | medium
+sample count: 2157 · max |offset|: 5.95m · loop close Δ: 0.00m
 ```
+
+Parabolica turn-in is **after** the geometric `s = 4864` (first steer `T+69.2`). Apex `onKerb = false`.
 
 Rettifilo `apex2 = −5.55` (T2). Roggia `apex2 = +5.75` (T5). Ascari `apex2 = +5.65` (T9), `apex3 = −4.15` (T10).
 
@@ -224,7 +242,7 @@ Rettifilo `apex2 = −5.55` (T2). Roggia `apex2 = +5.75` (T5). Ascari `apex2 = +
 
 ## Approximations
 
-- Offsets are lane-fraction estimates from public video and maps, not a surveyed tape. Absolute error is probably ~0.5–1.0 m on straights and ~0.3–0.7 m at kerb apexes; the *sign* and the late/early choice are the facts that matter.
+- Offsets are lane-fraction estimates from public video, timing, and maps, not a surveyed tape. Absolute error is probably ~0.5–1.0 m on straights and ~0.3–0.7 m at kerb apexes; the *sign* and the late/early choice are the facts that matter. Parabolica metres are **medium** because the onboard was not frame-scrubbed; FastF1 times are solid, the `s` map is v·dt onto OSM.
 - Local width is the published 10–12 m range, not a per-station survey. A 12 m panel would move a “full asphalt” offset by ~0.5 m.
 - OSM centreline ≠ FIA surveyed centreline (~44 cm over 5793 m; see track notes). Offsets inherit that.
 - Serraglio’s station is a geometric half-turn, not a published apex.
