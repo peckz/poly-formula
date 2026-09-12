@@ -7,7 +7,7 @@ import {
   generateParkTreePlacements,
 } from './data/placements.ts'
 import { createBillboardMesh } from './models/billboards.ts'
-import { createGrandstandMesh } from './models/grandstands.ts'
+import { createGantryBridgeMesh, createGrandstandMesh } from './models/grandstands.ts'
 import { createTerrain } from './models/terrain.ts'
 import { createTireStackManager } from './models/tires.ts'
 import { createTreeManager, type TreeInstance } from './models/trees.ts'
@@ -33,11 +33,13 @@ export * from './data/placements.ts'
 /**
  * Creates and mounts the Monza Royal Park landscape scaffold into the Three.js scene.
  *
- * Visual language:
- * - Monza park aesthetic (clean minimal PS1 / low-poly park circuit look)
- * - 8-12 color atlas (Lambert / vertex colors, no PBR overhead)
- * - Sky #8EC4E0, Fog #B4C4B8, Grass #4F7A3E, Canopy #2D4A28, Grandstands #E6E2D8 + #B81C2C
- * - Modular snap targets (S/F, Rettifilo, Parabolica) ready for Track Engineer ribbon JSON
+ * Visual language (matched to reference art):
+ * - Soft pale desaturated sky blue (#82ABCB) + distant atmospheric haze (#A4C2D4)
+ * - Warm mint / sage grass near track (#82B87C)
+ * - Faceted low-poly olive & forest green hills (#4D7540 / #3D6032)
+ * - Gentle midday sunlight with soft ambient fill & soft grey shadows
+ * - Low-poly blocky trees, blue/white tiered grandstands, coral/yellow gantry bridge
+ * - Low-poly grey boulders, fence posts, sponsor boards, and chicane tire stacks
  */
 export function createLandscape(
   scene: THREE.Scene,
@@ -57,21 +59,21 @@ export function createLandscape(
 
   const disposables: Array<{ dispose: () => void }> = []
 
-  // 1. Scene Fog & Sky Atmosphere (Italy midday: clear soft blue sky, gentle summer heat haze)
+  // 1. Scene Fog & Sky Atmosphere (Soft desaturated blue sky + gentle haze)
   if (enableFog) {
     scene.background = new THREE.Color(LANDSCAPE_COLORS.sky)
-    scene.fog = new THREE.FogExp2(LANDSCAPE_COLORS.fog, 0.0011)
+    scene.fog = new THREE.Fog(LANDSCAPE_COLORS.fog, 80, 1200)
   }
 
-  // 2. Lighting (Warm Italian midday sunlight & soft sky ambient fill)
+  // 2. Lighting (Gentle soft midday sun + soft grey ambient fill)
   if (enableLighting) {
-    const ambientLight = new THREE.AmbientLight(0xfff6ec, 1.05)
+    const ambientLight = new THREE.AmbientLight(0xdde8f0, 1.15)
     ambientLight.name = 'Landscape_Ambient'
     scene.add(ambientLight)
 
-    const sunLight = new THREE.DirectionalLight(0xfffaee, 1.75)
+    const sunLight = new THREE.DirectionalLight(0xfffaee, 1.45)
     sunLight.name = 'Landscape_Sun'
-    sunLight.position.set(60, 100, 70)
+    sunLight.position.set(50, 90, 60)
     sunLight.castShadow = true
     sunLight.shadow.mapSize.width = 2048
     sunLight.shadow.mapSize.height = 2048
@@ -101,14 +103,24 @@ export function createLandscape(
   textureManager.preloadAll()
   disposables.push(textureManager)
 
-  // 4. Ground Terrain & Runoff Areas
+  // 4. Ground Terrain, Faceted Hills, Boulders & Fence Posts
   if (enableGround) {
     const terrain = createTerrain(materials, MONZA_RUNOFF_AREAS)
     rootGroup.add(terrain.group)
     disposables.push(terrain)
   }
 
-  // 5. Grandstand Blocks
+  // 5. Sponsor Gantry Bridge (Warm Coral Arch + Yellow Pillars over track straight)
+  const gantryBridge = createGantryBridgeMesh(materials, {
+    id: 'gantry-sf-bridge',
+    width: 22,
+    height: 6.8,
+    position: [0, 0, -110],
+    rotationY: 0,
+  })
+  rootGroup.add(gantryBridge)
+
+  // 6. Grandstand Blocks (Light blue & white tiers with dark cantilevered roof)
   const grandstandPlacements = placements.filter((p) => p.type === 'grandstand')
   for (const gp of grandstandPlacements) {
     const grandstand = createGrandstandMesh(materials, {
@@ -120,7 +132,7 @@ export function createLandscape(
     rootGroup.add(grandstand)
   }
 
-  // 6. Sponsor Billboards
+  // 7. Sponsor Billboards
   const billboardPlacements = placements.filter((p) => p.type === 'billboard')
   for (const bp of billboardPlacements) {
     if (bp.brand) {
@@ -135,12 +147,12 @@ export function createLandscape(
     }
   }
 
-  // 7. Tire Stacks
+  // 8. Tire Stacks
   const tireManager = createTireStackManager(materials, MONZA_TIRE_STACK_PLACEMENTS)
   rootGroup.add(tireManager.group)
   disposables.push(tireManager)
 
-  // 8. Groves of Monza Park Trees (Poplars & Oaks)
+  // 9. Groves of Monza Park Trees (Poplars & Blocky Oaks)
   const treePlacements = generateParkTreePlacements()
   const allTreePlacements: TreeInstance[] = [
     ...placements
@@ -163,7 +175,7 @@ export function createLandscape(
   rootGroup.add(treeManager.group)
   disposables.push(treeManager)
 
-  // 9. Snap Targets Reference State
+  // 10. Snap Targets Reference State
   const snapTargetsMap = new Map<SnapMarkerName, SnapTarget>()
   for (const st of MONZA_SNAP_TARGETS) {
     snapTargetsMap.set(st.name, { ...st })

@@ -3,25 +3,24 @@ import type { LandscapeMaterials } from '../palette.ts'
 import type { TreeType } from '../types.ts'
 
 /**
- * Creates low-poly Lombardy Poplar geometry (Type A).
- * Tall, slender columnar canopy typical of Monza Royal Park.
+ * Creates low-poly Poplar / Cypress geometry (Type A).
+ * Slender brown trunk with faceted blocky conical canopy.
  */
 export function createPoplarGeometry(): { trunk: THREE.BufferGeometry; canopy: THREE.BufferGeometry } {
-  // 1. Trunk (slender 6-sided cylinder)
-  const trunkGeom = new THREE.CylinderGeometry(0.35, 0.55, 4.0, 6)
-  trunkGeom.translate(0, 2.0, 0)
+  // 1. Trunk (slender faceted 5-sided cylinder)
+  const trunkGeom = new THREE.CylinderGeometry(0.3, 0.45, 3.8, 5)
+  trunkGeom.translate(0, 1.9, 0)
 
-  // 2. Canopy (3 tiered 7-sided conical layers tapering upwards, height ~14m)
-  const layer1 = new THREE.ConeGeometry(2.2, 5.5, 7)
-  layer1.translate(0, 5.5, 0)
+  // 2. Blocky conical canopy (3 stepped faceted 5-sided pyramids)
+  const layer1 = new THREE.ConeGeometry(2.0, 4.5, 5)
+  layer1.translate(0, 4.8, 0)
 
-  const layer2 = new THREE.ConeGeometry(1.8, 5.0, 7)
-  layer2.translate(0, 8.5, 0)
+  const layer2 = new THREE.ConeGeometry(1.6, 4.2, 5)
+  layer2.translate(0, 7.5, 0)
 
-  const layer3 = new THREE.ConeGeometry(1.2, 4.5, 7)
-  layer3.translate(0, 11.5, 0)
+  const layer3 = new THREE.ConeGeometry(1.1, 3.8, 5)
+  layer3.translate(0, 10.2, 0)
 
-  // Merge canopy geometries
   const canopyGeom = mergeGeometries([layer1, layer2, layer3])
   layer1.dispose()
   layer2.dispose()
@@ -31,38 +30,48 @@ export function createPoplarGeometry(): { trunk: THREE.BufferGeometry; canopy: T
 }
 
 /**
- * Creates low-poly Broadleaf Park Oak / Stone Pine geometry (Type B).
- * Sturdy trunk with stepped faceted foliage clusters (~11m wide, ~10m tall).
+ * Creates blocky low-poly Oak / Park Tree geometry (Type B) matching reference style.
+ * Brown angled trunk with faceted blocky foliage clusters.
  */
 export function createOakGeometry(): { trunk: THREE.BufferGeometry; canopy: THREE.BufferGeometry } {
-  // 1. Trunk (heavier 7-sided tapered cylinder with root flare)
-  const trunkGeom = new THREE.CylinderGeometry(0.55, 0.9, 3.5, 7)
-  trunkGeom.translate(0, 1.75, 0)
+  // 1. Trunk (faceted 6-sided cylinder)
+  const trunkGeom = new THREE.CylinderGeometry(0.45, 0.7, 3.2, 6)
+  trunkGeom.translate(0, 1.6, 0)
 
-  // 2. Canopy (faceted low-poly icosahedral clusters)
-  const centerCluster = new THREE.IcosahedronGeometry(3.6, 0)
-  centerCluster.scale(1.2, 0.9, 1.2)
-  centerCluster.translate(0, 6.0, 0)
+  // 2. Blocky dodecahedral / icosahedral canopy clusters
+  const mainCluster = new THREE.DodecahedronGeometry(2.8, 0)
+  mainCluster.scale(1.1, 0.9, 1.1)
+  mainCluster.translate(0, 4.8, 0)
 
-  const leftCluster = new THREE.IcosahedronGeometry(2.6, 0)
-  leftCluster.scale(1.1, 0.85, 1.0)
-  leftCluster.translate(-2.2, 5.0, 0.5)
+  const leftCluster = new THREE.DodecahedronGeometry(2.0, 0)
+  leftCluster.scale(1.0, 0.8, 1.0)
+  leftCluster.translate(-1.6, 4.2, 0.3)
 
-  const rightCluster = new THREE.IcosahedronGeometry(2.8, 0)
-  rightCluster.scale(1.0, 0.85, 1.1)
-  rightCluster.translate(2.2, 5.2, -0.4)
+  const rightCluster = new THREE.DodecahedronGeometry(2.2, 0)
+  rightCluster.scale(1.0, 0.85, 1.0)
+  rightCluster.translate(1.6, 4.4, -0.3)
 
-  const topCluster = new THREE.IcosahedronGeometry(2.3, 0)
-  topCluster.scale(1.0, 0.9, 1.0)
-  topCluster.translate(0.2, 7.8, 0.1)
+  const topCluster = new THREE.DodecahedronGeometry(1.8, 0)
+  topCluster.scale(0.9, 0.9, 0.9)
+  topCluster.translate(0.1, 6.4, 0.1)
 
-  const canopyGeom = mergeGeometries([centerCluster, leftCluster, rightCluster, topCluster])
-  centerCluster.dispose()
+  const canopyGeom = mergeGeometries([mainCluster, leftCluster, rightCluster, topCluster])
+  mainCluster.dispose()
   leftCluster.dispose()
   rightCluster.dispose()
   topCluster.dispose()
 
   return { trunk: trunkGeom, canopy: canopyGeom }
+}
+
+/**
+ * Creates low-poly faceted rock / boulder geometry.
+ */
+export function createRockGeometry(): THREE.BufferGeometry {
+  const rock = new THREE.DodecahedronGeometry(2.0, 0)
+  rock.scale(1.4, 0.9, 1.2)
+  rock.translate(0, 1.0, 0)
+  return rock
 }
 
 /**

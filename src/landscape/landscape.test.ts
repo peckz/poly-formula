@@ -19,18 +19,18 @@ import {
 } from './index.ts'
 
 test('Visual palette contains all required PS1 park circuit colors', () => {
-  assert.equal(LANDSCAPE_COLORS.sky, 0x82c5eb, 'Sky color should be soft Italian midday blue #82C5EB')
-  assert.equal(LANDSCAPE_COLORS.fog, 0xb8d4e2, 'Fog color should be soft summer heat haze #B8D4E2')
-  assert.equal(LANDSCAPE_COLORS.grass, 0x5b7e3e, 'Grass color should be warm olive #5B7E3E')
-  assert.equal(LANDSCAPE_COLORS.canopy, 0x324f2a, 'Canopy color should be #324F2A')
-  assert.equal(LANDSCAPE_COLORS.trunk, 0x634839, 'Trunk color should be #634839')
-  assert.equal(LANDSCAPE_COLORS.runoffAsphalt, 0x44454b, 'Runoff color should be #44454B')
-  assert.equal(LANDSCAPE_COLORS.gravel, 0xc8b892, 'Gravel color should be #C8B892')
-  assert.equal(LANDSCAPE_COLORS.grandstand, 0xede8dc, 'Grandstand body should be #EDE8DC')
-  assert.equal(LANDSCAPE_COLORS.grandstandRedBand, 0xba202e, 'Italian red band should be #BA202E')
-  assert.equal(LANDSCAPE_COLORS.tires, 0x2b2b30, 'Tires color should be muted charcoal #2B2B30')
-  assert.equal(LANDSCAPE_COLORS.billboardField, 0xf4f1ea, 'Billboard field should be #F4F1EA')
-  assert.equal(LANDSCAPE_COLORS.billboardFrame, 0xdcd8d0, 'Billboard frame should be #DCD8D0')
+  assert.equal(LANDSCAPE_COLORS.sky, 0x82abcb, 'Sky color should be soft pale desaturated blue #82ABCB')
+  assert.equal(LANDSCAPE_COLORS.fog, 0xa4c2d4, 'Fog color should be soft atmospheric haze #A4C2D4')
+  assert.equal(LANDSCAPE_COLORS.grass, 0x82b87c, 'Grass color should be warm mint / sage #82B87C')
+  assert.equal(LANDSCAPE_COLORS.hills, 0x4d7540, 'Hills color should be olive green #4D7540')
+  assert.equal(LANDSCAPE_COLORS.canopy, 0x446b38, 'Canopy color should be blocky olive #446B38')
+  assert.equal(LANDSCAPE_COLORS.trunk, 0x6b4f3b, 'Trunk color should be #6B4F3B')
+  assert.equal(LANDSCAPE_COLORS.rockGrey, 0x94a3af, 'Rock color should be #94A3AF')
+  assert.equal(LANDSCAPE_COLORS.grandstandBlue, 0x98d4ec, 'Grandstand blue tiers should be #98D4EC')
+  assert.equal(LANDSCAPE_COLORS.grandstandRoof, 0x2e343d, 'Grandstand roof should be #2E343D')
+  assert.equal(LANDSCAPE_COLORS.gantryArch, 0xe87a54, 'Gantry arch should be #E87A54')
+  assert.equal(LANDSCAPE_COLORS.gantryPillars, 0xf2cc5b, 'Gantry pillars should be #F2CC5B')
+  assert.equal(LANDSCAPE_COLORS.tires, 0x282a30, 'Tires color should be muted dark charcoal #282A30')
 })
 
 test('All 10 sponsor brands are supported and generate valid textures', () => {
