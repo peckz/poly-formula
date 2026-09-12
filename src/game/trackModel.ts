@@ -3,6 +3,7 @@ import { ENVELOPE_LAT_ACCEL } from './driveAssist'
 import { BRAKE_DECEL, ENGINE, MAX_SPEED } from './sim'
 import type { LinePoint } from './racingLine'
 import { computeRacingLine, computeSpeedProfile } from './racingLine'
+import { buildBarriers } from './barriers'
 import { buildScenery } from './scenery'
 import type { TrackPath } from './trackPath'
 import { monzaPath } from './trackPath'
@@ -423,6 +424,8 @@ export function buildTrack(): BuiltTrack {
 
   // Sourced surroundings (OSM footprints): stands, pits, banking, forest.
   group.add(buildScenery(path))
+  // Safety furniture: Armco, walls, TecPro, tyres, fences, gravel.
+  group.add(buildBarriers(path))
 
   const racingLine = racingLineTrail(path)
   group.add(racingLine.mesh)
